@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lập trình C++ cơ bản, nâng cao</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-3xl font-bold text-orange-500">F8</span>
+                    </div>
+                    <div class="ml-6">
+                        <div class="relative">
+                            <input type="text" placeholder="Tìm kiếm khóa học, bài viết, video, ..." 
+                                   class="w-[500px] pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:border-orange-500">
+                            <div class="absolute left-3 top-2.5 text-gray-400">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 text-gray-700 hover:text-gray-900">Đăng ký</button>
+                    <button class="px-4 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600">Đăng nhập</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Sidebar -->
+            <div class="col-span-1">
+                <div class="space-y-4">
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-home text-gray-600"></i>
+                        <span>Trang chủ</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg bg-gray-100">
+                        <i class="fas fa-code text-gray-600"></i>
+                        <span>Lộ trình</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-newspaper text-gray-600"></i>
+                        <span>Bài viết</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-span-2">
+                <h1 class="text-3xl font-bold mb-4">Lập trình C++ cơ bản, nâng cao</h1>
+                <p class="text-gray-600 mb-8">
+                    Khóa học lập trình C++ từ cơ bản tới nâng cao dành cho người mới bắt đầu. Mục tiêu của khóa học này nhằm giúp các bạn nắm được các khái niệm căn cơ của lập trình, giúp các bạn có nền tảng vững chắc để chinh phục con đường trở thành một lập trình viên.
+                </p>
+
+                <!-- Course Content -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold">Nội dung khóa học</h2>
+                        <button class="text-orange-500 hover:underline">Mở rộng tất cả</button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Chapter 1 -->
+                        <div class="border rounded-lg">
+                            <div class="p-4 bg-gray-50 rounded-t-lg">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-semibold">1. Giới thiệu</h3>
+                                    <span class="text-gray-500">3 bài học</span>
+                                </div>
+                            </div>
+                            <div class="p-4 space-y-3">
+                                <div class="flex items-center justify-between text-gray-600">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>1. Giới thiệu khóa học</span>
+                                    </div>
+                                    <span>01:03</span>
+                                </div>
+                                <div class="flex items-center justify-between text-gray-600">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>2. Cài đặt Dev - C++</span>
+                                    </div>
+                                    <span>02:31</span>
+                                </div>
+                                <div class="flex items-center justify-between text-gray-600">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fas fa-play-circle"></i>
+                                        <span>3. Hướng dẫn sử dụng Dev - C++</span>
+                                    </div>
+                                    <span>03:33</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Other Chapters -->
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-semibold">2. Biến và kiểu dữ liệu</h3>
+                                <span class="text-gray-500">32 bài học</span>
+                            </div>
+                        </div>
+
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-semibold">3. Cấu trúc điều khiển và vòng lặp</h3>
+                                <span class="text-gray-500">27 bài học</span>
+                            </div>
+                        </div>
+
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-semibold">4. Mảng</h3>
+                                <span class="text-gray-500">18 bài học</span>
+                            </div>
+                        </div>
+
+                        <div class="border rounded-lg p-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-semibold">5. String</h3>
+                                <span class="text-gray-500">6 bài học</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

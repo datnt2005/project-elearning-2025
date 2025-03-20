@@ -1,0 +1,23 @@
+// Course routes
+$router->addRoute("/courses", [$courseController, "index"], ['isAdmin']);
+$router->addRoute("/courses/create", [$courseController, "createForm"], ['isAdmin']);
+$router->addRoute("/courses/store", [$courseController, "store"], ['isAdmin']);
+$router->addRoute("/courses/edit/{id}", [$courseController, "editForm"], ['isAdmin']);
+$router->addRoute("/courses/update/{id}", [$courseController, "update"], ['isAdmin']);
+$router->addRoute("/courses/delete/{id}", [$courseController, "destroy"], ['isAdmin']);
+
+// Section routes
+$router->addRoute("/sections", [$sectionController, "index"], ['isAdmin']);
+$router->addRoute("/sections/create", [$sectionController, "createForm"], ['isAdmin']);
+$router->addRoute("/sections/store", [$sectionController, "store"], ['isAdmin']);
+$router->addRoute("/sections/edit/{id}", [$sectionController, "editForm"], ['isAdmin']);
+$router->addRoute("/sections/update/{id}", [$sectionController, "update"], ['isAdmin']);
+$router->addRoute("/sections/delete/{id}", [$sectionController, "destroy"], ['isAdmin']);
+
+// Lesson routes
+$router->addRoute("/lessons", [$lessonController, "index"], ['isAdmin']);
+$router->addRoute("/lessons/create", [$lessonController, "createForm"], ['isAdmin']);
+$router->addRoute("/lessons/store", [$lessonController, "store"], ['isAdmin']);
+$router->addRoute("/lessons/edit/{id}", [$lessonController, "editForm"], ['isAdmin']);
+$router->addRoute("/lessons/update/{id}", [$lessonController, "update"], ['isAdmin']);
+$router->addRoute("/lessons/delete/{id}", [$lessonController, "destroy"], ['isAdmin']);
