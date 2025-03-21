@@ -22,4 +22,30 @@ class UserModel {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function updateUser($id, $data) {
+        $sql = "UPDATE users SET name = :name, phone = :phone" . 
+               (isset($data['image']) ? ", image = :image" : "") . 
+               " WHERE id = :id";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':name', $data['name'], PDO::PARAM_STR);
+        $stmt->bindValue(':phone', $data['phone'], PDO::PARAM_STR);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        if (isset($data['image'])) {
+            $stmt->bindValue(':image', $data['image'], PDO::PARAM_STR);
+        }
+
+        return $stmt->execute();
+    }
+
+    public function updatePassword($id, $newPassword) {
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':password', $newPassword, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        
+        return $stmt->execute();
+    }
 }

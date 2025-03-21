@@ -23,11 +23,9 @@ class AuthController
     {
         $this->AuthModel = new AuthModel();
 
-        // Load biến môi trường từ .env
         $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
         $dotenv->load();
 
-        // Cấu hình Google Client
         $this->googleClient = new Client();
         $this->googleClient->setClientId($_ENV['GOOGLE_CLIENT_ID']);
         $this->googleClient->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
@@ -38,8 +36,7 @@ class AuthController
     public function index()
     {
         $users = $this->AuthModel->getAllUsers();
-        //compact: gom bien dien thanh array
-        renderViewAdmin("view/users/user_list.php", compact('users'), "User List");
+        renderViewUser("view/users/user_list.php", compact('users'), "User List");
     }
 
     public function profile()
@@ -71,7 +68,7 @@ class AuthController
                     exit;
                 }
             } else {
-                $password = $user['password'];  
+                $password = $user['password'];
             }
 
             $this->AuthModel->updateUser($userId, $name, $email, $password, $image);
@@ -95,7 +92,7 @@ class AuthController
         }
         $user = $_SESSION['user'];
         if ($user['role'] === 'admin') {
-            renderViewAdmin("view/layouts/master_admin.php", compact('user'), "Admin Dashboard");
+            renderViewUser("view/layouts/master_admin.php", compact('user'), "Admin Dashboard");
         } else {
             renderViewUser("view/layouts/master_user.php", compact('user'), "User Dashboard");
         }
@@ -105,10 +102,111 @@ class AuthController
     {
         $users = $this->AuthModel->getAllUsers();
         //compact: gom bien dien thanh array
-        renderViewAdmin("view/layouts/dashboard_admin.php", compact('users'), "User List");
+        renderViewUser("view/layouts/dashboard_admin.php", compact('users'), "User List");
     }
 
+    public function show() {
+        $users = $this->AuthModel->getAllUsers(); 
+        renderViewAdmin("view/admin/user/user_list.php", compact('users'), "User List");
+    }
 
+    public function user_edit($id) {
+        $user = $this->AuthModel->getUserById($id);
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+            $name = trim($_POST['name']);
+            $email = trim($_POST['email']);
+            $image = $user['image']; 
+            $role = trim($_POST['role']);
+            $status = trim($_POST['status']);
+    
+            if (empty($name)) {
+                $errors[] = "Tên không được để trống.";
+            }
+    
+            if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = "Email không hợp lệ.";
+            }
+    
+            if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $image = $this->uploadImage($_FILES['image']);
+            }
+    
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                renderViewAdmin("view/admin/user/user_edit.php", compact('user', 'errors'), "Edit User");
+                return;
+            }
+            $this->AuthModel->editUser($id, $name, $email, $image, $role, $status);
+            $_SESSION['success'] = "Cập nhật thông tin người dùng thành công!";
+            header("Location: /admin/user");
+            exit;
+        }
+    
+        renderViewAdmin("view/admin/user/user_edit.php", compact('user'), "Edit User");
+    }
+
+    public function user_create() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = [];
+    
+            $name = trim($_POST['name']);
+            $email = trim($_POST['email']);
+            $password = trim($_POST['password']);
+            $role = $_POST['role'] ?? 'student';
+            $status = $_POST['status'] ?? 'active';
+            $image = (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) ? $this->uploadImage($_FILES['image']) : null;
+    
+            if (empty($name)) {
+                $errors[] = "Tên không được để trống.";
+            }
+    
+            if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = "Email không hợp lệ.";
+            }
+
+            if ($this->AuthModel->isEmailExists($email)) {
+                $errors[] = "Email đã được sử dụng!";
+            } 
+    
+            if (empty($password) || strlen($password) < 6) {
+                $errors[] = "Mật khẩu phải có ít nhất 6 ký tự.";
+            }
+    
+            if (!empty($errors)) {
+                $_SESSION['errors'] = $errors;
+                renderViewAdmin("view/admin/user/user_create.php", compact('errors'), "Create User");
+                return;
+            }
+    
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $this->AuthModel->createUser($name, $email, $hashedPassword, $image, $role, $status);
+    
+            $_SESSION['success'] = "Tạo người dùng thành công!";
+            header("Location: /admin/user");
+            exit;
+        }
+    
+        renderViewAdmin("view/admin/user/user_create.php", [], "Create User");
+    }
+    
+    
+
+    public function user_delete($id) {
+        $user = $this->AuthModel->getUserById($id);
+        if ($user) {
+            if (!empty($user['image']) && file_exists($user['image'])) {
+                unlink($user['image']);
+            }
+            $this->AuthModel->deleteUser($id);
+            $_SESSION['success'] = "Xóa người dùng thành công!";
+            header("Location: /admin/user");
+            exit;
+        } else {
+            echo "User not found.";
+        }
+    }
     public function adminUsers()
     {
         if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
@@ -116,125 +214,69 @@ class AuthController
             exit;
         }
         $users = $this->AuthModel->getAllUsers();
-        renderViewAdmin("view/admin/user_list.php", compact('users'), "User Management");
+        renderViewUser("view/admin/user_list.php", compact('users'), "User Management");
     }
 
-    public function show($id)
+  
+    public function register()
     {
-        $user = $this->AuthModel->getUserById($id);
-        renderViewUser("view/users/user_detail.php", compact('user'), "User Detail");
-    }
-
-    public function edit($id)
-    {
-        // Lấy thông tin người dùng
-        $user = $this->AuthModel->getUserById($id);
-        if (!$user) {
-            $_SESSION['error'] = "User not found.";
-            header("Location: /users");
-            exit;
-        }
-
+        $error1 = null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = trim($_POST['name']);
             $email = trim($_POST['email']);
-            $image = $user['image'];
-
-            // Kiểm tra upload ảnh
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $image = $this->uploadImage($_FILES['image']);
-            }
-
-
-            // Cập nhật thông tin người dùng
-            $this->AuthModel->editUser($id, $name, $email, $image);
-
-            $_SESSION['success'] = "Cập nhật thông tin người dùng thành công!";
-            header("Location: /users");
-            exit;
-        }
-
-        renderViewUser("view/users/user_edit.php", compact('user'), "Edit User");
-    }
-
-
-    public function create()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'];
-            $email = $_POST['email'];
             $password = $_POST['password'];
-            $image = $this->uploadImage($_FILES['image']); // xử lí upload ảnh
-            $role = $_POST['role'] ?? 'student';
-            $status = $_POST['status'] ?? 'active';
-            $this->AuthModel->createUser($name, $email, $password, $image, $role, $status);
-            header("Location: /users");
-        } else {
-            renderViewAdmin("view/users/user_create.php", [], "Create User");
-        }
-    }
+            $confirm_password = $_POST['confirm_password'];
 
-    public function register()
-{
-    $error1 = null;
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $name = trim($_POST['name']);
-        $email = trim($_POST['email']);
-        $password = $_POST['password'];
-        $confirm_password = $_POST['confirm_password'];
-
-        if (!preg_match("/^[a-zA-ZÀ-Ỹà-ỹ\s]{3,50}$/u", $name)) {
-            $error1 = "Tên không hợp lệ! Chỉ nhập chữ cái và ít nhất 3 ký tự.";
-        }
-        elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error1 = "Email không hợp lệ!";
-        }
-        elseif (strlen($password) < 6) {
-            $error1 = "Mật khẩu phải có ít nhất 6 ký tự!";
-        }
-        elseif ($password !== $confirm_password) {
-            $error1 = "Mật khẩu nhập lại không trùng khớp!";
-        }
-        // Kiểm tra email đã tồn tại chưa
-        elseif ($this->AuthModel->isEmailExists($email)) {
-            $error1 = "Email đã được sử dụng!";
-        } else {
-            if ($this->AuthModel->register($name, $email, $password)) {
-                $_SESSION['success_message1'] = "Đăng ký thành công! Hãy đăng nhập.";
+            if (!preg_match("/^[a-zA-ZÀ-Ỹà-ỹ\s]{3,50}$/u", $name)) {
+                $error1 = "Tên không hợp lệ! Chỉ nhập chữ cái và ít nhất 3 ký tự.";
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $error1 = "Email không hợp lệ!";
+            } elseif (strlen($password) < 6) {
+                $error1 = "Mật khẩu phải có ít nhất 6 ký tự!";
+            } elseif ($password !== $confirm_password) {
+                $error1 = "Mật khẩu nhập lại không trùng khớp!";
+            }
+            // Kiểm tra email đã tồn tại chưa
+            elseif ($this->AuthModel->isEmailExists($email)) {
+                $error1 = "Email đã được sử dụng!";
             } else {
-                $error1 = "Đăng ký thất bại. Email có thể đã được sử dụng.";
+                if ($this->AuthModel->register($name, $email, $password)) {
+                    $_SESSION['success_message1'] = "Đăng ký thành công! Hãy đăng nhập.";
+                } else {
+                    $error1 = "Đăng ký thất bại. Email có thể đã được sử dụng.";
+                }
             }
         }
+        renderViewUser("view/auth/register.php", compact('error1'), "Register");
     }
-    renderViewUser("view/auth/register.php", compact('error1'), "Register");
-}
 
-public function login()
-{
-    $error = null;
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $email = trim($_POST['email']);
-        $password = $_POST['password'];
+    public function login()
+    {
+        $error = null;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = trim($_POST['email']);
+            $password = $_POST['password'];
 
-        $user = $this->AuthModel->login($email, $password);
-        if ($user) {
-            $_SESSION['user'] = $user;
-            $_SESSION['user_id'] = $user['id'];  
-            $_SESSION['user_role'] = $user['role']; 
-            $_SESSION['user_name'] = $user['name'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_phone'] = $user['phone'];
-            $_SESSION['success_message'] = "Đăng nhập thành công!";
-            $_SESSION['loggedIn'] = true;
-            $redirectUrl = ($user['role'] === 'admin') ? '/admin' : '/login';
-            header("Location: $redirectUrl");
-            exit;
-        } else {
-            $error = "Email hoặc mật khẩu không chính xác.";
+            $user = $this->AuthModel->login($email, $password);
+            if ($user) {
+                $_SESSION['user'] = $user;
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_role'] = $user['role'];
+                $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_phone'] = $user['phone'];
+                $_SESSION['user_image'] = $user['image'];
+                $_SESSION['success_message'] = "Đăng nhập thành công!";
+                $_SESSION['loggedIn'] = true;
+                $redirectUrl = ($user['role'] === 'admin') ? '/admin/user' : '/login';
+                header("Location: $redirectUrl");
+                exit;
+            } else {
+                $error = "Email hoặc mật khẩu không chính xác.";
+            }
         }
+        renderViewUser("view/auth/login.php", compact('error'), "Login");
     }
-    renderViewUser("view/auth/login.php", compact('error'), "Login");
-}
 
 
     public function logout()
@@ -371,9 +413,7 @@ public function login()
             header("Location: /login");
             exit;
         }
-
         try {
-            // Lấy mã truy cập từ mã ủy quyền
             $token = $this->googleClient->fetchAccessTokenWithAuthCode($_GET['code']);
 
             if (isset($token['error'])) {
@@ -382,7 +422,6 @@ public function login()
 
             $this->googleClient->setAccessToken($token['access_token']);
 
-            // Lấy thông tin người dùng từ Google
             $googleService = new Oauth2($this->googleClient);
             $googleUser = $googleService->userinfo->get();
 
@@ -393,17 +432,23 @@ public function login()
             $email = $googleUser->email;
             $name = $googleUser->name;
 
-            // Kiểm tra người dùng trong cơ sở dữ liệu
             $user = $this->AuthModel->getUserByEmail($email);
             if (!$user) {
-                // Nếu chưa có tài khoản, tạo mới
-                $password = uniqid(); // Tạo mật khẩu ngẫu nhiên
+                $password = uniqid();  
                 $this->AuthModel->createUser($name, $email, $password, '', 'user');
                 $user = $this->AuthModel->getUserByEmail($email);
             }
 
-            // Lưu thông tin người dùng vào session
             $_SESSION['user'] = $user;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_role'] = $user['role'] ?? 'student';            
+            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['user_phone'] = $user['phone'];
+            $_SESSION['user_image'] = $user['image'];
+            $_SESSION['success_message'] = "Đăng nhập thành công!";
+            $_SESSION['loggedIn'] = true;
+
             header("Location: /");
             exit;
         } catch (Exception $e) {

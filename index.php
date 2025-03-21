@@ -58,6 +58,10 @@ $router->addRoute("/google/callback", [$authController, "googleCallback"]);
 $router->addRoute("/forgot_password", [$authController, "forgotPassword"]);
 $router->addRoute("/reset_password", [$authController, "resetPassword"]);
 
+$router->addRoute("/admin/user", [$authController, "show"]);
+$router->addRoute("/admin/user/delete/{id}", [$authController, "user_delete"]);
+$router->addRoute("/admin/user/create", [$authController, "user_create"]);
+$router->addRoute("/admin/user/edit/{id}", [$authController, "user_edit"]);
 
 //users
 $router->addRoute("/users", [$userController, "index"]);
@@ -70,6 +74,7 @@ $router->addRoute("/events", [$userController, "events"]);
 $router->addRoute("/pricing", [$userController, "pricing"]);
 $router->addRoute("/contact", [$userController, "contact"]);
 $router->addRoute("/profile", [$userController, "profile"]);
+
 
 
 //Categories

@@ -15,7 +15,7 @@ class Course
     public function getAllCourses()
     {
         $query = "SELECT co.*, ca.name AS category_name, su.name AS subcategory_name,
-        u.name AS instructor_name, u.avatar AS instructor_avatar
+        u.name AS instructor_name, u.image AS instructor_image
          FROM courses co
          LEFT JOIN categories ca ON co.category_id = ca.id
          LEFT JOIN subcategories su ON co.subcategory_id = su.id
