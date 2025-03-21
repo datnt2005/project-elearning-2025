@@ -23,6 +23,14 @@ require_once "Database.php";
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getQuestionsByQuizId($quiz_id) {
+        $query = "SELECT * FROM quiz_questions WHERE quiz_id = :quiz_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':quiz_id', $quiz_id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getAllQui(){
         $query = "SELECT id, title FROM quizzes";
         $stmt = $this->conn->prepare($query);

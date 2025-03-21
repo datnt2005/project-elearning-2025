@@ -30,7 +30,7 @@ class SubcategoryController {
             $name = $_POST['name'];
             $description = $_POST['description'];
             $this->subcategoryModel->create($category_id, $name, $description);
-            header("Location: /subcategories");
+            header("Location: /admin/subcategories");
         } else {
             $categories = $this->categoryModel->getAllCategory();
             renderViewAdmin("view/admin/subcategories/subcategories_create.php", compact('categories'), "subcategories Create");
@@ -43,7 +43,7 @@ class SubcategoryController {
             $name = $_POST['name'];
             $description = $_POST['description'];
             $this->subcategoryModel->update($id, $category_id, $name, $description);
-            header("Location: /subcategories");
+            header("Location: /admin/subcategories");
         } else {
             $subcategory = $this->subcategoryModel->getSubcategoryById($id);
             $categories = $this->categoryModel->getAllCategory();
@@ -53,6 +53,6 @@ class SubcategoryController {
 
     public function delete($id) {
         $this->subcategoryModel->delete($id);
-        header("Location: /subcategories");
+        header("Location: /admin/subcategories");
     }
 }

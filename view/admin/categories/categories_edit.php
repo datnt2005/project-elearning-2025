@@ -10,5 +10,5 @@
             value="<?= htmlspecialchars($categories['description']) ?>">
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
-    <a href="/categories" class="btn btn-secondary">Cancel</a>
+    <a href="/admin/categories" class="btn btn-secondary">Cancel</a>
 </form>

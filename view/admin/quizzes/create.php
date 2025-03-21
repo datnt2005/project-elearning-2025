@@ -2,20 +2,20 @@
 <h2>Thêm bài tập</h2>
 
 <form  action="" method="post">
-    <div class="mb-3">
-        <label class="form-label" for="lesson_id">Bài học</label>
-        <select class="form-control" name="lesson_id" id="lesson_id">
-            <option value="">Chọn bài học</option>
-            <?php foreach ($lessons as $lesson): ?>
-                <option value="<?= $lesson['id']; ?>" <?= isset($lesson_id) && $lesson_id == $lesson['id'] ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($lesson['title']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-        <?php if (!empty($errors['lesson_id'])): ?>
-            <p style="color: red;"><?= $errors['lesson_id']; ?></p>
-        <?php endif; ?>
-    </div>
+       <div class="mb-3">
+            <label class="form-label" for="section_id">Phần học</label>
+            <select class="form-control" name="section_id" id="section_id">
+                <option value="">Chọn Phần học</option>
+                <?php foreach ($sections as $section): ?>
+                    <option value="<?= $section['id']; ?>" <?= isset($section_id) && $section_id == $section['id'] ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($section['title']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <?php if (!empty($errors['section_id'])): ?>
+                <p style="color: red;"><?= $errors['section_id']; ?></p>
+            <?php endif; ?>
+        </div>
 
     <div>
         <label class="form-label" for="title">Câu hỏi</label>

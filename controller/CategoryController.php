@@ -25,7 +25,7 @@ class CategoryController {
             $name = $_POST['name'];
             $description = $_POST['description'];
             $this->categoryModel->createcategory($name, $description);
-            header("Location: /categories");
+            header("Location: /admin/categories");
         } else {
             renderViewAdmin("view/admin/categories/categories_create.php", [], "Create categories");
         }
@@ -37,7 +37,7 @@ class CategoryController {
             $description = $_POST['description'];
 
             $this->categoryModel->updatecategory($id, $name, $description);
-            header("Location: /categories");
+            header("Location: /admin/categories");
         } else {
             $categories = $this->categoryModel->getcategoryById($id);
             renderViewAdmin("view/admin/categories/categories_edit.php", compact('categories'), "Edit categories");
@@ -46,6 +46,6 @@ class CategoryController {
 
     public function delete($id) {
         $this->categoryModel->deletecategory($id);
-        header("Location: /categories");
+        header("Location: /admin/categories");
     }
 }

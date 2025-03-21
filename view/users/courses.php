@@ -34,13 +34,6 @@
     <main class="ml-24 pt-20 px-4">
 
         <div class="container main-course p-4">
-            <aside class="sidebar">
-                <ul>
-                    <li><a href="#">🏠 Trang chủ</a></li>
-                    <li><a href="#">📚 Lộ trình</a></li>
-                    <li><a href="#">📝 Bài viết</a></li>
-                </ul>
-            </aside>
             <main class="content">
                 <h1 class="text-2xl font-bold mb-2"><?php echo $course['title']; ?></h1>
                 <p class="mb-4"><?php echo $course['description']; ?></p>
@@ -53,7 +46,8 @@
                         </div>
                         <ul class="list-disc pl-5 hidden">
                             <?php foreach ($lessonsBySection[$section['id']] as $lesson): ?>
-                                <li>Bài <?= $lesson['order_number']; ?>: <?php echo $lesson['title']; ?></li>
+                                <li class="cursor-pointer mt-2 list-disc">Bài <?= $lesson['order_number']; ?>: <?php echo $lesson['title']; ?></li>
+                                <hr class="my-2">
                             <?php endforeach; ?>
                         </ul>
                     <?php endforeach; ?>
@@ -66,7 +60,7 @@
                 </video>
                 <div class="video-preview text-center text-lg font-semibold mb-3">🎥 Xem giới thiệu khóa học</div>
                 <h3 class="text-xl font-bold text-[#f05123] mb-3">Miễn phí</h3>
-                <button class="w-full bg-[#f05123] text-white py-2 rounded-lg font-medium hover:bg-[#d9451e]">
+                <button id="registerBtn" class="w-full bg-[#f05123] text-white py-2 rounded-lg font-medium hover:bg-[#d9451e]">
                     Đăng ký học
                 </button>
                 <ul class="mt-4 text-gray-700">
@@ -77,6 +71,61 @@
                 </ul>
             </aside>
         </div>
+        <!-- Popup Thanh Toán -->
+        <div id="paymentPopup" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full flex flex-col md:flex-row">
+                <div class="flex-1 p-4">
+                    <div class="flex items-center mb-4">
+                        <img src="https://placehold.co/50x50" alt="JavaScript Pro logo" class="w-12 h-12 rounded-full mr-4">
+                        <h1 class="text-2xl font-bold mb-2"><?php echo $course['title']; ?></h1>
+                    </div>
+                    <p class="mb-4"><?php echo $course['description']; ?></p>
+                    <h2 class="font-semibold mb-2">Bạn nhận được gì từ khóa học này?</h2>
+                    <ul class="list-disc pl-5">
+                        <li>Trình độ cơ bản</li>
+                        <li>138 bài học</li>
+                        <li>10 giờ 29 phút</li>
+                        <li>Hoạc mọi lúc, mọi nơi</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-100 p-4 rounded-lg w-full md:w-1/3">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold">Chi tiết thanh toán</h2>
+                        <button id="closePopup" class="text-gray-500"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="mb-4">
+                        <span class="font-semibold">Giá khóa học:</span>
+                        <span class="text-gray-500 line-through"> <?php echo $course['price']; ?></span>
+                        <span class="text-[#f05123] font-bold"> <?php echo $course['discount_price']; ?></span>
+                    </div>
+                    <input type="text" placeholder="Nhập mã giảm giá" class="w-full p-2 border rounded mb-2">
+                    <button class="w-full bg-blue-100 text-blue-500 p-2 rounded">Áp dụng</button>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="font-semibold">TỔNG</span>
+                        <span class="text-[#f05123] font-bold"> <?php echo $course['discount_price']; ?></span>
+                    </div>
+                    <form action="/checkout" method="POST">
+                        <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>">
+                        <input type="hidden" name="totalPrice" value="<?php echo $course['discount_price']; ?>">
+                        <?php $totalAmount = $course['discount_price'] - 0; ?>
+                        <input type="hidden" name="totalAmount" value=" <?php echo $totalAmount; ?>">
+                        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Tiếp tục thanh toán</button>
+                    </form>
+
+
+                    <p class="text-center text-gray-500 mt-4">Thanh toán an toàn với VNPay</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById("registerBtn").addEventListener("click", function() {
+                document.getElementById("paymentPopup").classList.remove("hidden");
+            });
+            document.getElementById("closePopup").addEventListener("click", function() {
+                document.getElementById("paymentPopup").classList.add("hidden");
+            });
+        </script>
         <script>
             function toggleDropdown(element) {
                 let content = element.nextElementSibling;
@@ -88,5 +137,8 @@
                 icon.classList.toggle("rotate-90");
             }
         </script>
+
+
+
 
     </main>

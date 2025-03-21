@@ -4,12 +4,13 @@
   class QuizAnswerModel {
     private $conn;
 
+
     public function __construct(){
         $database = new Database();
         $this->conn = $database->getConnection();
     }
-
-
+ 
+     // lấy tât cả câu trả lời
     public function getAllAnswers() {
         $sql = "SELECT qa.id AS answer_id, qq.id AS question_id, qq.question, 
                        qa.answer, qa.is_correct
@@ -22,7 +23,7 @@
     }
     
     
-
+  // lấy câu trả lời bởi id
     public function getAnswerById($id) {
         $sql = "SELECT * FROM quiz_answers WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
@@ -33,14 +34,14 @@
     }
     
     
-
+   // lấy tất cả câu hỏi
     public function getAllQuestions(){
         $query = "SELECT * FROM quiz_questions";
         $stmt = $this->conn->query($query);
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
+  // lấy tất cả câu trả lời cho câu hỏi với question_id
     public function getAnswersByQuestionId($question_id) {
         // Lấy tất cả câu trả lời cho câu hỏi với question_id
         $sql = "SELECT id, answer, is_correct FROM quiz_answers WHERE question_id = :question_id";

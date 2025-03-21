@@ -14,9 +14,12 @@ class Course
     // Lấy tất cả khoá học
     public function getAllCourses()
     {
-        $query = "SELECT co.*, ca.name AS category_name, su.name AS subcategory_name FROM courses co
+        $query = "SELECT co.*, ca.name AS category_name, su.name AS subcategory_name,
+        u.name AS instructor_name, u.avatar AS instructor_avatar
+         FROM courses co
          LEFT JOIN categories ca ON co.category_id = ca.id
          LEFT JOIN subcategories su ON co.subcategory_id = su.id
+         LEFT JOIN users u ON co.instructor_id = u.id
          ORDER BY co.id DESC";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -26,16 +29,11 @@ class Course
     // Lấy 1 khoá học theo ID
     public function getCourseById($id)
     {
-        $query = "SELECT co.*, sections.title AS section_title, lessons.title AS lesson_title,
-         sections.id AS section_id, lessons.id AS lesson_id, sections.description AS section_description, lessons.description AS lesson_description,
-
-         ca.name AS category_name, su.name AS subcategory_name FROM courses co
-         LEFT JOIN categories ca ON co.category_id = ca.id
-         LEFT JOIN subcategories su ON co.subcategory_id = su.id
-         INNER JOIN sections ON co.id = sections.course_id
-         INNER JOIN lessons ON sections.id = lessons.section_id
-
-         WHERE co.id = :id";
+        $query = "SELECT co.*, ca.name AS category_name, su.name AS subcategory_name 
+                  FROM courses co
+                  LEFT JOIN categories ca ON co.category_id = ca.id
+                  LEFT JOIN subcategories su ON co.subcategory_id = su.id
+                  WHERE co.id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();

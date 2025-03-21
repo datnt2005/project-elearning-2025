@@ -20,5 +20,5 @@
             value="<?= htmlspecialchars($subcategory['description']) ?>">
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
-    <a href="/subcategories" class="btn btn-secondary">Cancel</a>
+    <a href="/admin/subcategories" class="btn btn-secondary">Cancel</a>
 </form>

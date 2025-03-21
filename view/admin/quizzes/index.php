@@ -22,8 +22,7 @@
                         <th>ID</th>
                         <th>Tiêu đề</th>
                         <th>Mô tả</th>
-                        <th>Bài học</th>
-                       
+                        <th>Phần học</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -33,7 +32,7 @@
                         <td><?=  $quiz['id'] ?></td>
                         <td><?= htmlspecialchars($quiz['title']) ?></td>
                         <td><?= htmlspecialchars($quiz['description']) ?></td>
-                        <td><?= htmlspecialchars($quiz['lesson_id']) ?></td>
+                        <td><?= htmlspecialchars($quiz['section_id']) ?></td>
                        
                         
                         <td>
