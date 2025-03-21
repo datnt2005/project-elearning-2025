@@ -7,6 +7,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://cdn1.iconfinder.com/data/icons/keyboard-shortcut/24/f8-1024.png">
     <title>F8 - Học Lập Trình Để Đi Làm</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,7 +24,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center">
-                <a href="/" class="text-2xl font-bold text-[#f05123]">F8</a>
+                <a href="#" class="text-2xl font-bold text-[#f05123]">F8</a>
                 <span class="ml-2 text-gray-700">Học Lập Trình Để Đi Làm</span>
             </div>
             <div class="flex items-center">
@@ -49,7 +50,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                         <div class="relative">
                             <button @click="dropdownOpen = !dropdownOpen"
                                 class="flex items-center px-4 py-2 text-gray-700 font-medium focus:outline-none">
-                                <img src="https://i.pravatar.cc/40" alt="User Avatar" class="w-8 h-8 rounded-full">
+                                <img src="<?= !empty($user['image']) ? 'uploads/' . $user['image'] : '/uploads/avatar/default-avatar.png' ?>" alt="User Avatar" class="w-8 h-8 rounded-full">
                                 <span class="ml-2" x-text="userName"></span>
                             </button>
                             <div x-show="dropdownOpen" @click.away="dropdownOpen = false"
@@ -72,7 +73,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <!-- Sidebar -->
     <div class="fixed left-0 top-16 w-[96px] h-screen bg-white border-r border-gray-200">
         <div class="flex flex-col items-center py-6 space-y-8">
-            <a href="/" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
+            <a href="#" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
                 <i class="fas fa-home text-xl"></i>
                 <span class="mt-1 text-xs">Trang chủ</span>
             </a>

@@ -112,7 +112,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
 
         .dropdown-menu {
             display: none;
-            background-color:rgb(233, 233, 233);
+            background-color: rgb(233, 233, 233);
             width: 100%;
         }
 
@@ -124,7 +124,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         }
 
         .dropdown-menu a:hover {
-            background-color:rgb(206, 206, 206);
+            background-color: rgb(206, 206, 206);
         }
     </style>
 </head>
@@ -135,13 +135,15 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
     <div class="sidebar" id="sidebar">
         <h3 class="text-center h3">Admin Panel</h3>
         <!-- <?php
-                var_dump($_SESSION['user_role']);
-                echo "role cua user la " . ($_SESSION['user_role'] ?? 'Not Set') . "<br>";
-                ?> -->
+        var_dump($_SESSION['user_role']);
+        echo "role cua user la " . ($_SESSION['user_role'] ?? 'Not Set') . "<br>";
+        ?> -->
         <?php if (isset($_SESSION['loggedIn']) && $_SESSION['user_role'] === 'admin'): ?>
             <div class="text-center mb-3">
-                <img src="<?= $_SESSION['user_avatar'] ?? 'https://i.pravatar.cc/50' ?>" alt="Admin Avatar"
-                    class="rounded-circle" width="50" height="50">
+
+                <img src="../uploads/<?= htmlspecialchars($_SESSION['user_image']) ?>" alt="User Avatar"
+                    class="rounded-circle w-50 h-50">
+
                 <p class="mt-2 fw-bold text-dark"><?= $_SESSION['user_name'] ?? 'Admin' ?>(admin)</p>
             </div>
         <?php endif; ?>
@@ -153,7 +155,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         <a href="/admin"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
         <div class="dropdown">
             <a href="#" class="dropdown-toggle" onclick="toggleDropdown(event, 'courseDropdown')">
-                <i class="fas fa-book-open"></i> <span>Khóa học</span> 
+                <i class="fas fa-book-open"></i> <span>Khóa học</span>
             </a>
             <div class="dropdown-menu" id="courseDropdown">
                 <a href="/admin/courses"><i class="fas fa-book"></i> <span>Danh sách khóa học</span></a>
@@ -168,7 +170,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         <a href="/admin/quizAnswers"><i class="fas fa-check-circle"></i> <span>Câu trả lời</span></a>
 
         <a href="/admin/coupons"><i class="fas fa-tag"></i> <span>Mã giảm giá</span></a>
-        <a href="#"><i class="fas fa-cogs"></i> <span>Cài đặt</span></a>
+        <a href="/admin/user"><i class="fas fa-ticket"></i> <span>Người dùng</span></a>
         <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Đăng xuất</span></a>
 
     </div>
