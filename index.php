@@ -23,7 +23,7 @@ require_once "controller/SectionController.php";
 require_once "controller/LessonController.php";
 require_once "controller/CouponController.php";
 require_once "controller/CheckoutController.php";
-
+require_once "controller/FavouriteController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -42,6 +42,7 @@ $sectionController = new SectionController();
 $lessonController = new LessonController();
 $couponController = new CouponController();
 $checkoutController = new CheckoutController();
+$favouriteController = new FavouriteController();
 
 
 // $router->addMiddleware('logRequest');
@@ -58,10 +59,6 @@ $router->addRoute("/google/callback", [$authController, "googleCallback"]);
 $router->addRoute("/forgot_password", [$authController, "forgotPassword"]);
 $router->addRoute("/reset_password", [$authController, "resetPassword"]);
 
-$router->addRoute("/admin/user", [$authController, "show"]);
-$router->addRoute("/admin/user/delete/{id}", [$authController, "user_delete"]);
-$router->addRoute("/admin/user/create", [$authController, "user_create"]);
-$router->addRoute("/admin/user/edit/{id}", [$authController, "user_edit"]);
 
 //users
 $router->addRoute("/users", [$userController, "index"]);
@@ -76,7 +73,6 @@ $router->addRoute("/contact", [$userController, "contact"]);
 $router->addRoute("/profile", [$userController, "profile"]);
 $router->addRoute("/profile/update", [$userController, "updateProfile"]);    
 $router->addRoute("/profile/update-password", [$userController, "updatePassword"]);
-
 
 //Categories
 $router->addRoute("/admin/categories", [$categoryController, "index"], ['isAdmin']);
@@ -99,6 +95,21 @@ $router->addRoute("/admin/courses/store", [$courseController, "store"], ['isAdmi
 $router->addRoute("/admin/courses/edit/{id}", [$courseController, "editForm"], ['isAdmin']);
 $router->addRoute("/admin/courses/update/{id}", [$courseController, "update"], ['isAdmin']);
 $router->addRoute("/admin/courses/delete/{id}", [$courseController, "destroy"], ['isAdmin']);
+
+
+
+// Favourite Courses
+$router->addRoute("/favourite/add", [$favouriteController, "addFavourite"], ['isUser']);
+$router->addRoute("/favourite/remove", [$favouriteController, "removeFavourite"], ['isUser']);
+$router->addRoute("/", [$favouriteController, "index"], ['isUser']);
+
+
+//Order List
+$router->addRoute("/orderList", [$checkoutController, "getOrderByUserId"], ['isUser']);
+
+
+
+
 // Section routes
 $router->addRoute("/admin/sections", [$sectionController, "index"], ['isAdmin']);
 $router->addRoute("/admin/sections/create", [$sectionController, "createForm"], ['isAdmin']);
@@ -126,22 +137,16 @@ $router->addRoute("/admin/quizQuests", [$AdminQuiQuestionController, "index"]);
 $router->addRoute("/admin/quizQuests/create", [$AdminQuiQuestionController, "create"]);
 $router->addRoute("/admin/quizQuests/delete/{id}", [$AdminQuiQuestionController, "delete"]);
 $router->addRoute("/admin/quizQuests/update/{id}", [$AdminQuiQuestionController, "update"]);
-// $router->addRoute("/quizzes/course/{course_id}", [$AdminQuiQuestionController, 'show']);
-
-
 
 // câu trl 
-$router->addRoute("/admin/quizAnswers", [$AdminQuizAnswerController, "index"]);
+$router->addRoute("/quizAnswers", [$AdminQuizAnswerController, "index"]);
 $router->addRoute("/admin/quizAnswers/create", [$AdminQuizAnswerController, "create"]);
 $router->addRoute("/admin/quizAnswers/delete/{id}", [$AdminQuizAnswerController, "delete"]);
 $router->addRoute("/admin/quizAnswers/update/{id}", [$AdminQuizAnswerController, "update"]);
-$router->addRoute("/quizzes/section/{section_id}", [$adminQuizzeController,"show"]);
-
 
 //show course user
 $router->addRoute("/courses/show/{course_id}", [$courseController, "show"]);
 $router->addRoute("/courses/learning/{course_id}", [$courseController, "detailCourse"],['isUser']);
-
 // câu trl 
 // $router->addRoute("/course/{course_id}/sessions", [$sessionController, "home"]);  // Route cho SessionController
 // $router->addRoute("/admin/sections/create", [$sessionController, "create"]);

@@ -136,14 +136,14 @@ class CourseController
             // Upload/hoặc nhận URL video intro
             $videoPath = '';
             if (isset($_FILES['video_intro']) && $_FILES['video_intro']['error'] === 0) {
-                // User upload file video
+                // Admin upload file video
                 $targetDir  = "uploads/";
                 $fileName   = time() . "_" . basename($_FILES['video_intro']['name']);
                 $targetFile = $targetDir . $fileName;
                 move_uploaded_file($_FILES['video_intro']['tmp_name'], $targetFile);
                 $videoPath  = $targetFile;
             } else {
-                // User nhập URL thay vì upload
+                // Admin nhập URL thay vì upload
                 $videoPath = $_POST['video_intro'] ?? '';
             }
 

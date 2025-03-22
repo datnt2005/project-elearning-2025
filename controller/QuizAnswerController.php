@@ -39,7 +39,7 @@ require_once "model/QuizAnswerModel.php";
                     $this->quizAnswerModel->addAnswer($question_id, trim($answer_text), $is_correct);
                 }
                 $_SESSION['success_message'] = "Thêm câu trả lời thành công!";
-                header("Location: /quizAnswers");
+                header("Location:/admin/quizAnswers");
 
                 exit();
             }
@@ -60,7 +60,7 @@ require_once "model/QuizAnswerModel.php";
         } else {
             $_SESSION['error_message'] = "Không thể xóa câu trả lời!";
         }
-        header("Location: /quizAnswers");
+        header("Location: /admin/quizAnswers");
         exit();
     }
   // Controller: Update answer
@@ -78,7 +78,7 @@ require_once "model/QuizAnswerModel.php";
     // Kiểm tra nếu câu trả lời không tồn tại
     if (!$quizAnswer) {
         $_SESSION['error_message'] = "Câu trả lời không tồn tại.";
-        header("Location: /quizAnswers");
+        header("Location: /admin/quizAnswers");
         exit();
     }
 
@@ -109,7 +109,7 @@ require_once "model/QuizAnswerModel.php";
             }
 
             $_SESSION['success_message'] = "Cập nhật câu trả lời thành công!";
-            header("Location: /quizAnswers");
+            header("Location: /admin/quizAnswers");
             exit();
         }
     } else {
