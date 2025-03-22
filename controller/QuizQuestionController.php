@@ -35,11 +35,11 @@
           if (empty($errors)) {
               if ($this->quizQuestionModel->addQuestion($quiz_id, $question, $type)) {
                   $_SESSION['success_message'] = "Thêm câu hỏi thành công!";
-                  header("Location: /quizQuests");
+                  header("Location: /admin/quizQuests");
                   exit();
               } else {
                   $_SESSION['error_message'] = "Thêm câu hỏi thất bại!";
-                  header("Location: /quizQuests");
+                  header("Location: /admin/quizQuests");
                   exit();
               }
           }
@@ -73,11 +73,11 @@
            if ($this->quizQuestionModel->update($id, $quiz_id, $question, $type)) {
                $_SESSION['success_message'] = "Sửa câu hỏi thành công";
                ob_start();
-               header("Location: /quizQuests");
+               header("Location: /admin/quizzeQuestions");
                exit();
            } else {
                $_SESSION['error_message'] = "Sửa câu hỏi thất bại";
-               header("Location: /quizQuests");
+               header("Location: /admin/quizzeQuestions");
                exit();
            }
        }
@@ -90,7 +90,7 @@
      public function delete($id){
             $this->quizQuestionModel->delete($id);
             $_SESSION['success_message'] = "Xóa bài Tâp thành công";
-            header("Location: /quizQuests");
+            header("Location: /admin/quizzeQuestions");
             exit();
      }
  }

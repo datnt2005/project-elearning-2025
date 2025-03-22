@@ -11,7 +11,7 @@
         <div class="card-header d-flex justify-content-between align-items-center text-white"
             style="background: #2c3e50;">
             <h5><i class="fas fa-tags me-2"></i>Quản lý câu trả lời</h5>
-            <a href="admin/quizAnswers/create" class="btn btn-primary"><i class="fas fa-plus"></i> Thêm câu trả lời</a>
+            <a href="/admin/quizAnswers/create" class="btn btn-primary"><i class="fas fa-plus"></i> Thêm câu trả lời</a>
         </div>
         <div class="card-body">
             <table class="table table-bordered text-center">
