@@ -226,7 +226,7 @@ public function login()
             $_SESSION['user_phone'] = $user['phone'];
             $_SESSION['success_message'] = "Đăng nhập thành công!";
             $_SESSION['loggedIn'] = true;
-            $redirectUrl = ($user['role'] === 'admin') ? '/admin' : '/login';
+            $redirectUrl = ($user['role'] === 'admin') ? '/admin/categories' : '/login';
             header("Location: $redirectUrl");
             exit;
         } else {

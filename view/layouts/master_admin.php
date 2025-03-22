@@ -146,10 +146,6 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
             </div>
         <?php endif; ?>
 
-        <i class="fas fa-bars"></i>
-        </button>
-        <i class="fas fa-bars"></i>
-        </button>
         <a href="/admin"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
         <div class="dropdown">
             <a href="#" class="dropdown-toggle" onclick="toggleDropdown(event, 'courseDropdown')">
@@ -168,8 +164,8 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         <a href="/admin/quizAnswers"><i class="fas fa-check-circle"></i> <span>Câu trả lời</span></a>
 
         <a href="/admin/coupons"><i class="fas fa-tag"></i> <span>Mã giảm giá</span></a>
-        <a href="#"><i class="fas fa-cogs"></i> <span>Cài đặt</span></a>
         <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Đăng xuất</span></a>
+        <a href="#"><i class="fas fa-cogs"></i> <span>Cài đặt</span></a>
 
     </div>
 

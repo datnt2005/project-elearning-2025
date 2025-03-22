@@ -57,6 +57,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                                 <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Trang cá nhân</a>
                                 <a href="settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cài đặt</a>
                                 <a href="/logout" class="block px-4 py-2 text-red-500 hover:bg-gray-100">Đăng xuất</a>
+                                <a href="/orderList" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Khóa học đã mua</a>
                             </div>
                         </div>
                     </template>

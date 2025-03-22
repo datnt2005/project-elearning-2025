@@ -47,6 +47,52 @@ class CourseController
             "lessonsBySection" => $lessonsBySection
         ], "Course Detail");
     }
+
+
+    public function detailCourse($id, $idLesson = null) {
+        // Lấy thông tin khóa học theo ID
+        $course = $this->courseModel->getCourseById($id);
+        
+        // Lấy danh sách các phần (sections) của khóa học
+        $sections = $this->sectionModel->getSectionsByCourseId($id);
+        
+        // Lấy danh sách bài học theo từng phần
+        $lessonsBySection = [];
+        foreach ($sections as $section) {
+            $lessonsBySection[$section['id']] = $this->lessonModel->getLessonsBySectionId($section['id']);
+        }
+        
+        // Kiểm tra nếu khóa học không tồn tại
+        if (!$course) {
+            header("Location: /404");
+            exit;
+        }
+        
+        // Nếu không có bài học nào được chọn, chọn bài đầu tiên của khóa học
+        if (!$idLesson) {
+            foreach ($lessonsBySection as $lessons) {
+                if (!empty($lessons)) {
+                    $idLesson = $lessons[0]['id'];
+                    break;
+                }
+            }
+        }
+        
+        // Lấy thông tin bài học hiện tại
+        $lesson = $this->lessonModel->getLessonById($idLesson);
+        
+        // Truyền dữ liệu đến view
+        renderViewUser("view/users/detailCourse.php", [
+            "course" => $course, 
+            "sections" => $sections, 
+            "lessonsBySection" => $lessonsBySection,
+            "lesson" => $lesson
+        ]);
+    }
+
+    public function showLesson($idLesson) {
+        $lesson = $this->lessonModel->getLessonById($idLesson);
+    }
     
     // GET: /admin/courses -> Danh sách
     public function index()

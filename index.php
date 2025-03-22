@@ -21,6 +21,9 @@ require_once "controller/QuizQuestionController.php";
 require_once "controller/QuizAnswerController.php";
 require_once "controller/SectionController.php";
 require_once "controller/LessonController.php";
+require_once "controller/CouponController.php";
+require_once "controller/CheckoutController.php";
+require_once "controller/FavouriteController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -37,6 +40,10 @@ $AdminQuiQuestionController = new AdminQuiQuestionController();
 $AdminQuizAnswerController = new AdminQuizAnswerController();
 $sectionController = new SectionController();
 $lessonController = new LessonController();
+$couponController = new CouponController();
+$checkoutController = new CheckoutController();
+$favouriteController = new FavouriteController();
+
 
 // $router->addMiddleware('logRequest');
 
@@ -87,6 +94,21 @@ $router->addRoute("/admin/courses/store", [$courseController, "store"], ['isAdmi
 $router->addRoute("/admin/courses/edit/{id}", [$courseController, "editForm"], ['isAdmin']);
 $router->addRoute("/admin/courses/update/{id}", [$courseController, "update"], ['isAdmin']);
 $router->addRoute("/admin/courses/delete/{id}", [$courseController, "destroy"], ['isAdmin']);
+
+
+
+// Favourite Courses
+$router->addRoute("/favourite/add", [$favouriteController, "addFavourite"], ['isUser']);
+$router->addRoute("/favourite/remove", [$favouriteController, "removeFavourite"], ['isUser']);
+$router->addRoute("/", [$favouriteController, "index"], ['isUser']);
+
+
+//Order List
+$router->addRoute("/orderList", [$checkoutController, "getOrderByUserId"], ['isUser']);
+
+
+
+
 // Section routes
 $router->addRoute("/admin/sections", [$sectionController, "index"], ['isAdmin']);
 $router->addRoute("/admin/sections/create", [$sectionController, "createForm"], ['isAdmin']);
@@ -123,6 +145,7 @@ $router->addRoute("/admin/quizAnswers/update/{id}", [$AdminQuizAnswerController,
 
 //show course user
 $router->addRoute("/courses/show/{course_id}", [$courseController, "show"]);
+$router->addRoute("/courses/learning/{course_id}", [$courseController, "detailCourse"],['isUser']);
 // câu trl 
 // $router->addRoute("/course/{course_id}/sessions", [$sessionController, "home"]);  // Route cho SessionController
 // $router->addRoute("/admin/sections/create", [$sessionController, "create"]);
@@ -132,6 +155,24 @@ $router->addRoute("/courses/show/{course_id}", [$courseController, "show"]);
 // bài học 
 // Route cho LessionController để hiển thị thông tin bài học cụ thể
 $router->addRoute("/lesson/{lesson_id}", [$lessonController, "home"]);
+
+$router->addRoute("/admin/coupons", [$couponController, "index"]);
+$router->addRoute("/admin/coupons/create", [$couponController, "create"]);
+$router->addRoute("/admin/coupons/edit/{id}", [$couponController, "edit"]);
+$router->addRoute("/admin/coupons/update/{id}", [$couponController, "update"]);
+$router->addRoute("/admin/coupons/delete/{id}", [$couponController, "delete"]);
+
+
+// Checkout routes
+$router->addRoute("/checkout", [$checkoutController, "checkout"]);
+
+
+
+$router->addRoute("/thank-you", function() {
+    include __DIR__ . "/view/thank-you.php";
+
+});
+
 
 $router->dispatch();
 ?>

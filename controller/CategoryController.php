@@ -25,7 +25,7 @@ class CategoryController {
             $name = $_POST['name'];
             $description = $_POST['description'];
             $this->categoryModel->createcategory($name, $description);
-            header("Location: /categories");
+            header("Location: /admin/categories");
         } else {
             renderViewAdmin("view/admin/categories/categories_create.php", [], "Create categories");
         }
