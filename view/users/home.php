@@ -40,7 +40,7 @@
                                 <span class="text-[#f05123] font-bold mx-3"> <?php echo number_format($course['discount_price']); ?>đ</span>
                             </div>
                             <div class="instructor flex items-center">
-                                <img class="rounded-full" width="30px" height="30px" src="http://localhost:8000/<?= htmlspecialchars($course['instructor_avatar']) ?>" alt="avt">
+                                <img class="rounded-full" width="30px" height="30px" src="http://localhost:8000/uploads/<?= htmlspecialchars($course['instructor_image']) ?>" alt="avt">
                                 <span class="mx-2 text-gray-600"> <?php echo $course['instructor_name']; ?> </span>
                             </div>
                         </div>

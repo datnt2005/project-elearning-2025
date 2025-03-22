@@ -74,7 +74,8 @@ $router->addRoute("/events", [$userController, "events"]);
 $router->addRoute("/pricing", [$userController, "pricing"]);
 $router->addRoute("/contact", [$userController, "contact"]);
 $router->addRoute("/profile", [$userController, "profile"]);
-
+$router->addRoute("/profile/update", [$userController, "updateProfile"]);    
+$router->addRoute("/profile/update-password", [$userController, "updatePassword"]);
 
 
 //Categories
