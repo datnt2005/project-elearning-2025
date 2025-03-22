@@ -23,7 +23,7 @@ class Database {
 
         try {
             $this->conn = new PDO(
-                "mysql:host=" . $this->host . ";dbname=" . $this->db_name,
+                "mysql:host=" . $this->host . ";dbname=project-elearning-2025" . $this->db_name,
                 $this->username,
                 $this->password
             );

@@ -57,7 +57,10 @@
                         <option value="0">Tạm dừng</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-success">Thêm khóa học</button>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Thêm khóa học</button>
+                    <a href="/admin/courses" class="btn btn-secondary">Quay lại</a>
+                </div>
             </form>
         </div>
     </div>
