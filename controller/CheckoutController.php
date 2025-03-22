@@ -13,56 +13,54 @@ class CheckoutController {
     }
 
     public function checkout() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Kiểm tra xem người dùng đã đăng nhập chưa
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
                 // Nếu chưa đăng nhập, hiển thị thông báo yêu cầu đăng nhập
                 echo "<script>alert('Vui lòng đăng nhập để tiếp tục thanh toán.');</script>";
                 echo "<script>window.location.href = '/login';</script>";  // Chuyển hướng đến trang đăng nhập
                 exit;
             }
-            $total_price = $_POST['totalPrice'];
-            $payment_method = 'vnpay';
-            $order_code = uniqid('order_');  // Tạo mã đơn hàng duy nhất
+
+
+            $total_price = $_POST['amount'];
+            $payment_method = $_POST['payment_method'];
+            $orderCode = uniqid('order_'); 
             $user_id = $_SESSION['user']['id'];
-            $course_id = $_POST['course_id'];  // Cần lấy ID khóa học từ form
-            $discount_id = null;  // Nếu có mã giảm giá
-            $discount_price = null;  // Nếu có giảm giá
-            // $discount_id = $_POST['discount_id'] ?? null;  // Nếu có mã giảm giá
-            // $discount_price = $_POST['discount_price'] ?? 0;  // Nếu có giảm giá
-            $status = 'pending';  // Trạng thái đơn hàng
-            $payment_status = 'completed'; // Trạng thái thanh toán
-            $total_amount = $_POST['totalAmount'];
+            $course_id = $_POST['course_id'];  
+            $discount_id = $_POST['discount_id'] ?? null;  
+            $discount_price = $_POST['discount_price'] ?? 0; 
+            $status = 'pending';  
+            $payment_status = 'pending'; 
+            $total_amount = $total_price - $discount_price;
     
-            // Gọi phương thức tạo đơn hàng với đầy đủ các tham số
-            $isCreate = $this->orderModel->createOrder($user_id, $course_id, $order_code, $total_price , $total_amount, $discount_id, $discount_price, $total_amount, $status, $payment_method, $payment_status );
+           
+            $order_id = $this->orderModel->createOrder($user_id, $course_id, $total_price , $total_amount, $discount_id, $discount_price, $status, $payment_method, $payment_status );
     
-            if (!$isCreate) {
+            if (!$order_id) {
                 $_SESSION['error_message'] = "Không thể tạo đơn hàng!";
                 header("Location: /checkout");
                 exit;
             }
     
-            $this->processPayment();
+            // Xử lý thanh toán
+            $this->processPayment($orderCode, $total_amount);
         }
     }
     
-    
-    public function processPayment() {
-        
+    public function processPayment($orderCode, $total_amount) {
         $vnp_TmnCode = "BKW22DPU"; 
         $vnp_HashSecret = "BGTKQK8L785CZKUM9HSLX5EUX70RQAIN"; 
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; 
         $vnp_Returnurl = "http://localhost:8000/thank-you"; 
-
+    
         $vnp_TxnRef = time(); 
         $vnp_OrderInfo = "Thanh toán khóa học";
         $vnp_OrderType = "billpayment";
-        $vnp_Amount = $_POST['totalAmount'] * 100; 
+        $vnp_Amount = $total_amount * 100;  
         $vnp_Locale = "vn";
         $vnp_BankCode = "NCB";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
-
+    
         $inputData = array(
             "vnp_Version" => "2.1.0",
             "vnp_TmnCode" => $vnp_TmnCode,
@@ -77,8 +75,7 @@ class CheckoutController {
             "vnp_ReturnUrl" => $vnp_Returnurl,
             "vnp_TxnRef" => $vnp_TxnRef
         );
-
-        // Sắp xếp dữ liệu
+// Sắp xếp dữ liệu
         ksort($inputData);
         $query = "";
         $i = 0;
@@ -92,19 +89,30 @@ class CheckoutController {
             }
             $query .= urlencode($key) . "=" . urlencode($value) . '&';
         }
-
+    
         // Tạo URL thanh toán
         $vnp_Url = $vnp_Url . "?" . $query;
         if (isset($vnp_HashSecret)) {
             $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
-
-       
+    
         header('Location: ' . $vnp_Url);
         exit();
-    
-        
     }
-}
+
+    public function getOrderByUserId() {
+        if (!isset($_SESSION['user']['id'])) {
+            echo "<script>alert('Vui lòng đăng nhập để xem khóa học đã mua!');</script>";
+            echo "<script>window.location.href = '/login';</script>";
+            exit;
+        }
     
+        $user_id = $_SESSION['user']['id'];
+        $orders = $this->orderModel->getOrderByUserId($user_id);
+        
+        renderViewUser("view/users/orderList.php", compact('orders'), "Order List");
+    }
+    
+    
+}

@@ -44,5 +44,17 @@ class OrderModel {
         $stmt->bindParam(':payment_status', $payment_status);
         return $stmt->execute();
     }
+
+    public function getOrderByUserId($user_id) {
+        $query = "SELECT * FROM orders o
+                JOIN courses c ON o.course_id = c.id
+                JOIN users u ON c.instructor_id = u.id
+                WHERE o.user_id = :user_id AND o.status = 'completed'
+                ORDER BY o.created_at DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
