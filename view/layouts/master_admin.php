@@ -141,8 +141,8 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         <?php if (isset($_SESSION['loggedIn']) && $_SESSION['user_role'] === 'admin'): ?>
             <div class="text-center mb-3">
 
-                <img src="../uploads/<?= htmlspecialchars($_SESSION['user_image']) ?>" alt="User Avatar"
-                    class="rounded-circle w-50 h-50">
+                <img src="http://localhost:8000/uploads/<?php echo $_SESSION['user_image'] ?? 'avatar/default-avatar.png'; ?>" alt="User Avatar"
+                    class="rounded-circle " width="60" height="60">
 
                 <p class="mt-2 fw-bold text-dark"><?= $_SESSION['user_name'] ?? 'Admin' ?>(admin)</p>
             </div>

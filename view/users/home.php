@@ -55,7 +55,7 @@
                                         <span class="text-gray-500 line-through">
                                             <?php echo number_format($course['price'], 0, ',', '.'); ?> VND
                                         </span>
-                                        <span class="text-[#f05123] font-bold">
+                                        <span class="text-[#f05123] font-bold mx-2">
                                             <?php echo number_format($course['discount_price'], 0, ',', '.'); ?> VND
                                         </span>
                                     </div>
@@ -77,7 +77,7 @@
     <!-- Pro Courses Section -->
     <section>
     <?php if (!empty($favouriteList)) : ?>
-    <h2 class="text-2xl font-bold mb-6 flex items-center">
+    <h2 class="text-2xl font-bold mb-6 flex items-center mt-5" >
             Khóa học Yêu thích
             <span class="ml-2 px-2 py-1 bg-blue-500 text-white text-xs rounded">MỚI</span>
         </h2>
@@ -112,14 +112,14 @@
                                         <span class="text-gray-500 line-through">
                                             <?php echo number_format($course['price'], 0, ',', '.'); ?> VND
                                         </span>
-                                        <span class="text-[#f05123] font-bold">
+                                        <span class="text-[#f05123] font-bold mx-2">
                                             <?php echo number_format($course['discount_price'], 0, ',', '.'); ?> VND
                                         </span>
                                     </div>
                                 <?php endif; ?>
                             </div>
                             <div class="instructor flex items-center">
-                                <img class="rounded-full" width="30px" height="30px" src="http://localhost:8000/<?= htmlspecialchars($course['instructor_avatar']) ?>" alt="avt">
+                                <img class="rounded-full" width="30px" height="30px" src="http://localhost:8000/uploads/<?= htmlspecialchars($course['instructor_image']) ?>" alt="avt">
                                 <span class="mx-2 text-gray-600"> <?php echo $course['instructor_name']; ?> </span>
                             </div>
                         </div>

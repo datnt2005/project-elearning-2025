@@ -143,7 +143,7 @@ $router->addRoute("/quizAnswers", [$AdminQuizAnswerController, "index"]);
 $router->addRoute("/admin/quizAnswers/create", [$AdminQuizAnswerController, "create"]);
 $router->addRoute("/admin/quizAnswers/delete/{id}", [$AdminQuizAnswerController, "delete"]);
 $router->addRoute("/admin/quizAnswers/update/{id}", [$AdminQuizAnswerController, "update"]);
-
+$router->addRoute("/quizzes/section/{section_id}", [$adminQuizzeController,"show"]);
 //show course user
 $router->addRoute("/courses/show/{course_id}", [$courseController, "show"]);
 $router->addRoute("/courses/learning/{course_id}", [$courseController, "detailCourse"],['isUser']);
@@ -166,6 +166,8 @@ $router->addRoute("/admin/coupons/delete/{id}", [$couponController, "delete"]);
 
 // Checkout routes
 $router->addRoute("/checkout", [$checkoutController, "checkout"]);
+$router->addRoute("/checkout/vnpay-return", [$checkoutController, "vnpayReturn"]);
+$router->addRoute("/orderList", [$checkoutController, "getOrderByUserId"], ['isUser']);
 
 
 

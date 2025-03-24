@@ -24,8 +24,8 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center">
-                <a href="/" class="text-2xl font-bold text-[#f05123]">F8</a>
-                <span class="ml-2 text-gray-700">Học Lập Trình Để Đi Làm</span>
+                <a href="/" class="text-2xl font-bold text-[#f05123]">P6</a>
+                <span class="ml-2 text-gray-700">Học online không khó, chỉ sợ không có tiền🙂</span>
             </div>
             <div class="flex items-center">
                 <div class="relative mx-4">
@@ -56,6 +56,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                             <div x-show="dropdownOpen" @click.away="dropdownOpen = false"
                                 class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
                                 <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Trang cá nhân</a>
+                                <a href="/orderList" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Khóa học đã mua</a>
                                 <a href="settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cài đặt</a>
                                 <a href="/logout" class="block px-4 py-2 text-red-500 hover:bg-gray-100">Đăng xuất</a>
                             </div>
