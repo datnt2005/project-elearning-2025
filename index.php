@@ -23,6 +23,7 @@ require_once "controller/SectionController.php";
 require_once "controller/LessonController.php";
 require_once "controller/CouponController.php";
 require_once "controller/CheckoutController.php";
+require_once "controller/OrderController.php";
 require_once "controller/FavouriteController.php";
 require_once "controller/ReportController.php";
 
@@ -44,6 +45,7 @@ $lessonController = new LessonController();
 $couponController = new CouponController();
 $checkoutController = new CheckoutController();
 $favouriteController = new FavouriteController();
+$orderController = new OrderController();
 $reportController = new ReportController(); 
 
 
@@ -184,6 +186,11 @@ $router->addRoute("/admin/reports/completed-orders-year", [$reportController, "s
 $router->addRoute("/admin/reports/completed-orders-detail-date", [$reportController, "completedOrdersDetailByDate"], ['isAdmin']);
 $router->addRoute("/admin/reports/completed-orders-detail-month", [$reportController, "completedOrdersDetailByMonth"], ['isAdmin']);
 $router->addRoute("/admin/reports/completed-orders-detail-year", [$reportController, "completedOrdersDetailByYear"], ['isAdmin']);
+
+$router->addRoute("/admin/orders", [$orderController, "index"], ['isAdmin']);
+$router->addRoute("/admin/orders/edit/{id}", [$orderController, "edit"], ['isAdmin']);
+$router->addRoute("/admin/orders/update/{id}", [$orderController, "update"], ['isAdmin']);
+$router->addRoute("/admin/orders/delete/{id}", [$orderController, "delete"], ['isAdmin']);
 
 
 $router->addRoute("/thank-you", function() {
