@@ -119,4 +119,16 @@ class CouponModel {
     
         return false; // Nếu mã giảm giá không hợp lệ hoặc không có
     }
+    public function getCouponByCode($code) {
+        $stmt = $this->conn->prepare("SELECT discount_percent FROM coupons WHERE code = ?");
+        $stmt->execute([$code]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function getCoursePrice($course_id) {
+        $stmt = $this->conn->prepare("SELECT discount_price FROM courses WHERE id = ?");
+        $stmt->execute([$course_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
 }

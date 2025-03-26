@@ -24,6 +24,7 @@ require_once "controller/LessonController.php";
 require_once "controller/CouponController.php";
 require_once "controller/CheckoutController.php";
 require_once "controller/FavouriteController.php";
+require_once "controller/ReportController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -43,6 +44,7 @@ $lessonController = new LessonController();
 $couponController = new CouponController();
 $checkoutController = new CheckoutController();
 $favouriteController = new FavouriteController();
+$reportController = new ReportController(); 
 
 
 // $router->addMiddleware('logRequest');
@@ -162,6 +164,7 @@ $router->addRoute("/admin/coupons/create", [$couponController, "create"]);
 $router->addRoute("/admin/coupons/edit/{id}", [$couponController, "edit"]);
 $router->addRoute("/admin/coupons/update/{id}", [$couponController, "update"]);
 $router->addRoute("/admin/coupons/delete/{id}", [$couponController, "delete"]);
+$router->addRoute('/apply-coupon', [$couponController, 'applyCoupon'], ['isUser']);
 
 
 // Checkout routes
@@ -169,6 +172,18 @@ $router->addRoute("/checkout", [$checkoutController, "checkout"]);
 $router->addRoute("/checkout/vnpay-return", [$checkoutController, "vnpayReturn"]);
 $router->addRoute("/orderList", [$checkoutController, "getOrderByUserId"], ['isUser']);
 
+
+$router->addRoute("/admin/reports", [$reportController, "index"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-by-date", [$reportController, "completedOrdersByDateChart"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-by-month", [$reportController, "completedOrdersByMonthChart"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-by-year", [$reportController, "completedOrdersByYearChart"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-date", [$reportController, "showDateChartPage"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-month", [$reportController, "showMonthChartPage"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-year", [$reportController, "showYearChartPage"], ['isAdmin']);
+
+$router->addRoute("/admin/reports/completed-orders-detail-date", [$reportController, "completedOrdersDetailByDate"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-detail-month", [$reportController, "completedOrdersDetailByMonth"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-detail-year", [$reportController, "completedOrdersDetailByYear"], ['isAdmin']);
 
 
 $router->addRoute("/thank-you", function() {
