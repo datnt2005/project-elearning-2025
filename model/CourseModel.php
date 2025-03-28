@@ -123,4 +123,21 @@ class Course
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    public function getLessons($courseId) {
+        $query = "SELECT * FROM lessons l JOIN sections s ON l.section_id = s.id
+                  WHERE s.course_id = :course_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':course_id', $courseId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getSections($courseId) {
+        $query = "SELECT * FROM sections WHERE course_id = :course_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':course_id', $courseId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

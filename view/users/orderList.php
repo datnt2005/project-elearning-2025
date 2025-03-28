@@ -10,23 +10,23 @@
                 <div class="bg-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
                 <a href="/courses/learning/<?php echo $order['course_id']; ?>">
                         <div class="relative aspect-video">
-                            <img class="" width="100%" height="200px" src="http://localhost:8000/<?= htmlspecialchars($order['image']) ?>" alt="">
+                            <img class="" width="100%" height="200px" src="http://localhost:8000/<?= htmlspecialchars($order['course_image']) ?>" alt="">
                         </div>
                         <div class="p-4">
 
                             <div class="flex items-center justify-between">
                             <h3 class="text-xl font-bold text-gray-800"><?php echo $order['title']; ?></h3>
                             </div>
-                            <div class="flex items-center ">
+                            <div class="flex items-center text-green-600">
                                     <div class="flex items-center justify-between mt-2">
-                                        <span class="text-gray-500 line-through">
+                                        <span class="text-gray-500 line-through mx-3">
                                         <?php echo number_format($order['total_price'], 0, ',', '.'); ?> VND
                                         </span>
                                         <?php echo $order['payment_status'] === 'completed' ? 'Đã thanh toán' : 'Chờ thanh toán'; ?>
                                     </div>
                             </div>
                             <div class="instructor flex items-center">
-                                <img class="rounded-full" width="30px" height="30px" src="http://localhost:8000/<?= htmlspecialchars($course['instructor_avatar']) ?>" alt="avt">
+                                <img class="rounded-full" width="30px" height="30px" src="http://localhost:8000/uploads/<?= htmlspecialchars($order['instructor_image']) ?>" alt="avt">
                                 <span class="mx-2 text-gray-600"> <?php echo $order['instructor_name']; ?> </span>
                             </div>
                         </div>
