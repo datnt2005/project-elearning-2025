@@ -1,11 +1,11 @@
 <h2>Thống kê đơn hàng hoàn thành</h2>
 
-<!-- Phần hiển thị tổng số đơn hoàn thành -->
+
 <div id="totalOrders" style="margin-bottom: 20px;"></div>
 <span id="totalRevenue" style="margin-bottom: 20px;"></span>
 
 <style>
-    /* Thêm một vài kiểu cơ bản cho dropdown */
+
     #chartType {
         padding: 10px 15px;
         font-size: 16px;
@@ -42,7 +42,7 @@
     }
 </style>
 <br>
-<!-- Dropdown để chọn loại biểu đồ -->
+
 <select id="chartType" onchange="loadChart()">
     <option value="all">tổng hợp </option>
     <option value="day">Ngày</option>
@@ -50,13 +50,14 @@
     <option value="year">Năm</option>
 </select>
 
-<!-- Chứa các biểu đồ -->
+
 <div id="summaryChartContainer">
     <canvas id="ordersSummaryChart"></canvas>
 </div>
 
 <div id="dayChartContainer" style="display: none;">
     <canvas id="ordersDateChart"></canvas>
+    
 </div>
 <div id="monthChartContainer" style="display: none;">
     <canvas id="ordersMonthChart"></canvas>
@@ -68,7 +69,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Hàm tải biểu đồ theo ngày
+
     function loadSummaryChart() {
         fetch("/admin/reports/completed-orders-summary")
             .then(response => response.json())
@@ -83,7 +84,7 @@
                 let ordersData = data.data;
                 console.log("Dữ liệu chi tiết:", ordersData);
 
-                // Gán label mặc định nếu không có dữ liệu thời gian
+                
                 let labels = ordersData.map((item, index) => item.period || `Tổng hợp ${index + 1}`);
 
                 let totalOrders = ordersData.map(item => item.total_orders);
@@ -154,164 +155,236 @@
 
 
     function loadDayChart() {
-        fetch("/admin/reports/completed-orders-by-date")
-            .then(response => response.json())
-            .then(data => {
-                let labels = data.data.map(item => item.period);
-                let values = data.data.map(item => item.total);
+    fetch("/admin/reports/completed-orders-by-date")
+        .then(response => response.json())
+        .then(data => {
+            let labels = data.data.map(item => item.period);
+            let orderValues = data.data.map(item => item.total_orders);
+            let revenueValues = data.data.map(item => item.total_revenue);
 
-                // Hiển thị tổng số đơn hoàn thành
-                let totalOrders = values.reduce((acc, value) => acc + value, 0);
-                document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders}`;
-                
-
-                new Chart(document.getElementById("ordersDateChart"), {
-                    type: "line",
-                    data: {
-                        labels: labels,
-                        datasets: [{
+          
+            let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
+            let totalRevenue = revenueValues.reduce((acc, value) => acc + value, 0).toLocaleString();
+            document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders} | Tổng doanh thu: ${totalRevenue} VND`;
+            
+            let ctx = document.getElementById("ordersDateChart");
+            let chart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
                             label: "Số đơn hoàn thành",
-                            data: values,
+                            data: orderValues,
                             borderColor: "rgba(75, 192, 192, 1)",
                             backgroundColor: "rgba(75, 192, 192, 0.2)",
                             borderWidth: 2,
                             fill: true,
                             tension: 0.3
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: "Ngày"
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: "Số đơn hoàn thành"
-                                }
+                        },
+                        {
+                            label: "Tổng doanh thu (VND)",
+                            data: revenueValues,
+                            borderColor: "rgba(255, 99, 132, 1)",
+                            backgroundColor: "rgba(255, 99, 132, 0.2)",
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.3,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Ngày"
                             }
                         },
-                        onClick: function(evt, activeElements) {
-                            if (activeElements.length > 0) {
-                                let index = activeElements[0].index;
-                                let selectedDate = labels[index];
-                                fetch(`/admin/reports/completed-orders-detail-date?date=${selectedDate}`)
-                                    .then(response => response.json())
-                                    .then(orderData => {
-                                        openOrderDetails(selectedDate, orderData.orders);
-                                    })
-                                    .catch(error => console.error("Error fetching order details:", error));
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Số đơn hoàn thành"
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: "Tổng doanh thu (VND)"
                             }
                         }
+                    },
+                    onClick: function(evt, activeElements) {
+                        if (activeElements.length > 0) {
+                            let index = activeElements[0].index;
+                            let selectedDate = labels[index];
+                            fetch(`/admin/reports/completed-orders-detail-date?date=${selectedDate}`)
+                                .then(response => response.json())
+                                .then(orderData => {
+                                    openOrderDetails(selectedDate, orderData.orders);
+                                })
+                                .catch(error => console.error("Error fetching order details:", error));
+                        }
                     }
-                });
-            })
-            .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ ngày:", error));
-    }
+                }
+            });
+        })
+        .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ ngày:", error));
+}
 
-    // Hàm tải biểu đồ theo tháng
-    // Hàm tải biểu đồ theo tháng
+
+   
+
     function loadMonthChart() {
-        fetch("/admin/reports/completed-orders-by-month")
-            .then(response => response.json())
-            .then(data => {
-                let labels = data.map(item => item.period);
-                let values = data.map(item => item.total);
+    fetch("/admin/reports/completed-orders-by-month")
+        .then(response => response.json())
+        .then(data => {
+            let labels = data.map(item => item.period);
+            let orderValues = data.map(item => item.total_orders);
+            let revenueValues = data.map(item => item.total_revenue);
 
-                // Hiển thị tổng số đơn hoàn thành
-                let totalOrders = values.reduce((acc, value) => acc + value, 0);
-                document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders}`;
+            // Hiển thị tổng số đơn hoàn thành và tổng doanh thu
+            let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
+            let totalRevenue = revenueValues.reduce((acc, value) => acc + parseFloat(value), 0).toLocaleString("vi-VN");
+            document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders} | Tổng doanh thu: ${totalRevenue} VND`;
 
-                new Chart(document.getElementById("ordersMonthChart"), {
-                    type: "bar",
-                    data: {
-                        labels: labels,
-                        datasets: [{
+            new Chart(document.getElementById("ordersMonthChart"), {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
                             label: "Số đơn hoàn thành",
-                            data: values,
+                            data: orderValues,
                             backgroundColor: "rgba(54, 162, 235, 0.5)",
                             borderColor: "rgba(54, 162, 235, 1)",
                             borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
                         },
-                        onClick: function(evt, activeElements) {
-                            if (activeElements.length > 0) {
-                                let index = activeElements[0].index;
-                                let selectedMonth = labels[index];
-                                fetch(`/admin/reports/completed-orders-detail-month?month=${selectedMonth}`)
-                                    .then(response => response.json())
-                                    .then(orderData => {
-                                        openOrderDetails(selectedMonth, orderData.orders);
-                                    })
-                                    .catch(error => console.error("Error fetching order details:", error));
-                            }
-                        }
-                    }
-                });
-            })
-            .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ tháng:", error));
-    }
-
-    // Hàm tải biểu đồ theo năm
-    function loadYearChart() {
-        fetch("/admin/reports/completed-orders-by-year")
-            .then(response => response.json())
-            .then(data => {
-                let labels = data.map(item => item.period);
-                let values = data.map(item => item.total);
-
-                // Hiển thị tổng số đơn hoàn thành
-                let totalOrders = values.reduce((acc, value) => acc + value, 0);
-                document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders}`;
-
-                new Chart(document.getElementById("ordersYearChart"), {
-                    type: "bar",
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: "Số đơn hoàn thành",
-                            data: values,
+                        {
+                            label: "Tổng doanh thu (VND)",
+                            data: revenueValues,
                             backgroundColor: "rgba(255, 99, 132, 0.5)",
                             borderColor: "rgba(255, 99, 132, 1)",
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
+                            borderWidth: 1,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Số đơn hoàn thành"
                             }
                         },
-                        onClick: function(evt, activeElements) {
-                            if (activeElements.length > 0) {
-                                let index = activeElements[0].index;
-                                let selectedYear = labels[index];
-                                fetch(`/admin/reports/completed-orders-detail-year?year=${selectedYear}`)
-                                    .then(response => response.json())
-                                    .then(orderData => {
-                                        openOrderDetails(selectedYear, orderData.orders);
-                                    })
-                                    .catch(error => console.error("Error fetching order details:", error));
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: "Tổng doanh thu (VND)"
                             }
                         }
+                    },
+                    onClick: function(evt, activeElements) {
+                        if (activeElements.length > 0) {
+                            let index = activeElements[0].index;
+                            let selectedMonth = labels[index];
+                            fetch(`/admin/reports/completed-orders-detail-month?month=${selectedMonth}`)
+                                .then(response => response.json())
+                                .then(orderData => {
+                                    openOrderDetails(selectedMonth, orderData.orders);
+                                })
+                                .catch(error => console.error("Error fetching order details:", error));
+                        }
                     }
-                });
-            })
-            .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ năm:", error));
-    }
+                }
+            });
+        })
+        .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ tháng:", error));
+}
+
+
+   
+    function loadYearChart() {
+    fetch("/admin/reports/completed-orders-by-year")
+        .then(response => response.json())
+        .then(data => {
+            let labels = data.map(item => item.period);
+            let orderValues = data.map(item => item.total_orders);
+            let revenueValues = data.map(item => item.total_revenue);
+
+     
+            let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
+            let totalRevenue = revenueValues.reduce((acc, value) => acc + parseFloat(value), 0);
+            document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders} | Tổng doanh thu: ${totalRevenue.toLocaleString()} VND`;
+            new Chart(document.getElementById("ordersYearChart"), {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Số đơn hoàn thành",
+                            data: orderValues,
+                            backgroundColor: "rgba(54, 162, 235, 0.5)",
+                            borderColor: "rgba(54, 162, 235, 1)",
+                            borderWidth: 1
+                        },
+                        {
+                            label: "Tổng doanh thu (VND)",
+                            data: revenueValues,
+                            backgroundColor: "rgba(255, 99, 132, 0.5)",
+                            borderColor: "rgba(255, 99, 132, 1)",
+                            borderWidth: 1,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Số đơn hoàn thành"
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: "Tổng doanh thu (VND)"
+                            }
+                        }
+                    },
+                    onClick: function(evt, activeElements) {
+                        if (activeElements.length > 0) {
+                            let index = activeElements[0].index;
+                            let selectedYear = labels[index];
+                            fetch(`/admin/reports/completed-orders-detail-year?year=${selectedYear}`)
+                                .then(response => response.json())
+                                .then(orderData => {
+                                    openOrderDetails(selectedYear, orderData.orders);
+                                })
+                                .catch(error => console.error("Error fetching order details:", error));
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ năm:", error));
+}
+
 
     // Hàm mở Modal và hiển thị chi tiết đơn hàng
     function openOrderDetails(date, details) {

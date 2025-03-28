@@ -169,70 +169,83 @@ class OrderModel
     }
     
     public function getCompletedOrdersByDate()
-    {
-        $sql = "
-            SELECT 
-                MIN(DATE(created_at)) AS start_date, 
-                MAX(DATE(created_at)) AS end_date 
-            FROM orders 
-            WHERE status = 'completed'
-        ";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $dates = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-        $start_date = $dates['start_date'] ?? null;
-        $end_date = $dates['end_date'] ?? null;
-    
-        if (!$start_date || !$end_date) {
-            header('Content-Type: application/json; charset=UTF-8');
-            echo json_encode(["error" => "Không có đơn hàng nào hoàn thành"]);
-            exit;
-        }
-    
-        // Lấy danh sách đơn hàng theo ngày
-        $sql = "
-            SELECT 
-                DATE(created_at) AS period, 
-                COUNT(*) AS total 
-            FROM orders 
-            WHERE status = 'completed'
-            GROUP BY DATE(created_at)
-            ORDER BY DATE(created_at) ASC
-        ";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-        // Tính tổng đơn hàng
-        $totalCompletedOrders = array_sum(array_column($orders, 'total'));
-    
-        // Tạo danh sách ngày từ start_date đến end_date
-        $allDates = [];
-        $current_date = $start_date;
-    
-        while (strtotime($current_date) <= strtotime($end_date)) {
-            $allDates[$current_date] = 0; // Mặc định 0 đơn hàng
-            $current_date = date('Y-m-d', strtotime($current_date . ' +1 day'));
-        }
-    
-        foreach ($orders as $order) {
-            $allDates[$order['period']] = (int)$order['total'];
-        }
-    
-        // Format lại dữ liệu để trả về JSON
-        $result = [];
-        foreach ($allDates as $date => $total) {
-            $result[] = ["period" => $date, "total" => $total];
-        }
-    
+{
+    $sql = "
+        SELECT 
+            MIN(DATE(created_at)) AS start_date, 
+            MAX(DATE(created_at)) AS end_date 
+        FROM orders 
+        WHERE status = 'completed'
+    ";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    $dates = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $start_date = $dates['start_date'] ?? null;
+    $end_date = $dates['end_date'] ?? null;
+
+    if (!$start_date || !$end_date) {
         header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode([
-            "total_orders" => $totalCompletedOrders,
-            "data" => $result
-        ]);
+        echo json_encode(["error" => "Không có đơn hàng nào hoàn thành"]);
         exit;
     }
+
+    // Lấy danh sách đơn hàng theo ngày, bao gồm tổng tiền
+    $sql = "
+        SELECT 
+            DATE(created_at) AS period, 
+            COUNT(*) AS total_orders, 
+            SUM(total_price) AS total_revenue
+        FROM orders 
+        WHERE status = 'completed'
+        GROUP BY DATE(created_at)
+        ORDER BY DATE(created_at) ASC
+    ";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Tính tổng đơn hàng và tổng doanh thu
+    $totalCompletedOrders = array_sum(array_column($orders, 'total_orders'));
+    $totalRevenue = array_sum(array_column($orders, 'total_revenue'));
+
+    // Tạo danh sách ngày từ start_date đến end_date
+    $allDates = [];
+    $current_date = $start_date;
+
+    while (strtotime($current_date) <= strtotime($end_date)) {
+        $allDates[$current_date] = [
+            "total_orders" => 0,
+            "total_revenue" => 0.0
+        ];
+        $current_date = date('Y-m-d', strtotime($current_date . ' +1 day'));
+    }
+
+    foreach ($orders as $order) {
+        $allDates[$order['period']] = [
+            "total_orders" => (int)$order['total_orders'],
+            "total_revenue" => (float)$order['total_revenue']
+        ];
+    }
+
+    // Format lại dữ liệu để trả về JSON
+    $result = [];
+    foreach ($allDates as $date => $data) {
+        $result[] = [
+            "period" => $date,
+            "total_orders" => $data["total_orders"],
+            "total_revenue" => $data["total_revenue"]
+        ];
+    }
+
+    header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode([
+        "total_orders" => $totalCompletedOrders,
+        "total_revenue" => $totalRevenue,
+        "data" => $result
+    ]);
+    exit;
+}
     public function getCompletedOrdersDetailByDate($date)
     {
         $sql = "
@@ -262,16 +275,22 @@ class OrderModel
 
     public function getCompletedOrdersByMonth()
     {
-        $sql = "SELECT DATE_FORMAT(created_at, '%Y-%m') AS period, COUNT(*) AS total 
+        $sql = "
+            SELECT 
+                DATE_FORMAT(created_at, '%Y-%m') AS period, 
+                COUNT(*) AS total_orders,
+                SUM(total_amount) AS total_revenue
             FROM orders 
             WHERE status = 'completed' 
             GROUP BY period 
-            ORDER BY period ASC";
-
+            ORDER BY period ASC
+        ";
+    
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     public function getCompletedOrdersDetailByMonth($month)
     {
         $sql = "
@@ -301,16 +320,19 @@ class OrderModel
     
     public function getCompletedOrdersByYear()
     {
-        $sql = "SELECT DATE_FORMAT(created_at, '%Y') AS period, COUNT(*) AS total 
-            FROM orders 
-            WHERE status = 'completed' 
-            GROUP BY period 
-            ORDER BY period ASC";
-
+        $sql = "SELECT DATE_FORMAT(created_at, '%Y') AS period, 
+                       COUNT(*) AS total_orders, 
+                       SUM(total_amount) AS total_revenue
+                FROM orders 
+                WHERE status = 'completed' 
+                GROUP BY period 
+                ORDER BY period ASC";
+    
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     public function getCompletedOrdersDetailByYear($year)
 {
     $sql = "
