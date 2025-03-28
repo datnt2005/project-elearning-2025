@@ -12,6 +12,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -82,7 +83,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                 <i class="fas fa-road text-xl"></i>
                 <span class="mt-1 text-xs">Lộ trình</span>
             </a>
-            <a href="#" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
+            <a href="posts" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
                 <i class="fas fa-newspaper text-xl"></i>
                 <span class="mt-1 text-xs">Bài viết</span>
             </a>

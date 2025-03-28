@@ -27,7 +27,7 @@
     }
 
     .course-info {
-        width: 300px;
+        width: 600px;
     }
 
     .hidden {
@@ -60,8 +60,8 @@
             </div>
         </main>
         <aside class="course-info">
-            <video controls width="100%" class="rounded-lg shadow-lg">
-                <source src="http://localhost:8000/<?php echo $course['video_intro']; ?>" type="video/mp4">
+            <video controls width="100%" height="200" class="rounded-lg shadow-lg">
+                <source  src="http://localhost:8000/<?php echo $course['video_intro']; ?>" type="video/mp4">
                 Trình duyệt của bạn không hỗ trợ video.
             </video>
             <div class="video-preview text-center text-lg font-semibold mb-3">🎥 Xem giới thiệu khóa học</div>
