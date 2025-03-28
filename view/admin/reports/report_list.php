@@ -253,7 +253,7 @@ function loadDayChart() {
     let days = document.getElementById("dateRange").value;
     let endDate = new Date();
     let startDate = new Date();
-    startDate.setDate(endDate.getDate() - days + 1);
+    startDate.setDate(endDate.getDate() - days + 1); 
 
     fetch(`/admin/reports/completed-orders-by-date?days=${days}`)
         .then(response => response.json())
@@ -263,9 +263,13 @@ function loadDayChart() {
                 return itemDate >= startDate && itemDate <= endDate;
             });
 
-            let labels = filteredData.map(item => item.period);
+           let labels = filteredData.map(item => item.period);
             let orderValues = filteredData.map(item => item.total_orders);
             let revenueValues = filteredData.map(item => item.total_revenue);
+            
+            let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
+            let totalRevenue = revenueValues.reduce((acc, value) => acc + value, 0).toLocaleString();
+            document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders} | Tổng doanh thu: ${totalRevenue} VND`;
 
             let ctx = document.getElementById("ordersDateChart");
             if (window.ordersChart) {
@@ -290,7 +294,7 @@ function loadDayChart() {
                             backgroundColor: "rgba(33, 150, 243, 0.2)",
                             borderWidth: 3,
                             fill: true,
-                            tension: 0.3
+                            tension: 0.3 
                         },
                         {
                             label: "Tổng doanh thu (VND)",
