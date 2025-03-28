@@ -103,4 +103,6 @@ class Lesson
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    
 }

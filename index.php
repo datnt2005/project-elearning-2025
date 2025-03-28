@@ -147,6 +147,11 @@ $router->addRoute("/quizzes/section/{section_id}", [$adminQuizzeController,"show
 //show course user
 $router->addRoute("/courses/show/{course_id}", [$courseController, "show"]);
 $router->addRoute("/courses/learning/{course_id}", [$courseController, "detailCourse"],['isUser']);
+
+$router->addRoute("/update_progress", [$courseController, "updateProgress"], ['isUser']);
+$router->addRoute("/calculate_progress", [$courseController, "calculateProgress"], ['isUser']);
+$router->addRoute("/update_enrollment", [$courseController, "updateEnrollment"], ['isUser']);
+$router->addRoute("/certificate", [$courseController, "showCertificate"], ['isUser']);
 // câu trl 
 // $router->addRoute("/course/{course_id}/sessions", [$sessionController, "home"]);  // Route cho SessionController
 // $router->addRoute("/admin/sections/create", [$sessionController, "create"]);

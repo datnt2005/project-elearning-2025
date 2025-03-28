@@ -330,7 +330,7 @@ class AuthController
             $mail->Port = $_ENV['MAIL_PORT'];
 
             // Cấu hình email
-            $mail->setFrom($_ENV['MAIL_USERNAME'], 'Hạt Ngon');
+            $mail->setFrom($_ENV['MAIL_USERNAME'], 'Passion');
             $mail->addAddress($to);
             $mail->isHTML(true);
             $mail->Subject = $subject;
