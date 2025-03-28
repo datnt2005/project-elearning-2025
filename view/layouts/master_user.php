@@ -25,6 +25,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center">
+
                 <a href="/" class="text-2xl font-bold text-[#f05123]">P6</a>
                 <span class="ml-2 text-gray-700">Học online không khó, chỉ sợ không có tiền🙂</span>
             </div>

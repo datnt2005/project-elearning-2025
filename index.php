@@ -25,6 +25,7 @@ require_once "controller/CouponController.php";
 require_once "controller/CheckoutController.php";
 require_once "controller/OrderController.php";
 require_once "controller/FavouriteController.php";
+require_once "controller/ReviewController.php";
 require_once "controller/ReportController.php";
 require_once "controller/PostCategoryController.php";
 require_once "controller/PostController.php";
@@ -48,6 +49,7 @@ $lessonController = new LessonController();
 $couponController = new CouponController();
 $checkoutController = new CheckoutController();
 $favouriteController = new FavouriteController();
+$reviewController = new ReviewController();
 $orderController = new OrderController();
 $reportController = new ReportController(); 
 $postCategoryController = new PostCategoryController();
@@ -157,6 +159,17 @@ $router->addRoute("/quizzes/section/{section_id}", [$adminQuizzeController,"show
 //show course user
 $router->addRoute("/courses/show/{course_id}", [$courseController, "show"]);
 $router->addRoute("/courses/learning/{course_id}", [$courseController, "detailCourse"],['isUser']);
+
+$router->addRoute("/courses/review/add", [$reviewController, "addReview"], ['isUser']);
+$router->addRoute("/courses/review/get", [$reviewController, "getReviews"]);
+$router->addRoute("/courses/review/update", [$reviewController, "editReview"], ['isUser']);
+$router->addRoute("/courses/review/delete", [$reviewController, "deleteReview"], ['isUser']);
+$router->addRoute("/courses/review/like", [$reviewController, "toggleLikeReview"], ['isUser']);
+
+$router->addRoute("/courses/review/reply", [$reviewController, "replyReview"], ['isAdmin']);
+
+
+
 
 $router->addRoute("/update_progress", [$courseController, "updateProgress"], ['isUser']);
 $router->addRoute("/calculate_progress", [$courseController, "calculateProgress"], ['isUser']);

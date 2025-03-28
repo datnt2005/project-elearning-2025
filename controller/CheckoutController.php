@@ -1,6 +1,7 @@
 <?php
 require_once "model/OrderModel.php";
 require_once "model/CourseModel.php";
+require_once "model/CouponModel.php";
 require_once "model/UserModel.php";
 require_once "view/helpers.php";
 
@@ -11,14 +12,15 @@ class CheckoutController
 {
     private $orderModel;
     private $courseModel;
+    private $couponModel;
     private $userModel;
 
     public function __construct()
     {
         $this->orderModel = new OrderModel();
         $this->courseModel = new Course();
+        $this->couponModel = new CouponModel();
         $this->userModel = new UserModel();
-    }
 
     public function checkout()
     {
@@ -60,7 +62,6 @@ class CheckoutController
                 header("Location: /checkout");
                 exit;
             }
-
             // Xử lý thanh toán
             $this->processPayment($order_id, $total_amount);
         
@@ -232,9 +233,6 @@ class CheckoutController
     }
 
 
-
-
-
     // Phương thức tạo popup
     public function generatePopup($message)
     {
@@ -294,8 +292,8 @@ class CheckoutController
         </script>
         ";
     }
-    public function getOrderByUserId()
-    {
+    public function getOrderByUserId() {
+
         if (!isset($_SESSION['user']['id'])) {
             echo "<script>alert('Vui lòng đăng nhập để xem khóa học đã mua!');</script>";
             echo "<script>window.location.href = '/login';</script>";
@@ -308,3 +306,4 @@ class CheckoutController
         renderViewUser("view/users/orderList.php", compact('orders'), "Order List");
     }
 }
+

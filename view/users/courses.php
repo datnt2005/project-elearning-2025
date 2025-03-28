@@ -33,7 +33,12 @@
     .hidden {
         display: none;
     }
+
+    .hidden {
+        display: none;
+    }
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <main class="ml-24 pt-20 px-4">
@@ -59,6 +64,8 @@
                 <?php endforeach; ?>
             </div>
         </main>
+
+
         <aside class="course-info">
             <video controls width="100%" height="200" class="rounded-lg shadow-lg">
                 <source  src="http://localhost:8000/<?php echo $course['video_intro']; ?>" type="video/mp4">
@@ -114,10 +121,14 @@
                     <input type="hidden" name="payment_method" value="VNPAY">
 
                     <input type="text" name="coupon_code" id="couponCode" placeholder="Nhập mã giảm giá" class="w-full p-2 border rounded mb-2">
+
                     <button type="button" id="applyCouponBtn" class="w-full bg-blue-500 text-white p-2 rounded">Áp dụng</button>
 
                     <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded mt-2">Thanh toán</button>
 
+                </form>
+
+                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Thanh toán</button>
                 </form>
 
                 <p class="text-center text-gray-500 mt-4">Thanh toán an toàn với VNPay</p>
@@ -146,6 +157,18 @@
                 <button onclick="window.location.href = '/';" class="bg-blue-500 text-white py-2 px-4 rounded-lg">Đi đến trang của tôi</button>
                 <button id="closePurchasePopup" class="mt-3 text-gray-500">Đóng</button>
             </div>
+        </div>
+    </div>
+
+    <?php
+    $courseId = $course['id'] ?? null;
+    ?>
+    <div class="reviews-container mt-8 p-4 bg-white rounded shadow">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Đánh giá từ học viên</h2>
+
+        <!-- Danh sách đánh giá sẽ được JavaScript cập nhật -->
+        <div id="reviews-list">
+            <p>Chưa có đánh giá nào.</p>
         </div>
     </div>
 
@@ -219,7 +242,6 @@
         document.getElementById("closePurchasePopup").addEventListener("click", function() {
             document.getElementById("purchasePopup").classList.add("hidden");
         });
-
         // Hàm toggle dropdown cho các phần của khóa học
         function toggleDropdown(element) {
             let content = element.nextElementSibling;
@@ -232,4 +254,178 @@
         }
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let courseId = <?= json_encode($course['id']) ?>;
+            let userId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
+            let isAdmin = <?= json_encode($_SESSION['user']['role'] === 'admin') ?>;
+
+            // Tải danh sách đánh giá
+            fetch(`/courses/review/get?course_id=${courseId}&user_id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Dữ liệu nhận từ API:", data);
+                    let reviewsList = document.getElementById("reviews-list");
+                    reviewsList.innerHTML = "";
+
+                    if (data.status === "success" && Array.isArray(data.reviews) && data.reviews.length > 0) {
+                        data.reviews.forEach(review => {
+                            let imageHtml = review.images?.map(img =>
+                                `<img src="${img}" class="w-16 h-16 object-cover rounded-md shadow-md mr-2">`
+                            ).join('') || "";
+
+                            // 👉 **Hiển thị danh sách phản hồi khi trang load**
+                            let repliesHtml = review.replies?.map(reply => `
+                        <div class="reply-item ml-6 p-2 border-l-2 border-gray-300">
+                            <p class="font-semibold text-blue-600">${reply.admin_name} (Admin)</p>
+                            <p>${reply.comment}</p>
+                            <small class="text-gray-500">${reply.created_at}</small>
+                        </div>
+                    `).join("") || "";
+
+                            let replyForm = isAdmin ? `
+                        <div class="reply-form hidden ml-6 mt-2">
+                            <textarea class="reply-text border p-2 w-full" placeholder="Viết phản hồi..."></textarea>
+                            <button class="send-reply-btn bg-green-500 text-white px-3 py-1 mt-2 rounded-md" data-review-id="${review.id}">Gửi</button>
+                        </div>
+                    ` : "";
+
+                            let reviewHtml = `
+                        <div class="review-item p-3 border-b border-gray-300" data-review-id="${review.id}">
+                            <p class="font-semibold">${review.user_name}</p>
+                            <p>${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
+                            <p>${review.comment}</p>
+                            ${imageHtml ? `<div class="mt-2">${imageHtml}</div>` : ""}
+
+                            <div class="flex space-x-4 mt-2">
+                                <button class="like-btn flex items-center space-x-2" data-review-id="${review.id}">
+                                    <svg class="like-icon w-6 h-6 ${review.liked ? 'text-blue-500' : 'text-gray-500'}" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14 9V5a3 3 0 0 0-6 0v4H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-5zM9 5a1 1 0 0 1 2 0v4H9V5zm8 14H5v-8h3.5l.5-4h6l.5 4H19v8z"></path>
+                                    </svg>
+                                    <span class="like-count">${review.like_count}</span>
+                                </button>
+
+                                <button class="reply-btn text-blue-500 underline" data-review-id="${review.id}">Trả lời</button>
+                            </div>
+                            <small class="text-gray-500">${review.created_at}</small>
+                            <div class="replies-container ml-6 mt-2">${repliesHtml}</div>
+                            ${replyForm}
+                        </div>
+                    `;
+
+                            reviewsList.innerHTML += reviewHtml;
+                        });
+                    } else {
+                        reviewsList.innerHTML = "<p>Chưa có đánh giá nào.</p>";
+                    }
+                })
+                .catch(error => console.error("Lỗi:", error));
+
+            // Sử dụng event delegation
+            document.getElementById("reviews-list").addEventListener("click", function(event) {
+                let target = event.target;
+
+                // Xử lý nút like
+                if (target.closest(".like-btn")) {
+                    let button = target.closest(".like-btn");
+                    let reviewId = button.getAttribute("data-review-id");
+                    toggleLike(reviewId, button);
+                }
+
+                // Xử lý nút trả lời
+                if (target.classList.contains("reply-btn")) {
+                    let reviewId = target.getAttribute("data-review-id");
+                    toggleReplyInput(reviewId);
+                }
+
+                // Xử lý gửi phản hồi
+                if (target.classList.contains("send-reply-btn")) {
+                    let reviewId = target.getAttribute("data-review-id");
+                    let comment = target.previousElementSibling.value.trim();
+                    if (comment) {
+                        sendReply(reviewId, comment, target);
+                    }
+                }
+            });
+        });
+
+        // Hiển thị hộp nhập phản hồi
+        function toggleReplyInput(reviewId) {
+            let replyForm = document.querySelector(`.review-item[data-review-id="${reviewId}"] .reply-form`);
+            if (replyForm) {
+                replyForm.classList.toggle("hidden");
+            }
+        }
+
+        // Gửi phản hồi từ Admin
+        function sendReply(reviewId, comment, button) {
+            fetch(`/courses/review/reply`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: `review_id=${reviewId}&comment=${encodeURIComponent(comment)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Dữ liệu phản hồi:", data);
+
+                    if (data.status === "success") {
+                        let reply = data.reply;
+
+                        let replyHtml = `
+                    <div class="reply-item ml-6 p-2 border-l-2 border-gray-300">
+                        <p class="font-semibold text-blue-600">${reply.admin_name} (Admin)</p>
+                        <p>${reply.comment}</p>
+                        <small class="text-gray-500">Vừa xong</small>
+                    </div>
+                `;
+
+                        let reviewItem = document.querySelector(`.review-item[data-review-id="${reviewId}"]`);
+                        if (reviewItem) {
+                            let replyContainer = reviewItem.querySelector(".replies-container");
+                            if (!replyContainer) {
+                                replyContainer = document.createElement("div");
+                                replyContainer.classList.add("replies-container", "ml-6", "mt-2");
+                                reviewItem.appendChild(replyContainer);
+                            }
+                            replyContainer.insertAdjacentHTML("beforeend", replyHtml);
+                        }
+
+                        button.previousElementSibling.value = "";
+                        button.closest(".reply-form").classList.add("hidden");
+                    } else {
+                        alert("Lỗi khi gửi phản hồi!");
+                    }
+                })
+                .catch(error => console.error("Lỗi:", error));
+        }
+
+        // Xử lý Like
+        function toggleLike(reviewId, button) {
+            fetch(`/courses/review/like`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: `review_id=${reviewId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let likeIcon = button.querySelector(".like-icon");
+                    let likeCount = button.querySelector(".like-count");
+
+                    if (data.status === "liked") {
+                        likeIcon.classList.add("text-blue-500");
+                        likeIcon.classList.remove("text-gray-500");
+                    } else if (data.status === "unliked") {
+                        likeIcon.classList.remove("text-blue-500");
+                        likeIcon.classList.add("text-gray-500");
+                    }
+
+                    likeCount.innerText = data.like_count;
+                })
+                .catch(error => console.error("Lỗi:", error));
+        }
+    </script>
 </main>
