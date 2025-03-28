@@ -313,7 +313,6 @@ class CourseController
         exit;
     }
 
-
     public function updateProgress()
     {
         header('Content-Type: application/json');
@@ -374,4 +373,5 @@ class CourseController
 
         echo json_encode($response);
     }
+
 }

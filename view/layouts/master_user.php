@@ -83,7 +83,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                 <i class="fas fa-road text-xl"></i>
                 <span class="mt-1 text-xs">Lộ trình</span>
             </a>
-            <a href="#" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
+            <a href="posts" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
                 <i class="fas fa-newspaper text-xl"></i>
                 <span class="mt-1 text-xs">Bài viết</span>
             </a>

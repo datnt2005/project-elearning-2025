@@ -24,6 +24,9 @@ require_once "controller/LessonController.php";
 require_once "controller/CouponController.php";
 require_once "controller/CheckoutController.php";
 require_once "controller/FavouriteController.php";
+require_once "controller/PostCategoryController.php";
+require_once "controller/PostController.php";
+require_once "controller/CommentPostController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -43,6 +46,9 @@ $lessonController = new LessonController();
 $couponController = new CouponController();
 $checkoutController = new CheckoutController();
 $favouriteController = new FavouriteController();
+$postCategoryController = new PostCategoryController();
+$postController = new PostController();
+$commentPostController = new CommentPostController();
 
 
 // $router->addMiddleware('logRequest');
@@ -174,6 +180,28 @@ $router->addRoute("/checkout", [$checkoutController, "checkout"]);
 $router->addRoute("/checkout/vnpay-return", [$checkoutController, "vnpayReturn"]);
 $router->addRoute("/orderList", [$checkoutController, "getOrderByUserId"], ['isUser']);
 
+// Post category
+$router->addRoute("/admin/postCategory", [$postCategoryController, "index"]);
+$router->addRoute("/admin/postCategory/create", [$postCategoryController, "create"]);
+$router->addRoute("/admin/postCategory/edit/{id}", [$postCategoryController, "edit"]);
+$router->addRoute("/admin/postCategory/delete/{id}", [$postCategoryController, "delete"]);
+
+// post
+$router->addRoute("/admin/post", [$postController, "index"]);
+$router->addRoute("/admin/post/create", [$postController, "create"]);
+$router->addRoute("/admin/post/edit/{id}", [$postController, "edit"]);
+$router->addRoute("/admin/post/delete/{id}", [$postController, "delete"]);
+
+$router->addRoute("/posts", [$postController, "show"]);
+$router->addRoute("/posts/detail/{id}", [$postController, "detail"]);
+
+ 
+
+// comment
+
+$router->addRoute("/add-comment", [$commentPostController, "addComment"]);
+$router->addRoute("/get-comments/{post_id}", [$commentPostController, "getComments"]);
+$router->addRoute("/delete-comment/{id}", [$commentPostController, "deleteComment"], 'DELETE');
 
 
 $router->addRoute("/thank-you", function() {
