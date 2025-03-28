@@ -179,9 +179,12 @@ $router->addRoute("/admin/reports", [$reportController, "index"], ['isAdmin']);
 $router->addRoute("/admin/reports/completed-orders-by-date", [$reportController, "completedOrdersByDateChart"], ['isAdmin']);
 $router->addRoute("/admin/reports/completed-orders-by-month", [$reportController, "completedOrdersByMonthChart"], ['isAdmin']);
 $router->addRoute("/admin/reports/completed-orders-by-year", [$reportController, "completedOrdersByYearChart"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-summary", [$reportController, "getSummaryOrders"], ['isAdmin']);
+
 $router->addRoute("/admin/reports/completed-orders-date", [$reportController, "showDateChartPage"], ['isAdmin']);
 $router->addRoute("/admin/reports/completed-orders-month", [$reportController, "showMonthChartPage"], ['isAdmin']);
 $router->addRoute("/admin/reports/completed-orders-year", [$reportController, "showYearChartPage"], ['isAdmin']);
+
 
 $router->addRoute("/admin/reports/completed-orders-detail-date", [$reportController, "completedOrdersDetailByDate"], ['isAdmin']);
 $router->addRoute("/admin/reports/completed-orders-detail-month", [$reportController, "completedOrdersDetailByMonth"], ['isAdmin']);

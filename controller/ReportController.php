@@ -16,9 +16,23 @@ class ReportController
     {
         renderViewAdmin("view/admin/reports/report_list.php", [], "Report List");
     }
+    public function getSummaryOrders()
+    {
+        header('Content-Type: application/json; charset=UTF-8');
+    
+        $summary = $this->orderModel->getSummaryOrders();
+    
+        if (!$summary) {
+            echo json_encode(["error" => "Không có dữ liệu"]);
+        } else {
+            echo json_encode($summary);
+        }
+        exit;
+    }
+    
     public function completedOrdersByDateChart()
     {
-        header('Content-Type: application/json'); // Đảm bảo trả về JSON
+        header('Content-Type: application/json'); 
     
         $data = $this->orderModel->getCompletedOrdersByDate();
     
@@ -113,4 +127,5 @@ public function completedOrdersDetailByYear()
     {
         renderViewAdmin("view/admin/reports/completed_orders_year_chart.php", [], "Completed Orders By Year");
     }
+
 }

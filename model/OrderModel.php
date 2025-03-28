@@ -154,6 +154,20 @@ class OrderModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getSummaryOrders()
+    {
+        $sql = "SELECT COUNT(*) AS total_orders, COALESCE(SUM(total_amount), 0) AS total_revenue FROM orders WHERE status = 'completed'";
+    
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC) ?? ["total_orders" => 0, "total_revenue" => 0];
+    
+        // Đảm bảo JSON trả về là một mảng chứa dữ liệu
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(["data" => [$result]]);
+        exit;
+    }
+    
     public function getCompletedOrdersByDate()
     {
         $sql = "
@@ -322,5 +336,6 @@ class OrderModel
     echo json_encode(["year" => $year, "orders" => $orders]);
     exit;
 }
+
 
 }
