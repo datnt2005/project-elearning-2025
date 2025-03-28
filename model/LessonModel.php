@@ -102,5 +102,47 @@ class Lesson
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
+    } 
+    // Đánh dấu bài học hoàn thành
+    public function markLessonComplete($userId, $courseId, $lessonId)
+    {
+        $query = "INSERT INTO user_progress (user_id, course_id, lesson_id, is_completed, completed_at)
+                  VALUES (:userId, :courseId, :lessonId, 1, NOW())
+                  ON DUPLICATE KEY UPDATE is_completed = 1, completed_at = NOW()";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
+        $stmt->bindParam(':lessonId', $lessonId, PDO::PARAM_INT);
+        $stmt->execute();
     }
+
+       // Lấy số lượng bài học đã hoàn thành
+       public function getCompletedLessonsCount($userId, $courseId)
+       {
+           $query = "SELECT COUNT(*) AS completed_lessons
+                     FROM user_progress
+                     WHERE user_id = :userId AND course_id = :courseId AND is_completed = 1";
+   
+           $stmt = $this->conn->prepare($query);
+           $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+           $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
+           $stmt->execute();
+           return $stmt->fetch(PDO::FETCH_ASSOC)['completed_lessons'];
+       }
+ // Lấy tổng số bài học trong khóa học
+ public function getTotalLessonsCount($courseId)
+ {
+     $query = "SELECT COUNT(*) AS total_lessons
+               FROM lessons
+               WHERE course_id = :courseId";
+
+     $stmt = $this->conn->prepare($query);
+     $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
+     $stmt->execute();
+     return $stmt->fetch(PDO::FETCH_ASSOC)['total_lessons'];
+ }
+
+ 
+
 }

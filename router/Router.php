@@ -17,6 +17,7 @@ class Router {
 
     public function dispatch() {
         $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $method = $_SERVER['REQUEST_METHOD']; // GET, POST, PUT, DELETE
 
         foreach ($this->routes as $route => $routeData) {
             $pattern = "#^" . preg_replace('/\{[a-zA-Z0-9_]+\}/', '([a-zA-Z0-9_]+)', $route) . "$#";
@@ -30,7 +31,6 @@ class Router {
                     }
                 }
 
-                
                 foreach ($routeData['middleware'] as $middleware) {
                     if (!$middleware()) {
                         return;
@@ -44,5 +44,13 @@ class Router {
 
         echo "404 Not Found";
     }
+
+    public function jsonResponse($data, $status = 200) {
+        header('Content-Type: application/json');
+        http_response_code($status);
+        echo json_encode($data);
+        exit;
+    }
+    
 }
 ?>

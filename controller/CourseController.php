@@ -240,4 +240,25 @@ class CourseController
         header("Location: /admin/courses");
         exit;
     }
+    public function updateProgress($userId, $courseId, $lessonId)
+    {
+        $this->lessonModel->markLessonComplete($userId, $courseId, $lessonId);
+        $completedLessons = $this->lessonModel->getCompletedLessonsCount($userId, $courseId);
+        $totalLessons = $this->lessonModel->getTotalLessonsCount($courseId);
+        $progressPercentage = ($completedLessons / $totalLessons) * 100;
+
+        $this->courseModel->updateCourseProgress($userId, $courseId, $progressPercentage);
+    }
+
+    public function showProgress($userId, $courseId)
+    {
+        $progress = $this->courseModel->getCourseProgress($userId, $courseId);
+        renderViewUser("view/users/progress.php", ["progress" => $progress], "Progress Tracking");
+    }
+
+    public function logActivity($userId, $lessonId, $activityType)
+    {
+        $this->courseModel->logLearningActivity($userId, $lessonId, $activityType);
+    }
+        
 }

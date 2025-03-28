@@ -123,4 +123,42 @@ class Course
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    public function updateCourseProgress($userId, $courseId, $progressPercentage)
+    {
+        $query = "UPDATE user_progress 
+                  SET progress_percentage = :progressPercentage, last_updated = NOW() 
+                  WHERE user_id = :userId AND course_id = :courseId";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':progressPercentage', $progressPercentage);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    public function logLearningActivity($userId, $lessonId, $action)
+    {
+        $query = "INSERT INTO learning_logs (user_id, lesson_id, action, timestamp) 
+                  VALUES (:userId, :lessonId, :action, NOW())";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':lessonId', $lessonId, PDO::PARAM_INT);
+        $stmt->bindParam(':action', $action);
+        $stmt->execute();
+    }
+
+    public function getCourseProgress($userId, $courseId)
+    {
+        $query = "SELECT progress_percentage 
+                  FROM user_progress 
+                  WHERE user_id = :userId AND course_id = :courseId";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['progress_percentage'];
+    }
 }
