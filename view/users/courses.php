@@ -27,13 +27,19 @@
     }
 
     .course-info {
-        width: 300px;
+        width: 600px;
+    }
+
+    .hidden {
+        display: none;
     }
 
     .hidden {
         display: none;
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <main class="ml-24 pt-20 px-4">
 
@@ -61,8 +67,8 @@
 
 
         <aside class="course-info">
-            <video controls width="100%" class="rounded-lg shadow-lg">
-                <source src="http://localhost:8000/<?php echo $course['video_intro']; ?>" type="video/mp4">
+            <video controls width="100%" height="200" class="rounded-lg shadow-lg">
+                <source  src="http://localhost:8000/<?php echo $course['video_intro']; ?>" type="video/mp4">
                 Trình duyệt của bạn không hỗ trợ video.
             </video>
             <div class="video-preview text-center text-lg font-semibold mb-3">🎥 Xem giới thiệu khóa học</div>
@@ -116,7 +122,11 @@
 
                     <input type="text" name="coupon_code" id="couponCode" placeholder="Nhập mã giảm giá" class="w-full p-2 border rounded mb-2">
 
+                    <button type="button" id="applyCouponBtn" class="w-full bg-blue-500 text-white p-2 rounded">Áp dụng</button>
 
+                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded mt-2">Thanh toán</button>
+
+                </form>
 
                     <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Thanh toán</button>
                 </form>
@@ -162,8 +172,48 @@
         </div>
     </div>
 
-
     <script>
+        document.getElementById('applyCouponBtn').addEventListener('click', function() {
+            let couponCode = document.getElementById('couponCode').value;
+            let courseId = document.querySelector('input[name="course_id"]').value;
+
+            fetch('/apply-coupon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `coupon_code=${couponCode}&course_id=${courseId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('discountedPrice').innerText = `
+                  Giá mới: ${data.new_price} VND`;
+                        document.getElementById('finalAmount').value = data.new_price.replace(/\D/g, ''); // Cập nhật giá mới vào form
+
+                        // Hiển thị popup thông báo thành công
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Áp dụng thành công!',
+                            text: `Giá mới: ${data.new_price} VND`,
+                            confirmButtonText: 'OK'
+                        });
+
+                    } else {
+                        // Hiển thị popup lỗi khi mã giảm giá không hợp lệ
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Mã giảm giá không hợp lệ!',
+                            text: 'Vui lòng kiểm tra lại mã của bạn.',
+                            confirmButtonText: 'Thử lại'
+                        });
+                    }
+                });
+        });
+
+
+
+
         document.getElementById("registerBtn").addEventListener("click", function() {
             // Kiểm tra nếu người dùng chưa đăng nhập và chưa mua khóa học
             if (!<?php echo isset($_SESSION['user']) ? 'true' : 'false'; ?>) {
@@ -378,6 +428,4 @@
                 .catch(error => console.error("Lỗi:", error));
         }
     </script>
-
-
 </main>

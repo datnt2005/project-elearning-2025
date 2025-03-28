@@ -12,6 +12,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -24,8 +25,9 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center">
-                <a href="/" class="text-2xl font-bold text-[#f05123]">F8</a>
-                <span class="ml-2 text-gray-700">Học Lập Trình Để Đi Làm</span>
+
+                <a href="/" class="text-2xl font-bold text-[#f05123]">P6</a>
+                <span class="ml-2 text-gray-700">Học online không khó, chỉ sợ không có tiền🙂</span>
             </div>
             <div class="flex items-center">
                 <div class="relative mx-4">
@@ -50,13 +52,13 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                         <div class="relative">
                             <button @click="dropdownOpen = !dropdownOpen"
                                 class="flex items-center px-4 py-2 text-gray-700 font-medium focus:outline-none">
-                                <img src="<?= !empty($user['image']) ? 'uploads/' . $user['image'] : '/uploads/avatar/default-avatar.png' ?>" alt="User Avatar" class="w-8 h-8 rounded-full">
+                                <img src="http://localhost:8000/<?= !empty($user['image']) ? 'uploads/' . $user['image'] : 'uploads/avatar/default-avatar.png' ?>" alt="User Avatar" class="w-8 h-8 rounded-full">
                                 <span class="ml-2" x-text="userName"></span>
                             </button>
                             <div x-show="dropdownOpen" @click.away="dropdownOpen = false"
                                 class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
                                 <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Trang cá nhân</a>
-                                <a href="/orderList" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Lịch sử</a>
+                                <a href="/orderList" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Khóa học đã mua</a>
                                 <a href="settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cài đặt</a>
                                 <a href="/logout" class="block px-4 py-2 text-red-500 hover:bg-gray-100">Đăng xuất</a>
                             </div>
@@ -82,7 +84,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                 <i class="fas fa-road text-xl"></i>
                 <span class="mt-1 text-xs">Lộ trình</span>
             </a>
-            <a href="#" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
+            <a href="posts" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
                 <i class="fas fa-newspaper text-xl"></i>
                 <span class="mt-1 text-xs">Bài viết</span>
             </a>

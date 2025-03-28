@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Hiển thị kết quả tổng thể
         setTimeout(() => {
             alert(`Bạn đã trả lời đúng ${correctCount}/${totalQuestions} câu!`);
-            history.back(); // 🔙 Quay lại trang trước sau khi nộp bài
+            // history.back(); // 🔙 Quay lại trang trước sau khi nộp bài
         }, 1000); // Đợi 1 giây trước khi quay lại
     });
 });

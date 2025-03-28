@@ -141,8 +141,8 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         <?php if (isset($_SESSION['loggedIn']) && $_SESSION['user_role'] === 'admin'): ?>
             <div class="text-center mb-3">
 
-                <img src="../uploads/<?= htmlspecialchars($_SESSION['user_image']) ?>" alt="User Avatar"
-                    class="rounded-circle w-50 h-50">
+                <img src="http://localhost:8000/uploads/<?php echo $_SESSION['user_image'] ?? 'avatar/default-avatar.png'; ?>" alt="User Avatar"
+                    class="rounded-circle " width="60" height="60">
 
                 <p class="mt-2 fw-bold text-dark"><?= $_SESSION['user_name'] ?? 'Admin' ?>(admin)</p>
             </div>
@@ -152,7 +152,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         </button>
         <i class="fas fa-bars"></i>
         </button>
-        <a href="/admin"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+        <a href="/admin/reports"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
         <div class="dropdown">
             <a href="#" class="dropdown-toggle" onclick="toggleDropdown(event, 'courseDropdown')">
                 <i class="fas fa-book-open"></i> <span>Khóa học</span>
@@ -163,6 +163,16 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
                 <a href="/admin/lessons"><i class="fas fa-play-circle"></i> <span>Bài học</span></a>
             </div>
         </div>
+
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle" onclick="toggleDropdown(event, 'postDropdown')">
+                <i class="fas fa-book-open"></i> <span>Bài viết</span>
+            </a>
+            <div class="dropdown-menu" id="postDropdown">
+                <a href="/admin/postCategory"><i class="fas fa-book"></i> <span>Danh mục bài viết</span></a>
+                <a href="/admin/post"><i class="fas fa-play-circle"></i> <span>Bài viết</span></a>
+            </div>
+        </div>
         <a href="/admin/categories"><i class="fas fa-th-list"></i> <span>Danh mục</span></a>
         <a href="/admin/subcategories"><i class="fas fa-list-ul"></i> <span>Danh mục phụ</span></a>
         <a href="/admin/quizzes"><i class="fas fa-puzzle-piece"></i> <span>Bài kiểm tra</span></a>
@@ -170,8 +180,12 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         <a href="/admin/quizAnswers"><i class="fas fa-check-circle"></i> <span>Câu trả lời</span></a>
 
         <a href="/admin/coupons"><i class="fas fa-tag"></i> <span>Mã giảm giá</span></a>
+        <a href="/admin/orders"><i class="fas fa-ticket"></i> <span>Đơn hàng</span"></a>
         <a href="/admin/user"><i class="fas fa-ticket"></i> <span>Người dùng</span></a>
+        <a href="/admin/postCategory"><i class="fas fa-ticket"></i> <span>Bài viết</span></a>
         <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Đăng xuất</span></a>
+
+        
 
     </div>
 
@@ -194,7 +208,17 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
 </html>
 <script>
     function toggleDropdown(event, dropdownId) {
-        event.preventDefault(); // Ngăn chặn điều hướng mặc định
+        event.preventDefault();  
+        let dropdown = document.getElementById(dropdownId);
+        if (dropdown.style.display === "block") {
+            dropdown.style.display = "none";
+        } else {
+            dropdown.style.display = "block";
+        }
+    }
+
+       function toggleDropdown(event, dropdownId) {
+        event.preventDefault();  
         let dropdown = document.getElementById(dropdownId);
         if (dropdown.style.display === "block") {
             dropdown.style.display = "none";

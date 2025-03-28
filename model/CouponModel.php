@@ -55,12 +55,79 @@ class CouponModel {
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-    public function checkCouponExists($coupon_code)
-    {
-        $sql = "SELECT id, discount_value FROM coupons WHERE code = :coupon_code AND status = 'active'";
+    public function checkCouponExists($coupon_code) {
+        // Truy vấn lấy mã giảm giá
+        $sql = "SELECT * FROM coupons WHERE code = :coupon_code AND status = 'active' AND start_date <= NOW() AND end_date >= NOW()";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':coupon_code', $coupon_code, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $coupon = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($coupon) {
+            return [
+                'id' => $coupon['id'],
+                'discount_percent' => $coupon['discount_percent'], // Lấy phần trăm giảm giá
+            ];
+        }
+
+        return false;
+    }
+
+    public function getCouponDetailsByCode($coupon_code) {
+        $sql = "SELECT id, code, description, discount_percent, start_date, end_date, status FROM coupons WHERE code = :coupon_code";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':coupon_code', $coupon_code);
         $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+  
+
+    public function getDiscountByCode($coupon_code) {
+        $sql = "SELECT id, code, description, discount_percent, start_date, end_date, status 
+                FROM coupons 
+                WHERE code = :coupon_code AND status = 'active'";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':coupon_code', $coupon_code);
+        $stmt->execute();
+        $coupon = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        if ($coupon) {
+            // Kiểm tra xem mã giảm giá có còn hiệu lực không
+            $current_date = date('Y-m-d H:i:s');
+            if (strtotime($coupon['start_date']) > strtotime($current_date)) {
+                return ['error' => 'Mã giảm giá chưa bắt đầu.'];
+            } elseif (strtotime($coupon['end_date']) < strtotime($current_date)) {
+                return ['error' => 'Mã giảm giá đã hết hạn.'];
+            }
+    
+            // Trả về thông tin mã giảm giá hợp lệ
+            return $coupon;
+        }
+    
+        return null; // Nếu không tìm thấy mã giảm giá hợp lệ
+    }
+    
+    public function applyDiscount($coupon_code, $course_price) {
+        $coupon = $this->checkCouponExists($coupon_code);
+    
+        if ($coupon) {
+            $discount_value = $coupon['discount_value']; // Lấy giá trị giảm giá
+            $discount_price = $course_price - ($course_price * ($discount_value / 100)); // Tính giá sau giảm giá
+            return $discount_price;
+        }
+    
+        return false; // Nếu mã giảm giá không hợp lệ hoặc không có
+    }
+    public function getCouponByCode($code) {
+        $stmt = $this->conn->prepare("SELECT discount_percent FROM coupons WHERE code = ?");
+        $stmt->execute([$code]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function getCoursePrice($course_id) {
+        $stmt = $this->conn->prepare("SELECT discount_price FROM courses WHERE id = ?");
+        $stmt->execute([$course_id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     

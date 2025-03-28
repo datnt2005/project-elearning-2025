@@ -102,5 +102,18 @@ class Lesson
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
+    } 
+    // Đánh dấu bài học hoàn thành
+    public function markLessonComplete($userId, $courseId, $lessonId)
+    {
+        $query = "INSERT INTO user_progress (user_id, course_id, lesson_id, is_completed, completed_at)
+                  VALUES (:userId, :courseId, :lessonId, 1, NOW())
+                  ON DUPLICATE KEY UPDATE is_completed = 1, completed_at = NOW()";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
+        $stmt->bindParam(':lessonId', $lessonId, PDO::PARAM_INT);
+        $stmt->execute();
     }
 }
