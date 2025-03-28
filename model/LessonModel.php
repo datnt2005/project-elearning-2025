@@ -116,33 +116,4 @@ class Lesson
         $stmt->bindParam(':lessonId', $lessonId, PDO::PARAM_INT);
         $stmt->execute();
     }
-
-       // Lấy số lượng bài học đã hoàn thành
-       public function getCompletedLessonsCount($userId, $courseId)
-       {
-           $query = "SELECT COUNT(*) AS completed_lessons
-                     FROM user_progress
-                     WHERE user_id = :userId AND course_id = :courseId AND is_completed = 1";
-   
-           $stmt = $this->conn->prepare($query);
-           $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-           $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
-           $stmt->execute();
-           return $stmt->fetch(PDO::FETCH_ASSOC)['completed_lessons'];
-       }
- // Lấy tổng số bài học trong khóa học
- public function getTotalLessonsCount($courseId)
- {
-     $query = "SELECT COUNT(*) AS total_lessons
-               FROM lessons
-               WHERE course_id = :courseId";
-
-     $stmt = $this->conn->prepare($query);
-     $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
-     $stmt->execute();
-     return $stmt->fetch(PDO::FETCH_ASSOC)['total_lessons'];
- }
-
- 
-
 }

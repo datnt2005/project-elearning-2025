@@ -124,41 +124,20 @@ class Course
         return $stmt->execute();
     }
 
-    public function updateCourseProgress($userId, $courseId, $progressPercentage)
-    {
-        $query = "UPDATE user_progress 
-                  SET progress_percentage = :progressPercentage, last_updated = NOW() 
-                  WHERE user_id = :userId AND course_id = :courseId";
-
+    public function getLessons($courseId) {
+        $query = "SELECT * FROM lessons l JOIN sections s ON l.section_id = s.id
+                  WHERE s.course_id = :course_id";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':progressPercentage', $progressPercentage);
-        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-        $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
+        $stmt->bindParam(':course_id', $courseId, PDO::PARAM_INT);
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function logLearningActivity($userId, $lessonId, $action)
-    {
-        $query = "INSERT INTO learning_logs (user_id, lesson_id, action, timestamp) 
-                  VALUES (:userId, :lessonId, :action, NOW())";
-
+    public function getSections($courseId) {
+        $query = "SELECT * FROM sections WHERE course_id = :course_id";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-        $stmt->bindParam(':lessonId', $lessonId, PDO::PARAM_INT);
-        $stmt->bindParam(':action', $action);
+        $stmt->bindParam(':course_id', $courseId, PDO::PARAM_INT);
         $stmt->execute();
-    }
-
-    public function getCourseProgress($userId, $courseId)
-    {
-        $query = "SELECT progress_percentage 
-                  FROM user_progress 
-                  WHERE user_id = :userId AND course_id = :courseId";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-        $stmt->bindParam(':courseId', $courseId, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC)['progress_percentage'];
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
