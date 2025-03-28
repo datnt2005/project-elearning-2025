@@ -23,7 +23,9 @@ require_once "controller/SectionController.php";
 require_once "controller/LessonController.php";
 require_once "controller/CouponController.php";
 require_once "controller/CheckoutController.php";
+require_once "controller/OrderController.php";
 require_once "controller/FavouriteController.php";
+require_once "controller/ReportController.php";
 require_once "controller/PostCategoryController.php";
 require_once "controller/PostController.php";
 require_once "controller/CommentPostController.php";
@@ -46,6 +48,8 @@ $lessonController = new LessonController();
 $couponController = new CouponController();
 $checkoutController = new CheckoutController();
 $favouriteController = new FavouriteController();
+$orderController = new OrderController();
+$reportController = new ReportController(); 
 $postCategoryController = new PostCategoryController();
 $postController = new PostController();
 $commentPostController = new CommentPostController();
@@ -173,6 +177,7 @@ $router->addRoute("/admin/coupons/create", [$couponController, "create"]);
 $router->addRoute("/admin/coupons/edit/{id}", [$couponController, "edit"]);
 $router->addRoute("/admin/coupons/update/{id}", [$couponController, "update"]);
 $router->addRoute("/admin/coupons/delete/{id}", [$couponController, "delete"]);
+$router->addRoute('/apply-coupon', [$couponController, 'applyCoupon'], ['isUser']);
 
 
 // Checkout routes
@@ -202,6 +207,26 @@ $router->addRoute("/posts/detail/{id}", [$postController, "detail"]);
 $router->addRoute("/add-comment", [$commentPostController, "addComment"]);
 $router->addRoute("/get-comments/{post_id}", [$commentPostController, "getComments"]);
 $router->addRoute("/delete-comment/{id}", [$commentPostController, "deleteComment"], 'DELETE');
+
+$router->addRoute("/admin/reports", [$reportController, "index"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-by-date", [$reportController, "completedOrdersByDateChart"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-by-month", [$reportController, "completedOrdersByMonthChart"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-by-year", [$reportController, "completedOrdersByYearChart"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-summary", [$reportController, "getSummaryOrders"], ['isAdmin']);
+
+$router->addRoute("/admin/reports/completed-orders-date", [$reportController, "showDateChartPage"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-month", [$reportController, "showMonthChartPage"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-year", [$reportController, "showYearChartPage"], ['isAdmin']);
+
+
+$router->addRoute("/admin/reports/completed-orders-detail-date", [$reportController, "completedOrdersDetailByDate"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-detail-month", [$reportController, "completedOrdersDetailByMonth"], ['isAdmin']);
+$router->addRoute("/admin/reports/completed-orders-detail-year", [$reportController, "completedOrdersDetailByYear"], ['isAdmin']);
+
+$router->addRoute("/admin/orders", [$orderController, "index"], ['isAdmin']);
+$router->addRoute("/admin/orders/edit/{id}", [$orderController, "edit"], ['isAdmin']);
+$router->addRoute("/admin/orders/update/{id}", [$orderController, "update"], ['isAdmin']);
+$router->addRoute("/admin/orders/delete/{id}", [$orderController, "delete"], ['isAdmin']);
 
 
 $router->addRoute("/thank-you", function() {

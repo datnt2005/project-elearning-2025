@@ -29,7 +29,7 @@ class CouponController {
             $status = $_POST['status'];
             
             $this->couponModel->createCoupon($code, $description, $discount_percent, $start_date, $end_date, $status);
-            header("Location: /coupons");
+            header("Location: admin/coupons");
         } else {
             renderViewAdmin("view/admin/coupons/coupons_create.php", [], "Create Coupon");
         }
@@ -54,7 +54,30 @@ class CouponController {
 
     public function delete($id) {
         $this->couponModel->deleteCoupon($id);
-        header("Location: /coupons");
+        header("Location: admin/coupons");
     }
+    public function applyCoupon() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $coupon_code = $_POST['coupon_code'] ?? '';
+            $course_id = $_POST['course_id'] ?? '';
+    
+            if ($coupon_code && $course_id) {
+                $coupon = $this->couponModel->getCouponByCode($coupon_code);
+
+                
+                if ($coupon) {
+                    $course = $this->couponModel->getCoursePrice($course_id);
+                    $discount = ($course['discount_price'] * $coupon['discount_percent']) / 100;
+                    $new_price = max(0, $course['discount_price'] - $discount);
+                    
+    
+                    echo json_encode(['success' => true, 'new_price' => number_format($new_price)]);
+                    return;
+                }
+            }
+            echo json_encode(['success' => false]);
+        }
+    }
+    
 }
 

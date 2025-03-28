@@ -152,7 +152,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         </button>
         <i class="fas fa-bars"></i>
         </button>
-        <a href="/admin"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
+        <a href="/admin/reports"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
         <div class="dropdown">
             <a href="#" class="dropdown-toggle" onclick="toggleDropdown(event, 'courseDropdown')">
                 <i class="fas fa-book-open"></i> <span>Khóa học</span>
@@ -180,6 +180,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         <a href="/admin/quizAnswers"><i class="fas fa-check-circle"></i> <span>Câu trả lời</span></a>
 
         <a href="/admin/coupons"><i class="fas fa-tag"></i> <span>Mã giảm giá</span></a>
+        <a href="/admin/orders"><i class="fas fa-ticket"></i> <span>Đơn hàng</span"></a>
         <a href="/admin/user"><i class="fas fa-ticket"></i> <span>Người dùng</span></a>
         <a href="/admin/postCategory"><i class="fas fa-ticket"></i> <span>Bài viết</span></a>
         <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Đăng xuất</span></a>
