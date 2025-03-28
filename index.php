@@ -24,6 +24,7 @@ require_once "controller/LessonController.php";
 require_once "controller/CouponController.php";
 require_once "controller/CheckoutController.php";
 require_once "controller/FavouriteController.php";
+require_once "controller/ReviewController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -43,6 +44,7 @@ $lessonController = new LessonController();
 $couponController = new CouponController();
 $checkoutController = new CheckoutController();
 $favouriteController = new FavouriteController();
+$reviewController = new ReviewController();
 
 
 // $router->addMiddleware('logRequest');
@@ -71,7 +73,8 @@ $router->addRoute("/events", [$userController, "events"]);
 $router->addRoute("/pricing", [$userController, "pricing"]);
 $router->addRoute("/contact", [$userController, "contact"]);
 $router->addRoute("/profile", [$userController, "profile"]);
-
+$router->addRoute("/profile/update", [$userController, "updateProfile"]);    
+$router->addRoute("/profile/update-password", [$userController, "updatePassword"]);
 
 //Categories
 $router->addRoute("/admin/categories", [$categoryController, "index"], ['isAdmin']);
@@ -142,10 +145,22 @@ $router->addRoute("/quizAnswers", [$AdminQuizAnswerController, "index"]);
 $router->addRoute("/admin/quizAnswers/create", [$AdminQuizAnswerController, "create"]);
 $router->addRoute("/admin/quizAnswers/delete/{id}", [$AdminQuizAnswerController, "delete"]);
 $router->addRoute("/admin/quizAnswers/update/{id}", [$AdminQuizAnswerController, "update"]);
-
+$router->addRoute("/quizzes/section/{section_id}", [$adminQuizzeController,"show"]);
 //show course user
 $router->addRoute("/courses/show/{course_id}", [$courseController, "show"]);
 $router->addRoute("/courses/learning/{course_id}", [$courseController, "detailCourse"],['isUser']);
+
+$router->addRoute("/courses/review/add", [$reviewController, "addReview"], ['isUser']);
+$router->addRoute("/courses/review/get", [$reviewController, "getReviews"]);
+$router->addRoute("/courses/review/update", [$reviewController, "editReview"], ['isUser']);
+$router->addRoute("/courses/review/delete", [$reviewController, "deleteReview"], ['isUser']);
+$router->addRoute("/courses/review/like", [$reviewController, "toggleLikeReview"], ['isUser']);
+
+$router->addRoute("/courses/review/reply", [$reviewController, "replyReview"], ['isAdmin']);
+
+
+
+
 // câu trl 
 // $router->addRoute("/course/{course_id}/sessions", [$sessionController, "home"]);  // Route cho SessionController
 // $router->addRoute("/admin/sections/create", [$sessionController, "create"]);
@@ -165,6 +180,8 @@ $router->addRoute("/admin/coupons/delete/{id}", [$couponController, "delete"]);
 
 // Checkout routes
 $router->addRoute("/checkout", [$checkoutController, "checkout"]);
+$router->addRoute("/checkout/vnpay-return", [$checkoutController, "vnpayReturn"]);
+$router->addRoute("/orderList", [$checkoutController, "getOrderByUserId"], ['isUser']);
 
 
 

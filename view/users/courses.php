@@ -4,7 +4,6 @@
     }
 
     .main-course {
-        /* margin: 80px auto 20px; */
         margin: 0 auto;
         display: flex;
         gap: 20px;
@@ -30,10 +29,16 @@
     .course-info {
         width: 300px;
     }
+
+    .hidden {
+        display: none;
+    }
 </style>
+
 <main class="ml-24 pt-20 px-4">
 
     <div class="container main-course p-4">
+
         <main class="content">
             <h1 class="text-2xl font-bold mb-2"><?php echo $course['title']; ?></h1>
             <p class="mb-4"><?php echo $course['description']; ?></p>
@@ -46,25 +51,22 @@
                     </div>
                     <ul class="list-disc pl-5 hidden">
                         <?php foreach ($lessonsBySection[$section['id']] as $lesson): ?>
-                            <li class="cursor-pointer mt-2 list-disc">Bài <?= $lesson['order_number']; ?>: <?php echo $lesson['title']; ?></li>
-                            <hr class="my-2">
+                            <li class="mt-3 mb-1">Bài <?= $lesson['order_number']; ?>: <?php echo $lesson['title']; ?></li>
+                            <hr>
                         <?php endforeach; ?>
                     </ul>
                 <?php endforeach; ?>
             </div>
         </main>
+
+
         <aside class="course-info">
             <video controls width="100%" class="rounded-lg shadow-lg">
                 <source src="http://localhost:8000/<?php echo $course['video_intro']; ?>" type="video/mp4">
                 Trình duyệt của bạn không hỗ trợ video.
             </video>
             <div class="video-preview text-center text-lg font-semibold mb-3">🎥 Xem giới thiệu khóa học</div>
-            <h3 class="text-xl font-bold text-[#f05123] mb-3">Miễn phí</h3>
-            <button class="favorite-btn flex items-center gap-1 px-3 py-1 border border-gray-300 rounded-lg hover:bg-red-100 transition-all duration-300"
-                data-course-id="<?= $course['id']; ?>"
-                data-favorite="<?= $isFavourite ? 'true' : 'false'; ?>">
-                <i class="fas fa-heart <?= $isFavourite ? 'text-red-500' : 'text-gray-400'; ?>"></i>
-            </button>
+            <h3 class="text-xl font-bold text-[#f05123] mb-3"><?= number_format($course['discount_price']); ?>đ</h3>
             <button id="registerBtn" class="w-full bg-[#f05123] text-white py-2 rounded-lg font-medium hover:bg-[#d9451e]">
                 Đăng ký học
             </button>
@@ -76,6 +78,7 @@
             </ul>
         </aside>
     </div>
+
     <!-- Popup Thanh Toán -->
     <div id="paymentPopup" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 hidden">
         <div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full flex flex-col md:flex-row">
@@ -90,7 +93,7 @@
                     <li>Trình độ cơ bản</li>
                     <li>138 bài học</li>
                     <li>10 giờ 29 phút</li>
-                    <li>Hoạc mọi lúc, mọi nơi</li>
+                    <li>Hoặc mọi lúc, mọi nơi</li>
                 </ul>
             </div>
             <div class="bg-gray-100 p-4 rounded-lg w-full md:w-1/3">
@@ -100,38 +103,96 @@
                 </div>
                 <div class="mb-4">
                     <span class="font-semibold">Giá khóa học:</span>
-                    <span class="text-gray-500 line-through"> <?php echo $course['price']; ?></span>
-                    <span class="text-[#f05123] font-bold"> <?php echo $course['discount_price']; ?></span>
+                    <span class="text-gray-500 line-through" id="originalPrice"><?= number_format($course['price']); ?>đ</span>
+                    <span class="text-[#f05123] font-bold" id="discountedPrice"><?= number_format($course['discount_price']); ?>đ</span>
                 </div>
-                <input type="text" placeholder="Nhập mã giảm giá" class="w-full p-2 border rounded mb-2">
-                <button class="w-full bg-blue-100 text-blue-500 p-2 rounded">Áp dụng</button>
-                <div class="flex justify-between items-center mb-4">
-                    <span class="font-semibold">TỔNG</span>
-                    <span class="text-[#f05123] font-bold"> <?php echo $course['discount_price']; ?></span>
-                </div>
+
+
+                <!-- Form for coupon code -->
                 <form action="/checkout" method="POST">
                     <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>">
-                    <input type="hidden" name="totalPrice" value="<?php echo $course['discount_price']; ?>">
-                    <?php $totalAmount = $course['discount_price'] - 0; ?>
-                    <input type="hidden" name="totalAmount" value=" <?php echo $totalAmount; ?>">
-                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Tiếp tục thanh toán</button>
-                </form>
+                    <input type="hidden" name="amount" id="finalAmount" value="<?php echo $course['discount_price']; ?>">
+                    <input type="hidden" name="payment_method" value="VNPAY">
 
+                    <input type="text" name="coupon_code" id="couponCode" placeholder="Nhập mã giảm giá" class="w-full p-2 border rounded mb-2">
+
+
+
+                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Thanh toán</button>
+                </form>
 
                 <p class="text-center text-gray-500 mt-4">Thanh toán an toàn với VNPay</p>
             </div>
         </div>
     </div>
 
+
+    <!-- Popup yêu cầu đăng nhập -->
+    <div id="loginPopup" class="hidden">
+        <div style="background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+            <div style="background-color: #fff; padding: 20px; border-radius: 8px; text-align: center;">
+                <p>Vui lòng đăng nhập để tiếp tục thanh toán.</p>
+                <button onclick="window.location.href = '/login';">Đăng Nhập</button>
+                <button id="closeLoginPopup" class="mt-3 text-gray-500">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Đã Mua Khóa Học -->
+    <div id="purchasePopup" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold mb-4">Bạn đã mua khóa học này rồi!</h2>
+                <p class="mb-4">Bạn đã đăng ký khóa học này trước đó. Vui lòng kiểm tra khóa học của bạn trong trang của tôi.</p>
+                <button onclick="window.location.href = '/';" class="bg-blue-500 text-white py-2 px-4 rounded-lg">Đi đến trang của tôi</button>
+                <button id="closePurchasePopup" class="mt-3 text-gray-500">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <?php
+    $courseId = $course['id'] ?? null;
+    ?>
+    <div class="reviews-container mt-8 p-4 bg-white rounded shadow">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Đánh giá từ học viên</h2>
+
+        <!-- Danh sách đánh giá sẽ được JavaScript cập nhật -->
+        <div id="reviews-list">
+            <p>Chưa có đánh giá nào.</p>
+        </div>
+    </div>
+
+
     <script>
         document.getElementById("registerBtn").addEventListener("click", function() {
-            document.getElementById("paymentPopup").classList.remove("hidden");
+            // Kiểm tra nếu người dùng chưa đăng nhập và chưa mua khóa học
+            if (!<?php echo isset($_SESSION['user']) ? 'true' : 'false'; ?>) {
+                // Nếu người dùng chưa đăng nhập, hiển thị popup yêu cầu đăng nhập
+                document.getElementById("loginPopup").classList.remove("hidden");
+            } else if (<?php echo isset($course['purchased']) && $course['purchased'] == true ? 'true' : 'false'; ?>) {
+                // Nếu người dùng đã mua khóa học, hiển thị popup "Bạn đã mua khóa học"
+                document.getElementById("purchasePopup").classList.remove("hidden");
+            } else {
+                // Nếu người dùng đã đăng nhập nhưng chưa mua khóa học, hiển thị popup thanh toán
+                document.getElementById("paymentPopup").classList.remove("hidden");
+            }
         });
+
+        // Đóng popup yêu cầu đăng nhập
+        document.getElementById("closeLoginPopup").addEventListener("click", function() {
+            document.getElementById("loginPopup").classList.add("hidden");
+        });
+
+        // Đóng popup thanh toán
         document.getElementById("closePopup").addEventListener("click", function() {
             document.getElementById("paymentPopup").classList.add("hidden");
         });
-    </script>
-    <script>
+
+        // Đóng popup đã mua khóa học
+        document.getElementById("closePurchasePopup").addEventListener("click", function() {
+            document.getElementById("purchasePopup").classList.add("hidden");
+        });
+        // Hàm toggle dropdown cho các phần của khóa học
         function toggleDropdown(element) {
             let content = element.nextElementSibling;
             let icon = element.querySelector("i");
@@ -143,44 +204,180 @@
         }
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let courseId = <?= json_encode($course['id']) ?>;
+            let userId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
+            let isAdmin = <?= json_encode($_SESSION['user']['role'] === 'admin') ?>;
 
+            // Tải danh sách đánh giá
+            fetch(`/courses/review/get?course_id=${courseId}&user_id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Dữ liệu nhận từ API:", data);
+                    let reviewsList = document.getElementById("reviews-list");
+                    reviewsList.innerHTML = "";
 
+                    if (data.status === "success" && Array.isArray(data.reviews) && data.reviews.length > 0) {
+                        data.reviews.forEach(review => {
+                            let imageHtml = review.images?.map(img =>
+                                `<img src="${img}" class="w-16 h-16 object-cover rounded-md shadow-md mr-2">`
+                            ).join('') || "";
 
-</main>
+                            // 👉 **Hiển thị danh sách phản hồi khi trang load**
+                            let repliesHtml = review.replies?.map(reply => `
+                        <div class="reply-item ml-6 p-2 border-l-2 border-gray-300">
+                            <p class="font-semibold text-blue-600">${reply.admin_name} (Admin)</p>
+                            <p>${reply.comment}</p>
+                            <small class="text-gray-500">${reply.created_at}</small>
+                        </div>
+                    `).join("") || "";
 
+                            let replyForm = isAdmin ? `
+                        <div class="reply-form hidden ml-6 mt-2">
+                            <textarea class="reply-text border p-2 w-full" placeholder="Viết phản hồi..."></textarea>
+                            <button class="send-reply-btn bg-green-500 text-white px-3 py-1 mt-2 rounded-md" data-review-id="${review.id}">Gửi</button>
+                        </div>
+                    ` : "";
 
+                            let reviewHtml = `
+                        <div class="review-item p-3 border-b border-gray-300" data-review-id="${review.id}">
+                            <p class="font-semibold">${review.user_name}</p>
+                            <p>${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</p>
+                            <p>${review.comment}</p>
+                            ${imageHtml ? `<div class="mt-2">${imageHtml}</div>` : ""}
 
+                            <div class="flex space-x-4 mt-2">
+                                <button class="like-btn flex items-center space-x-2" data-review-id="${review.id}">
+                                    <svg class="like-icon w-6 h-6 ${review.liked ? 'text-blue-500' : 'text-gray-500'}" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14 9V5a3 3 0 0 0-6 0v4H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-5zM9 5a1 1 0 0 1 2 0v4H9V5zm8 14H5v-8h3.5l.5-4h6l.5 4H19v8z"></path>
+                                    </svg>
+                                    <span class="like-count">${review.like_count}</span>
+                                </button>
 
-<script>
-    document.querySelectorAll('.favorite-btn').forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.preventDefault();
-            let courseId = this.getAttribute('data-course-id');
-            let isFavorite = this.getAttribute('data-favorite') === 'true';
-            let url = isFavorite ? '/favourite/remove' : '/favourite/add';
+                                <button class="reply-btn text-blue-500 underline" data-review-id="${review.id}">Trả lời</button>
+                            </div>
+                            <small class="text-gray-500">${review.created_at}</small>
+                            <div class="replies-container ml-6 mt-2">${repliesHtml}</div>
+                            ${replyForm}
+                        </div>
+                    `;
 
-            fetch(url, {
-                    method: 'POST',
+                            reviewsList.innerHTML += reviewHtml;
+                        });
+                    } else {
+                        reviewsList.innerHTML = "<p>Chưa có đánh giá nào.</p>";
+                    }
+                })
+                .catch(error => console.error("Lỗi:", error));
+
+            // Sử dụng event delegation
+            document.getElementById("reviews-list").addEventListener("click", function(event) {
+                let target = event.target;
+
+                // Xử lý nút like
+                if (target.closest(".like-btn")) {
+                    let button = target.closest(".like-btn");
+                    let reviewId = button.getAttribute("data-review-id");
+                    toggleLike(reviewId, button);
+                }
+
+                // Xử lý nút trả lời
+                if (target.classList.contains("reply-btn")) {
+                    let reviewId = target.getAttribute("data-review-id");
+                    toggleReplyInput(reviewId);
+                }
+
+                // Xử lý gửi phản hồi
+                if (target.classList.contains("send-reply-btn")) {
+                    let reviewId = target.getAttribute("data-review-id");
+                    let comment = target.previousElementSibling.value.trim();
+                    if (comment) {
+                        sendReply(reviewId, comment, target);
+                    }
+                }
+            });
+        });
+
+        // Hiển thị hộp nhập phản hồi
+        function toggleReplyInput(reviewId) {
+            let replyForm = document.querySelector(`.review-item[data-review-id="${reviewId}"] .reply-form`);
+            if (replyForm) {
+                replyForm.classList.toggle("hidden");
+            }
+        }
+
+        // Gửi phản hồi từ Admin
+        function sendReply(reviewId, comment, button) {
+            fetch(`/courses/review/reply`, {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/x-www-form-urlencoded",
                     },
-                    body: JSON.stringify({
-                        course_id: courseId
-                    })
+                    body: `review_id=${reviewId}&comment=${encodeURIComponent(comment)}`
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status === 'added') {
-                        this.querySelector('i').classList.remove('text-gray-400');
-                        this.querySelector('i').classList.add('text-red-500');
-                        this.setAttribute('data-favorite', 'true');
-                    } else if (data.status === 'removed') {
-                        this.querySelector('i').classList.remove('text-red-500');
-                        this.querySelector('i').classList.add('text-gray-400');
-                        this.setAttribute('data-favorite', 'false');
+                    console.log("Dữ liệu phản hồi:", data);
+
+                    if (data.status === "success") {
+                        let reply = data.reply;
+
+                        let replyHtml = `
+                    <div class="reply-item ml-6 p-2 border-l-2 border-gray-300">
+                        <p class="font-semibold text-blue-600">${reply.admin_name} (Admin)</p>
+                        <p>${reply.comment}</p>
+                        <small class="text-gray-500">Vừa xong</small>
+                    </div>
+                `;
+
+                        let reviewItem = document.querySelector(`.review-item[data-review-id="${reviewId}"]`);
+                        if (reviewItem) {
+                            let replyContainer = reviewItem.querySelector(".replies-container");
+                            if (!replyContainer) {
+                                replyContainer = document.createElement("div");
+                                replyContainer.classList.add("replies-container", "ml-6", "mt-2");
+                                reviewItem.appendChild(replyContainer);
+                            }
+                            replyContainer.insertAdjacentHTML("beforeend", replyHtml);
+                        }
+
+                        button.previousElementSibling.value = "";
+                        button.closest(".reply-form").classList.add("hidden");
+                    } else {
+                        alert("Lỗi khi gửi phản hồi!");
                     }
                 })
-                .catch(error => console.error("Lỗi JSON:", error));
-        });
-    });
-</script>
+                .catch(error => console.error("Lỗi:", error));
+        }
+
+        // Xử lý Like
+        function toggleLike(reviewId, button) {
+            fetch(`/courses/review/like`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: `review_id=${reviewId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let likeIcon = button.querySelector(".like-icon");
+                    let likeCount = button.querySelector(".like-count");
+
+                    if (data.status === "liked") {
+                        likeIcon.classList.add("text-blue-500");
+                        likeIcon.classList.remove("text-gray-500");
+                    } else if (data.status === "unliked") {
+                        likeIcon.classList.remove("text-blue-500");
+                        likeIcon.classList.add("text-gray-500");
+                    }
+
+                    likeCount.innerText = data.like_count;
+                })
+                .catch(error => console.error("Lỗi:", error));
+        }
+    </script>
+
+
+</main>
