@@ -6,7 +6,6 @@
 <br>
 
 <style>
-
     #chartType {
         padding: 10px 15px;
         font-size: 16px;
@@ -41,36 +40,36 @@
     #chartType:focus {
         box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     }
+
     .date-range-container {
-    display: flex;
+        display: flex;
 
-    margin: 20px 0;
-}
+        margin: 20px 0;
+    }
 
-.custom-select {
-    padding: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 8px;
-    border: 2px solid #007bff;
-    background: #f8f9fa;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 2px 2px 10px rgba(0, 123, 255, 0.2);
-}
+    .custom-select {
+        padding: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: 2px solid #007bff;
+        background: #f8f9fa;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 2px 2px 10px rgba(0, 123, 255, 0.2);
+    }
 
-.custom-select:hover {
-    background: #e9ecef;
-    border-color: #0056b3;
-}
+    .custom-select:hover {
+        background: #e9ecef;
+        border-color: #0056b3;
+    }
 
-.custom-select:focus {
-    outline: none;
-    border-color: #004085;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-}
-
+    .custom-select:focus {
+        outline: none;
+        border-color: #004085;
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    }
 </style>
 <br>
 
@@ -92,17 +91,16 @@
 
 
 <script>
-function toggleDateRange() {
-    const chartType = document.getElementById("chartType").value;
-    const dateRange = document.getElementById("dateRange");
+    function toggleDateRange() {
+        const chartType = document.getElementById("chartType").value;
+        const dateRange = document.getElementById("dateRange");
 
-    if (chartType === "day") {
-        dateRange.style.display = "block";
-    } else {
-        dateRange.style.display = "none";
+        if (chartType === "day") {
+            dateRange.style.display = "block";
+        } else {
+            dateRange.style.display = "none";
+        }
     }
-}
-
 </script>
 <div id="summaryChartContainer">
     <canvas id="ordersSummaryChart"></canvas>
@@ -110,7 +108,7 @@ function toggleDateRange() {
 
 <div id="dayChartContainer" style="display: none;">
     <canvas id="ordersDateChart"></canvas>
-    
+
 </div>
 <div id="monthChartContainer" style="display: none;">
     <canvas id="ordersMonthChart"></canvas>
@@ -122,7 +120,6 @@ function toggleDateRange() {
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-
     function loadSummaryChart() {
         fetch("/admin/reports/completed-orders-summary")
             .then(response => response.json())
@@ -135,29 +132,24 @@ function toggleDateRange() {
                 }
 
                 let ordersData = data.data;
-                console.log("Dữ liệu chi tiết:", ordersData);
-
-                
-                let labels = ordersData.map((item, index) => item.period || `Tổng hợp từ trước đến nay`);
-
+                let labels = ordersData.map((item, index) => item.period || "Tổng hợp từ trước đến nay");
                 let totalOrders = ordersData.map(item => item.total_orders);
                 let totalRevenue = ordersData.map(item => Number(item.total_revenue));
 
-                console.log("Labels:", labels);
-                console.log("Total Orders:", totalOrders);
-                console.log("Total Revenue:", totalRevenue);
-
                 let totalOrdersSum = totalOrders.reduce((acc, value) => acc + value, 0);
                 let totalRevenueSum = totalRevenue.reduce((acc, value) => acc + value, 0);
-                document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrdersSum} | Tổng doanh thu: ${totalRevenue.toLocaleString()} VND`;
-                document.getElementById("totalRevenue").innerText = `Tổng tiền thu được: ${Number(totalRevenueSum).toLocaleString('vi-VN')} VND`;
-              
+                document.getElementById("totalOrders").innerText = `🛒 Tổng đơn hoàn thành: ${totalOrdersSum} | 💰 Tổng doanh thu: ${totalRevenueSum.toLocaleString()} VND`;
+                document.getElementById("totalRevenue").innerText = `💵 Tổng tiền thu được: ${totalRevenueSum.toLocaleString('vi-VN')} VND`;
 
                 let canvas = document.getElementById("ordersSummaryChart");
-
                 if (canvas.chartInstance) {
                     canvas.chartInstance.destroy();
                 }
+                canvas.style.border = "2px solid #dee2e6";
+                canvas.style.borderRadius = "8px";
+                canvas.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+                canvas.style.padding = "10px";
+                canvas.style.backgroundColor = "#fff";
 
                 canvas.chartInstance = new Chart(canvas, {
                     type: "bar",
@@ -166,38 +158,86 @@ function toggleDateRange() {
                         datasets: [{
                                 label: "Số đơn hoàn thành",
                                 data: totalOrders,
-                                backgroundColor: "rgba(54, 162, 235, 0.5)",
-                                borderColor: "rgba(54, 162, 235, 1)",
-                                borderWidth: 1,
+                                backgroundColor: "rgba(44, 62, 80, 0.85)",
+                                borderColor: "rgba(44, 62, 80, 1)",
+                                borderWidth: 3,
+                                borderRadius: 8,
+                                hoverBackgroundColor: "rgba(52, 73, 94, 1)",
                                 yAxisID: "y"
                             },
                             {
                                 label: "Tổng tiền (VND)",
                                 data: totalRevenue,
-                                backgroundColor: "rgba(255, 99, 132, 0.5)",
-                                borderColor: "rgba(255, 99, 132, 1)",
-                                borderWidth: 1,
+                                backgroundColor: "rgba(211, 84, 0, 0.85)",
+                                borderColor: "rgba(211, 84, 0, 1)",
+                                borderWidth: 3,
+                                borderRadius: 8,
+                                hoverBackgroundColor: "rgba(230, 126, 34, 1)",
                                 yAxisID: "y1"
                             }
                         ]
-
                     },
                     options: {
                         responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    color: "#222"
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                                titleFont: {
+                                    size: 14,
+                                    weight: "bold"
+                                },
+                                bodyFont: {
+                                    size: 14
+                                },
+                                bodyColor: "#fff",
+                                padding: 12,
+                                displayColors: false
+                            }
+                        },
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                grid: {
+                                    color: "#bbb"
+                                },
+                                title: {
+                                    display: true,
+                                    text: "Số đơn hàng",
+                                    font: {
+                                        size: 16,
+                                        weight: "bold"
+                                    },
+                                    color: "#222"
+                                }
                             },
                             y1: {
                                 beginAtZero: true,
                                 position: "right",
                                 grid: {
-                                    drawOnChartArea: false
+                                    drawOnChartArea: false,
+                                    color: "#bbb"
                                 },
+                                title: {
+                                    display: true,
+                                    text: "Tổng doanh thu (VND)",
+                                    font: {
+                                        size: 16,
+                                        weight: "bold"
+                                    },
+                                    color: "#222"
+                                }
                             }
                         }
                     }
-
                 });
             })
             .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ tổng hợp:", error));
@@ -208,16 +248,126 @@ function toggleDateRange() {
     });
 
 
-    function loadDayChart() {
+    function loadYearChart() {
+    fetch("/admin/reports/completed-orders-by-year")
+        .then(response => response.json())
+        .then(data => {
+            let labels = data.map(item => item.period);
+            let orderValues = data.map(item => item.total_orders);
+            let revenueValues = data.map(item => item.total_revenue);
+
+            let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
+            let totalRevenue = revenueValues.reduce((acc, value) => acc + parseFloat(value), 0);
+            document.getElementById("totalOrders").innerText = `🛒 Tổng đơn hoàn thành: ${totalOrders} | 💰 Tổng doanh thu: ${totalRevenue.toLocaleString()} VND`;
+
+            let canvas = document.getElementById("ordersYearChart");
+            if (canvas.chartInstance) {
+                canvas.chartInstance.destroy();
+            }
+
+            canvas.style.border = "2px solid #dee2e6";
+            canvas.style.borderRadius = "8px";
+            canvas.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+            canvas.style.padding = "10px";
+            canvas.style.backgroundColor = "#fff";
+
+            canvas.chartInstance = new Chart(canvas, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Số đơn hoàn thành",
+                            data: orderValues,
+                            backgroundColor: "rgba(13, 110, 253, 0.85)", // Bootstrap primary
+                            borderColor: "rgba(13, 110, 253, 1)",
+                            borderWidth: 2,
+                            borderRadius: 6,
+                            hoverBackgroundColor: "rgba(10, 90, 230, 1)",
+                            yAxisID: "y"
+                        },
+                        {
+                            label: "Tổng tiền (VND)",
+                            data: revenueValues,
+                            backgroundColor: "rgba(220, 53, 69, 0.85)", // Bootstrap danger
+                            borderColor: "rgba(220, 53, 69, 1)",
+                            borderWidth: 2,
+                            borderRadius: 6,
+                            hoverBackgroundColor: "rgba(200, 45, 60, 1)",
+                            yAxisID: "y1"
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                color: "#212529" // Bootstrap dark text
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: "rgba(0, 0, 0, 0.75)",
+                            titleFont: { size: 14, weight: "bold" },
+                            bodyFont: { size: 14 },
+                            bodyColor: "#fff",
+                            padding: 10,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: "#dee2e6" // Bootstrap border color
+                            },
+                            title: {
+                                display: true,
+                                text: "Số đơn hàng",
+                                font: {
+                                    size: 14,
+                                    weight: "bold"
+                                },
+                                color: "#212529"
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: "right",
+                            grid: {
+                                drawOnChartArea: false,
+                                color: "#dee2e6"
+                            },
+                            title: {
+                                display: true,
+                                text: "Tổng doanh thu (VND)",
+                                font: {
+                                    size: 14,
+                                    weight: "bold"
+                                },
+                                color: "#212529"
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ năm:", error));
+}
+
+function loadDayChart() {
     let days = document.getElementById("dateRange").value;
     let endDate = new Date();
     let startDate = new Date();
-    startDate.setDate(endDate.getDate() - days + 1); // Giới hạn từ ngày hiện tại - số ngày chọn
+    startDate.setDate(endDate.getDate() - days + 1);
 
     fetch(`/admin/reports/completed-orders-by-date?days=${days}`)
         .then(response => response.json())
         .then(data => {
-            // Lọc dữ liệu trong khoảng thời gian mong muốn
             let filteredData = data.data.filter(item => {
                 let itemDate = new Date(item.period);
                 return itemDate >= startDate && itemDate <= endDate;
@@ -227,14 +377,17 @@ function toggleDateRange() {
             let orderValues = filteredData.map(item => item.total_orders);
             let revenueValues = filteredData.map(item => item.total_revenue);
 
-            let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
-            let totalRevenue = revenueValues.reduce((acc, value) => acc + value, 0).toLocaleString();
-            document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders} | Tổng doanh thu: ${totalRevenue} VND`;
-
             let ctx = document.getElementById("ordersDateChart");
             if (window.ordersChart) {
                 window.ordersChart.destroy();
             }
+
+            ctx.style.border = "2px solid #dee2e6";
+            ctx.style.borderRadius = "8px";
+            ctx.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+            ctx.style.padding = "10px";
+            ctx.style.backgroundColor = "#fff";
+
             window.ordersChart = new Chart(ctx, {
                 type: "line",
                 data: {
@@ -243,18 +396,18 @@ function toggleDateRange() {
                         {
                             label: "Số đơn hoàn thành",
                             data: orderValues,
-                            borderColor: "rgba(75, 192, 192, 1)",
-                            backgroundColor: "rgba(75, 192, 192, 0.2)",
-                            borderWidth: 2,
+                            borderColor: "rgba(33, 150, 243, 1)",
+                            backgroundColor: "rgba(33, 150, 243, 0.2)",
+                            borderWidth: 3,
                             fill: true,
                             tension: 0.3
                         },
                         {
                             label: "Tổng doanh thu (VND)",
                             data: revenueValues,
-                            borderColor: "rgba(255, 99, 132, 1)",
-                            backgroundColor: "rgba(255, 99, 132, 0.2)",
-                            borderWidth: 2,
+                            borderColor: "rgba(255, 87, 34, 1)",
+                            backgroundColor: "rgba(255, 87, 34, 0.2)",
+                            borderWidth: 3,
                             fill: true,
                             tension: 0.3,
                             yAxisID: 'y1'
@@ -264,20 +417,26 @@ function toggleDateRange() {
                 options: {
                     responsive: true,
                     scales: {
-                        x: { title: { display: true, text: "Ngày" } },
-                        y: { beginAtZero: true, title: { display: true, text: "Số đơn hoàn thành" } },
-                        y1: { beginAtZero: true, position: 'right', title: { display: true, text: "Tổng doanh thu (VND)" } }
-                    },
-                    onClick: function(evt, activeElements) {
-                        if (activeElements.length > 0) {
-                            let index = activeElements[0].index;
-                            let selectedDate = labels[index];
-                            fetch(`/admin/reports/completed-orders-detail-date?date=${selectedDate}`)
-                                .then(response => response.json())
-                                .then(orderData => {
-                                    openOrderDetails(selectedDate, orderData.orders);
-                                })
-                                .catch(error => console.error("Error fetching order details:", error));
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Ngày"
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Số đơn hoàn thành"
+                            }
+                        },
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: "Tổng doanh thu (VND)"
+                            }
                         }
                     }
                 }
@@ -287,152 +446,239 @@ function toggleDateRange() {
 }
 
 
-   
+
+
+
 
     function loadMonthChart() {
-    fetch("/admin/reports/completed-orders-by-month")
-        .then(response => response.json())
-        .then(data => {
-            let labels = data.map(item => item.period);
-            let orderValues = data.map(item => item.total_orders);
-            let revenueValues = data.map(item => item.total_revenue);
+        fetch("/admin/reports/completed-orders-by-month")
+            .then(response => response.json())
+            .then(data => {
+                let labels = data.map(item => item.period);
+                let orderValues = data.map(item => item.total_orders);
+                let revenueValues = data.map(item => item.total_revenue);
 
-            // Hiển thị tổng số đơn hoàn thành và tổng doanh thu
-            let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
-            let totalRevenue = revenueValues.reduce((acc, value) => acc + parseFloat(value), 0).toLocaleString("vi-VN");
-            document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders} | Tổng doanh thu: ${totalRevenue} VND`;
+                // Hiển thị tổng số đơn hoàn thành và tổng doanh thu
+                let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
+                let totalRevenue = revenueValues.reduce((acc, value) => acc + parseFloat(value), 0).toLocaleString("vi-VN");
+                document.getElementById("totalOrders").innerText = `🛒 Tổng đơn hoàn thành: ${totalOrders} | 💰 Tổng doanh thu: ${totalRevenue} VND`;
 
-            new Chart(document.getElementById("ordersMonthChart"), {
-                type: "bar",
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: "Số đơn hoàn thành",
-                            data: orderValues,
-                            backgroundColor: "rgba(54, 162, 235, 0.5)",
-                            borderColor: "rgba(54, 162, 235, 1)",
-                            borderWidth: 1
-                        },
-                        {
-                            label: "Tổng doanh thu (VND)",
-                            data: revenueValues,
-                            backgroundColor: "rgba(255, 99, 132, 0.5)",
-                            borderColor: "rgba(255, 99, 132, 1)",
-                            borderWidth: 1,
-                            yAxisID: 'y1'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: "Số đơn hoàn thành"
+                let canvas = document.getElementById("ordersMonthChart");
+                if (canvas.chartInstance) {
+                    canvas.chartInstance.destroy();
+                }
+                canvas.style.border = "2px solid #dee2e6";
+                canvas.style.borderRadius = "8px";
+                canvas.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+                canvas.style.padding = "10px";
+                canvas.style.backgroundColor = "#fff";
+
+                canvas.chartInstance = new Chart(canvas, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                                label: "Số đơn hoàn thành",
+                                data: orderValues,
+                                backgroundColor: "rgba(44, 62, 80, 0.85)", // Bootstrap primary
+                                borderColor: "rgba(44, 62, 80, 1)",
+                                borderWidth: 2,
+                                borderRadius: 6,
+                                hoverBackgroundColor: "rgba(52, 73, 94, 1)",
+                                yAxisID: "y"
+                            },
+                            {
+                                label: "Tổng tiền (VND)",
+                                data: revenueValues,
+                                backgroundColor: "rgba(211, 84, 0, 0.85)", // Bootstrap danger
+                                borderColor: "rgba(211, 84, 0, 1)",
+                                borderWidth: 2,
+                                borderRadius: 6,
+                                hoverBackgroundColor: "rgba(230, 126, 34, 1)",
+                                yAxisID: "y1"
                             }
-                        },
-                        y1: {
-                            beginAtZero: true,
-                            position: 'right',
-                            title: {
-                                display: true,
-                                text: "Tổng doanh thu (VND)"
-                            }
-                        }
+                        ]
                     },
-                    onClick: function(evt, activeElements) {
-                        if (activeElements.length > 0) {
-                            let index = activeElements[0].index;
-                            let selectedMonth = labels[index];
-                            fetch(`/admin/reports/completed-orders-detail-month?month=${selectedMonth}`)
-                                .then(response => response.json())
-                                .then(orderData => {
-                                    openOrderDetails(selectedMonth, orderData.orders);
-                                })
-                                .catch(error => console.error("Error fetching order details:", error));
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    },
+                                    color: "#212529" // Bootstrap dark text
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: "rgba(0, 0, 0, 0.75)",
+                                titleFont: {
+                                    size: 14,
+                                    weight: "bold"
+                                },
+                                bodyFont: {
+                                    size: 14
+                                },
+                                bodyColor: "#fff",
+                                padding: 10,
+                                displayColors: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: "#dee2e6" // Bootstrap border color
+                                },
+                                title: {
+                                    display: true,
+                                    text: "Số đơn hàng",
+                                    font: {
+                                        size: 14,
+                                        weight: "bold"
+                                    },
+                                    color: "#212529"
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: "right",
+                                grid: {
+                                    drawOnChartArea: false,
+                                    color: "#dee2e6"
+                                },
+                                title: {
+                                    display: true,
+                                    text: "Tổng doanh thu (VND)",
+                                    font: {
+                                        size: 14,
+                                        weight: "bold"
+                                    },
+                                    color: "#212529"
+                                }
+                            }
                         }
                     }
-                }
-            });
-        })
-        .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ tháng:", error));
-}
+                });
+            })
+            .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ tháng:", error));
+    }
 
 
-   
     function loadYearChart() {
-    fetch("/admin/reports/completed-orders-by-year")
-        .then(response => response.json())
-        .then(data => {
-            let labels = data.map(item => item.period);
-            let orderValues = data.map(item => item.total_orders);
-            let revenueValues = data.map(item => item.total_revenue);
+        fetch("/admin/reports/completed-orders-by-year")
+            .then(response => response.json())
+            .then(data => {
+                let labels = data.map(item => item.period);
+                let orderValues = data.map(item => item.total_orders);
+                let revenueValues = data.map(item => item.total_revenue);
 
-     
-            let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
-            let totalRevenue = revenueValues.reduce((acc, value) => acc + parseFloat(value), 0);
-            document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders} | Tổng doanh thu: ${totalRevenue.toLocaleString()} VND`;
-            new Chart(document.getElementById("ordersYearChart"), {
-                type: "bar",
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: "Số đơn hoàn thành",
-                            data: orderValues,
-                            backgroundColor: "rgba(54, 162, 235, 0.5)",
-                            borderColor: "rgba(54, 162, 235, 1)",
-                            borderWidth: 1
-                        },
-                        {
-                            label: "Tổng doanh thu (VND)",
-                            data: revenueValues,
-                            backgroundColor: "rgba(255, 99, 132, 0.5)",
-                            borderColor: "rgba(255, 99, 132, 1)",
-                            borderWidth: 1,
-                            yAxisID: 'y1'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: "Số đơn hoàn thành"
+                let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
+                let totalRevenue = revenueValues.reduce((acc, value) => acc + parseFloat(value), 0);
+                document.getElementById("totalOrders").innerText = `🛒 Tổng đơn hoàn thành: ${totalOrders} | 💰 Tổng doanh thu: ${totalRevenue.toLocaleString()} VND`;
+
+                let canvas = document.getElementById("ordersYearChart");
+                if (canvas.chartInstance) {
+                    canvas.chartInstance.destroy();
+                }
+                canvas.style.border = "2px solid #dee2e6";
+                canvas.style.borderRadius = "8px";
+                canvas.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.1)";
+                canvas.style.padding = "10px";
+                canvas.style.backgroundColor = "#fff";
+
+                canvas.chartInstance = new Chart(canvas, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                                label: "Số đơn hoàn thành",
+                                data: orderValues,
+                                backgroundColor: "rgba(44, 62, 80, 0.85)", // Bootstrap primary
+                                borderColor: "rgba(44, 62, 80, 1)",
+                                borderWidth: 2,
+                                borderRadius: 6,
+                                hoverBackgroundColor: "rgba(52, 73, 94, 1)",
+                                yAxisID: "y"
+                            },
+                            {
+                                label: "Tổng tiền (VND)",
+                                data: revenueValues,
+                                backgroundColor: "rgba(211, 84, 0, 0.85)", // Bootstrap danger
+                                borderColor: "rgba(211, 84, 0, 1)",
+                                borderWidth: 2,
+                                borderRadius: 6,
+                                hoverBackgroundColor: "rgba(230, 126, 34, 1)",
+                                yAxisID: "y1"
                             }
-                        },
-                        y1: {
-                            beginAtZero: true,
-                            position: 'right',
-                            title: {
-                                display: true,
-                                text: "Tổng doanh thu (VND)"
-                            }
-                        }
+                        ]
                     },
-                    onClick: function(evt, activeElements) {
-                        if (activeElements.length > 0) {
-                            let index = activeElements[0].index;
-                            let selectedYear = labels[index];
-                            fetch(`/admin/reports/completed-orders-detail-year?year=${selectedYear}`)
-                                .then(response => response.json())
-                                .then(orderData => {
-                                    openOrderDetails(selectedYear, orderData.orders);
-                                })
-                                .catch(error => console.error("Error fetching order details:", error));
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    },
+                                    color: "#212529" // Bootstrap dark text
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: "rgba(0, 0, 0, 0.75)",
+                                titleFont: {
+                                    size: 14,
+                                    weight: "bold"
+                                },
+                                bodyFont: {
+                                    size: 14
+                                },
+                                bodyColor: "#fff",
+                                padding: 10,
+                                displayColors: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: "#dee2e6" // Bootstrap border color
+                                },
+                                title: {
+                                    display: true,
+                                    text: "Số đơn hàng",
+                                    font: {
+                                        size: 14,
+                                        weight: "bold"
+                                    },
+                                    color: "#212529"
+                                }
+                            },
+                            y1: {
+                                beginAtZero: true,
+                                position: "right",
+                                grid: {
+                                    drawOnChartArea: false,
+                                    color: "#dee2e6"
+                                },
+                                title: {
+                                    display: true,
+                                    text: "Tổng doanh thu (VND)",
+                                    font: {
+                                        size: 14,
+                                        weight: "bold"
+                                    },
+                                    color: "#212529"
+                                }
+                            }
                         }
                     }
-                }
-            });
-        })
-        .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ năm:", error));
-}
+                });
+            })
+            .catch(error => console.error("Lỗi khi tải dữ liệu biểu đồ năm:", error));
+    }
 
 
     // Hàm mở Modal và hiển thị chi tiết đơn hàng
