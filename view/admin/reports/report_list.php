@@ -1,8 +1,9 @@
 <h2>Thống kê đơn hàng hoàn thành</h2>
 
-
-<div id="totalOrders" style="margin-bottom: 20px;"></div>
-<span id="totalRevenue" style="margin-bottom: 20px;"></span>
+<div style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; color: #2c3e50; font-weight: bold; font-size: 16px;" id="totalOrders" style="margin-bottom: 20px;"></div>
+<br>
+<span style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; color: #2c3e50; font-weight: bold; font-size: 16px;" id="totalRevenue"></span>
+<br>
 
 <style>
 
@@ -40,17 +41,69 @@
     #chartType:focus {
         box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     }
+    .date-range-container {
+    display: flex;
+
+    margin: 20px 0;
+}
+
+.custom-select {
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid #007bff;
+    background: #f8f9fa;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 2px 10px rgba(0, 123, 255, 0.2);
+}
+
+.custom-select:hover {
+    background: #e9ecef;
+    border-color: #0056b3;
+}
+
+.custom-select:focus {
+    outline: none;
+    border-color: #004085;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
 </style>
 <br>
 
-<select id="chartType" onchange="loadChart()">
-    <option value="all">tổng hợp </option>
+<select id="chartType" onchange="toggleDateRange(); loadChart();">
+    <option value="all">Tổng hợp</option>
     <option value="day">Ngày</option>
     <option value="month">Tháng</option>
     <option value="year">Năm</option>
 </select>
 
+<div class="date-range-container">
+    <select id="dateRange" class="custom-select" onchange="loadDayChart()" style="display: none;">
+        <option value="4">📅 Ngày hôm qua</option>
+        <option value="9">📆 7 ngày qua</option>
+        <option value="30">📊 30 ngày qua</option>
+        <option value="90">📈 90 ngày qua</option>
+    </select>
+</div>
 
+
+<script>
+function toggleDateRange() {
+    const chartType = document.getElementById("chartType").value;
+    const dateRange = document.getElementById("dateRange");
+
+    if (chartType === "day") {
+        dateRange.style.display = "block";
+    } else {
+        dateRange.style.display = "none";
+    }
+}
+
+</script>
 <div id="summaryChartContainer">
     <canvas id="ordersSummaryChart"></canvas>
 </div>
@@ -85,7 +138,7 @@
                 console.log("Dữ liệu chi tiết:", ordersData);
 
                 
-                let labels = ordersData.map((item, index) => item.period || `Tổng hợp ${index + 1}`);
+                let labels = ordersData.map((item, index) => item.period || `Tổng hợp từ trước đến nay`);
 
                 let totalOrders = ordersData.map(item => item.total_orders);
                 let totalRevenue = ordersData.map(item => Number(item.total_revenue));
@@ -96,8 +149,9 @@
 
                 let totalOrdersSum = totalOrders.reduce((acc, value) => acc + value, 0);
                 let totalRevenueSum = totalRevenue.reduce((acc, value) => acc + value, 0);
-                document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrdersSum}`;
+                document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrdersSum} | Tổng doanh thu: ${totalRevenue.toLocaleString()} VND`;
                 document.getElementById("totalRevenue").innerText = `Tổng tiền thu được: ${Number(totalRevenueSum).toLocaleString('vi-VN')} VND`;
+              
 
                 let canvas = document.getElementById("ordersSummaryChart");
 
@@ -155,20 +209,33 @@
 
 
     function loadDayChart() {
-    fetch("/admin/reports/completed-orders-by-date")
+    let days = document.getElementById("dateRange").value;
+    let endDate = new Date();
+    let startDate = new Date();
+    startDate.setDate(endDate.getDate() - days + 1); // Giới hạn từ ngày hiện tại - số ngày chọn
+
+    fetch(`/admin/reports/completed-orders-by-date?days=${days}`)
         .then(response => response.json())
         .then(data => {
-            let labels = data.data.map(item => item.period);
-            let orderValues = data.data.map(item => item.total_orders);
-            let revenueValues = data.data.map(item => item.total_revenue);
+            // Lọc dữ liệu trong khoảng thời gian mong muốn
+            let filteredData = data.data.filter(item => {
+                let itemDate = new Date(item.period);
+                return itemDate >= startDate && itemDate <= endDate;
+            });
 
-          
+            let labels = filteredData.map(item => item.period);
+            let orderValues = filteredData.map(item => item.total_orders);
+            let revenueValues = filteredData.map(item => item.total_revenue);
+
             let totalOrders = orderValues.reduce((acc, value) => acc + value, 0);
             let totalRevenue = revenueValues.reduce((acc, value) => acc + value, 0).toLocaleString();
             document.getElementById("totalOrders").innerText = `Tổng số đơn hoàn thành: ${totalOrders} | Tổng doanh thu: ${totalRevenue} VND`;
-            
+
             let ctx = document.getElementById("ordersDateChart");
-            let chart = new Chart(ctx, {
+            if (window.ordersChart) {
+                window.ordersChart.destroy();
+            }
+            window.ordersChart = new Chart(ctx, {
                 type: "line",
                 data: {
                     labels: labels,
@@ -197,27 +264,9 @@
                 options: {
                     responsive: true,
                     scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: "Ngày"
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: "Số đơn hoàn thành"
-                            }
-                        },
-                        y1: {
-                            beginAtZero: true,
-                            position: 'right',
-                            title: {
-                                display: true,
-                                text: "Tổng doanh thu (VND)"
-                            }
-                        }
+                        x: { title: { display: true, text: "Ngày" } },
+                        y: { beginAtZero: true, title: { display: true, text: "Số đơn hoàn thành" } },
+                        y1: { beginAtZero: true, position: 'right', title: { display: true, text: "Tổng doanh thu (VND)" } }
                     },
                     onClick: function(evt, activeElements) {
                         if (activeElements.length > 0) {
@@ -451,12 +500,13 @@
     }
 </script>
 
+
 <!-- Modal hiển thị chi tiết đơn hàng -->
 <div id="orderDetailsModal" class="modal fade" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng ngày <span id="modalDate"></span></h5>
+                <h5 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng <span id="modalDate"></span></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

@@ -1,39 +1,39 @@
 <?php
-require_once "model/OrderModel.php"; // Change to OrderModel
+require_once "model/OrderModel.php"; 
 require_once "view/helpers.php";
 
 class OrderController {
-    private $orderModel; // Change to orderModel
+    private $orderModel; 
 
     public function __construct() {
-        $this->orderModel = new OrderModel(); // Change to OrderModel
+        $this->orderModel = new OrderModel(); 
     }
 
     public function index() {
-        $orders = $this->orderModel->getAllOrders(); // Change method name to getAllOrders
-        //compact: gom bien dien thanh array
+        $orders = $this->orderModel->getAllOrders(); 
         renderViewAdmin("view/admin/orders/orders_list.php", compact('orders'), "Orders List");
     }
+    
 
     public function show($id) {
-        $order = $this->orderModel->getOrderById($id); // Change method name to getOrderById
+        $order = $this->orderModel->getOrderById($id);
         renderViewAdmin("view/admin/orders/orders_detail.php", compact('order'), "Order Detail");
     }
 
     public function edit($id) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $status = $_POST['status']; // You can update order status, for example
+            $status = $_POST['status']; 
 
-            $this->orderModel->updateOrder($id, $status); // Change method to updateOrder
+            $this->orderModel->updateOrder($id, $status);
             header("Location: /admin/orders");
         } else {
-            $order = $this->orderModel->getOrderById($id); // Change to getOrderById
+            $order = $this->orderModel->getOrderById($id); 
             renderViewAdmin("view/admin/orders/orders_edit.php", compact('order'), "Edit Order");
         }
     }
 
     public function delete($id) {
-        $this->orderModel->deleteOrder($id); // Change to deleteOrder
+        $this->orderModel->deleteOrder($id); 
         header("Location: /admin/orders");
     }
 }

@@ -5,19 +5,21 @@ class OrderModel
 
     public function __construct()
     {
-        $database = new Database(); // Assuming Database class handles the DB connection
+        $database = new Database(); //
         $this->conn = $database->getConnection();
     }
 
-    // Get all orders
+   
     public function getAllOrders()
     {
-        $query = "SELECT orders.*, users.name AS user_name
-                  FROM orders
-                  LEFT JOIN users ON orders.user_id = users.id";
+        $query = "SELECT orders.*, users.name AS user_name, courses.title AS course_title
+        FROM orders
+        LEFT JOIN users ON orders.user_id = users.id
+        LEFT JOIN courses ON orders.course_id = courses.id";
+
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch orders and user names
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
 
     public function getOrderById($id)
@@ -29,7 +31,7 @@ class OrderModel
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC); // Return order with user name
+        return $stmt->fetch(PDO::FETCH_ASSOC); 
     }
     public function findOrderById($orderId)
     {
@@ -44,7 +46,7 @@ class OrderModel
         $stmt = $this->conn->prepare("SELECT * FROM users WHERE id = :user_id LIMIT 1");
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);  // Trả về mảng thông tin người dùng
+        return $stmt->fetch(PDO::FETCH_ASSOC);  
     }
 
 
@@ -65,16 +67,16 @@ class OrderModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Delete order
+   
     public function deleteOrder($id)
     {
         $sql = "DELETE FROM orders WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute(); // Return true/false depending on success
+        return $stmt->execute(); 
     }
 
-    // Phương thức cập nhật payment_status trong OrderModel
+   
     public function getOrderByOrderCode($orderCode)
     {
         $sql = "SELECT * FROM orders WHERE order_code = ? LIMIT 1";
@@ -128,8 +130,6 @@ class OrderModel
     }
 
 
-
-
     public function getOrderByUserAndCourse($user_id, $course_id)
     {
 
@@ -154,6 +154,8 @@ class OrderModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
     public function getSummaryOrders()
     {
         $sql = "SELECT COUNT(*) AS total_orders, COALESCE(SUM(total_amount), 0) AS total_revenue FROM orders WHERE status = 'completed'";
@@ -162,7 +164,7 @@ class OrderModel
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC) ?? ["total_orders" => 0, "total_revenue" => 0];
     
-        // Đảm bảo JSON trả về là một mảng chứa dữ liệu
+       
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode(["data" => [$result]]);
         exit;
