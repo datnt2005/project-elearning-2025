@@ -27,7 +27,7 @@
     }
 
     .course-info {
-        width: 600px;
+        width: 900px;
     }
 
     .hidden {
@@ -126,9 +126,6 @@
 
                     <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded mt-2">Thanh toán</button>
 
-                </form>
-
-                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Thanh toán</button>
                 </form>
 
                 <p class="text-center text-gray-500 mt-4">Thanh toán an toàn với VNPay</p>
@@ -271,7 +268,7 @@
                     if (data.status === "success" && Array.isArray(data.reviews) && data.reviews.length > 0) {
                         data.reviews.forEach(review => {
                             let imageHtml = review.images?.map(img =>
-                                `<img src="${img}" class="w-16 h-16 object-cover rounded-md shadow-md mr-2">`
+                                `<img src="/${img}" class="w-16 h-16 object-cover rounded-md shadow-md mr-2">`
                             ).join('') || "";
 
                             // 👉 **Hiển thị danh sách phản hồi khi trang load**

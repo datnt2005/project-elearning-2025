@@ -7,8 +7,8 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="https://cdn1.iconfinder.com/data/icons/keyboard-shortcut/24/f8-1024.png">
-    <title>F8 - Học Lập Trình Để Đi Làm</title>
+    <!-- <link rel="icon" type="image/png" href="https://cdn1.iconfinder.com/data/icons/keyboard-shortcut/24/f8-1024.png"> -->
+    <title>P6 - Passion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -84,13 +84,13 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                 <i class="fas fa-road text-xl"></i>
                 <span class="mt-1 text-xs">Lộ trình</span>
             </a>
-            <a href="posts" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
+            <a href="/posts" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
                 <i class="fas fa-newspaper text-xl"></i>
                 <span class="mt-1 text-xs">Bài viết</span>
             </a>
         </div>
     </div>
-<main class="contain">
+<main class="contain mb-5">
     <?= $content ?>
 </main>
 

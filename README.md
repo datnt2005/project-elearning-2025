@@ -1,6 +1,7 @@
 php -S localhost:8000
 # duAnBanKhoaHoc
 - lenh cai dat
+composer install
 composer require vlucas/phpdotenv
 composer require phpmailer/phpmailer
 

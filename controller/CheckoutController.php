@@ -22,6 +22,7 @@ class CheckoutController
         $this->couponModel = new CouponModel();
         $this->userModel = new UserModel();
 
+    }
     public function checkout()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

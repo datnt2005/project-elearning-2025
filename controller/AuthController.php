@@ -268,7 +268,7 @@ class AuthController
                 $_SESSION['user_image'] = $user['image'];
                 $_SESSION['success_message'] = "Đăng nhập thành công!";
                 $_SESSION['loggedIn'] = true;
-                $redirectUrl = ($user['role'] === 'admin') ? '/admin/user' : '/login';
+                $redirectUrl = ($user['role'] === 'admin') ? '/admin/reports' : '/login';
                 header("Location: $redirectUrl");
                 exit;
             } else {

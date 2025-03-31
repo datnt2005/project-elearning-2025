@@ -144,5 +144,3 @@ function removeAnswer(button) {
         font-size: 14px;
     }
 </style>
-
-

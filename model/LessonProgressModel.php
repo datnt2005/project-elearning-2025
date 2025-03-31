@@ -226,6 +226,7 @@ class LessonProgressModel
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = $_ENV['MAIL_PORT'];
             // Người gửi và người nhận
+            $mail->CharSet = "UTF-8";
             $mail->setFrom($_ENV['MAIL_USERNAME'], 'Passion');
             $mail->addAddress($toEmail);
             $mail->isHTML(true);

@@ -18,6 +18,13 @@
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAllCourses(){
+        $query = "SELECT id, title FROM courses";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getAllSections() {
         $query = "SELECT id, title FROM sections";
         $stmt = $this->conn->prepare($query);
@@ -32,6 +39,8 @@
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
 
     // lấy danh sách bài học 
 

@@ -43,6 +43,14 @@ class Section
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getSectionsByCourse($course_id) {
+        $query = "SELECT id, title FROM sections WHERE course_id = :course_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':course_id', $course_id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     // Tạo section
     // Cột: course_id, title, description, order_number
     public function create($course_id, $title, $description, $order_number)

@@ -137,7 +137,6 @@ $router->addRoute("/admin/lessons/store", [$lessonController, "store"], ['isAdmi
 $router->addRoute("/admin/lessons/edit/{id}", [$lessonController, "editForm"], ['isAdmin']);
 $router->addRoute("/admin/lessons/update/{id}", [$lessonController, "update"], ['isAdmin']);
 $router->addRoute("/admin/lessons/delete/{id}", [$lessonController, "destroy"], ['isAdmin']);
-
 // bài kiểm tra
 $router->addRoute("/admin/quizzes", [$adminQuizzeController, "index"]);
 $router->addRoute("/admin/quizzes/create", [$adminQuizzeController, "createQuizze"]);
@@ -151,7 +150,7 @@ $router->addRoute("/admin/quizQuests/delete/{id}", [$AdminQuiQuestionController,
 $router->addRoute("/admin/quizQuests/update/{id}", [$AdminQuiQuestionController, "update"]);
 
 // câu trl 
-$router->addRoute("/quizAnswers", [$AdminQuizAnswerController, "index"]);
+$router->addRoute("/admin/quizAnswers", [$AdminQuizAnswerController, "index"]);
 $router->addRoute("/admin/quizAnswers/create", [$AdminQuizAnswerController, "create"]);
 $router->addRoute("/admin/quizAnswers/delete/{id}", [$AdminQuizAnswerController, "delete"]);
 $router->addRoute("/admin/quizAnswers/update/{id}", [$AdminQuizAnswerController, "update"]);
