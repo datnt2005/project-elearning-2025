@@ -11,11 +11,9 @@ composer require phpmailer/phpmailer
 
 2: Sau khi pull code mới về thì 
     - Bước 1: cd vào folder cần xử lý 
-    - Bước 2: chạy npm i 
-    - Bước 3: chạy lệnh sau : cp .env.example .env 
-    - Bước 4: copy env trên doc của trello A Phúc đã public 
-    - Bước 5: Đối với Backend thì npm run dev Đối với Frontend thì npm run dev 
-    - Bước 6: Tiến hành code
+    - Bước 2: chạy php -S localhost:8000
+    - Bước 3: copy env trên Group của Tiến Đạt 
+    - Bước 4: Tiến hành code
 
 3: Trước khi code thì đọc kỹ mục 1 và 2 và check requirement của leader
 
@@ -25,7 +23,7 @@ composer require phpmailer/phpmailer
     - Không được tự ý xử lý conflict một mình
     - Việc Merge code:      
         + TRƯỚC KHI TẮT MÁY GIT COMMIT GIT PUSH lên local của mình
-        + LUÔN MERGE VÀO NHANH VÀO CỦA MÌNH TRƯỚC, RỒI MỚI ĐƯỢC MERGE VÀO NHANH DEV
+        + LUÔN MERGE VÀO NHÁNH VÀO CỦA MÌNH TRƯỚC, RỒI MỚI ĐƯỢC MERGE VÀO NHANH DEV
         + LUÔN LUÔN MERGE VÀO NHÁNH "dev"
         + NHÁNH MAIN CHỈ CÓ LEADER CHECK ổn rồi mới được merge
         + Nếu đọc requirement không hiểu thì liên hệ leader để đc hỗ trợ
