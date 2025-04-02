@@ -30,6 +30,7 @@ require_once "controller/ReportController.php";
 require_once "controller/PostCategoryController.php";
 require_once "controller/PostController.php";
 require_once "controller/CommentPostController.php";
+require_once "controller/NotesController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -55,6 +56,7 @@ $reportController = new ReportController();
 $postCategoryController = new PostCategoryController();
 $postController = new PostController();
 $commentPostController = new CommentPostController();
+$notesController = new NotesController();
 
 
 // $router->addMiddleware('logRequest');
@@ -239,6 +241,13 @@ $router->addRoute("/admin/orders", [$orderController, "index"], ['isAdmin']);
 $router->addRoute("/admin/orders/edit/{id}", [$orderController, "edit"], ['isAdmin']);
 $router->addRoute("/admin/orders/update/{id}", [$orderController, "update"], ['isAdmin']);
 $router->addRoute("/admin/orders/delete/{id}", [$orderController, "delete"], ['isAdmin']);
+
+$router->addRoute("/notes", [$notesController, "create"]);
+$router->addRoute("/notes/get", [$notesController, "getNotesByCourse"], ['isUser']);
+$router->addRoute("/notes/edit/{id}", [$notesController, "edit"], ['isUser']);
+$router->addRoute("/notes/update", [$notesController, "update"], ['isUser']);
+$router->addRoute("/notes/delete/{id}", [$notesController, "delete"], ['isUser']);
+
 
 
 $router->addRoute("/thank-you", function() {

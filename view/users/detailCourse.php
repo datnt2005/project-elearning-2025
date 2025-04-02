@@ -17,15 +17,81 @@
                         referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 <?php endif; ?>
             </div>
-            <div class="description" id="video-description">
-                <p class="text-3xl m-5 mb-0"><strong>Bài <?php echo $currentLesson['order_number']; ?>: <?php echo htmlspecialchars($currentLesson['title'], ENT_QUOTES, 'UTF-8'); ?></strong></p>
-                <p class="mx-5"><?php echo htmlspecialchars($currentLesson['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+            <div class="flex items-center justify-between">
+                <div class="description" id="video-description">
+                    <p class="text-3xl m-5 mb-0">
+                        <strong>Bài <?php echo $currentLesson['order_number']; ?>: <?php echo htmlspecialchars($currentLesson['title'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                    </p>
+                    <p class="mx-5"><?php echo htmlspecialchars($currentLesson['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                </div>
+                <div class="ghichu" id="ghichu">
+                    <!-- Nút Thêm Ghi Chú -->
+                    <button id="note-button" class="bg-purple-500 text-white px-4 py-2 rounded mr-5" onclick="openModal()">
+                        <i class="fas fa-plus mr-2"></i> Thêm Ghi Chú <span id="video-time">00:00</span>
+                    </button>
+                </div>
             </div>
-        </div>
 
+            <script src="https://cdn.tailwindcss.com"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+            <!-- Modal -->
+            <div id="noteModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+                <div class="w-full max-w-2xl p-4 bg-gray-900 text-white rounded-lg">
+                    <div class="mb-2 text-lg">
+                        <p id="note-time" class="text-lg mb-3">Thêm ghi chú tại <span class="bg-purple-500 text-white px-2 py-1 rounded">00:00</span></p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <div class="flex items-center mb-2">
+                            <button onclick="toggleActive(this, 'bold')" class="bg-gray-700 text-white p-2 rounded mr-2"><i class="fas fa-bold"></i></button>
+                            <button onclick="toggleActive(this, 'italic')" class="bg-gray-700 text-white p-2 rounded mr-2"><i class="fas fa-italic"></i></button>
+                            <button onclick="toggleList(this, 'insertUnorderedList')" class="bg-gray-700 text-white p-2 rounded mr-2"><i class="fas fa-list-ul"></i></button>
+                            <button onclick="toggleList(this, 'insertOrderedList')" class="bg-gray-700 text-white p-2 rounded mr-2"><i class="fas fa-list-ol"></i></button>
+                            <button onclick="insertImage()" class="bg-gray-700 text-white p-2 rounded mr-2"><i class="fas fa-image"></i></button>
+                            <button onclick="openColorPopup('textColorPopup')" class="bg-gray-700 text-white p-2 rounded mr-2"><i class="fas fa-paint-brush"></i></button>
+                            <button onclick="openColorPopup('bgColorPopup')" class="bg-gray-700 text-white p-2 rounded mr-2"><i class="fas fa-fill-drip"></i></button>
+                        </div>
+                        <!-- Form Ghi Chú -->
+                        <form id="noteForm" action="/notes" method="POST">
+                            <div id="noteContent" contenteditable="true" class="w-full bg-gray-700 text-white p-2 rounded h-32 overflow-auto" style="outline: none;"></div>
+                            <input type="hidden" name="note" id="note">
+                            <input type="hidden" id="video_time" name="video_time">
+                            <input type="hidden" id="users_id" name="users_id" value="<?php echo isset($users['id']) ? $users['id'] : ''; ?>">
+                            <input type="hidden" name="courses_id" value="<?php echo $course['id']; ?>">
+                            <input type="hidden" id="lessons_id" name="lessons_id" value="<?php echo $lessons_id = $_POST['lessons_id'] ?? null; ?>">
+                            <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded">TẠO GHI CHÚ</button>
+                        </form>
+
+
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button onclick="closeModal()" class="bg-gray-800 text-white px-4 py-2 rounded mr-2">HỦY BỎ</button>
+                    </div>
+                </div>
+                <!-- Popup chọn màu chữ -->
+                <div id="textColorPopup" class="color-popup">
+                    <p>Chọn màu chữ</p>
+                    <input type="color" id="textColorPicker" onchange="changeTextColor()">
+                    <button onclick="closeColorPopup('textColorPopup')">Đóng</button>
+                </div>
+
+                <!-- Popup chọn màu nền -->
+                <div id="bgColorPopup" class="color-popup">
+                    <p>Chọn màu nền</p>
+                    <input type="color" id="bgColorPicker" onchange="changeBgColor()">
+                    <button onclick="closeColorPopup('bgColorPopup')">Đóng</button>
+                </div>
+            </div>
+            <script src="https://www.youtube.com/iframe_api"></script>
+
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        </div>
+       
         <!-- Sidebar nội dung khóa học -->
         <div class="sidebar">
             <div class="progress-bar mt-4">
+                <button id="toggle-notes-btn" class="bg-purple-500 text-white px-4 py-2 rounded">Ghi chú</button>
+                <br>
                 <span id="course-progress">Tiến độ khóa học: <?php echo number_format($progress['progress'], 2); ?>%</span>
                 <div class="progress-container">
                     <div id="progress-bar" class="progress-fill" style="width: <?php echo $progress['progress']; ?>%;"></div>
@@ -36,14 +102,364 @@
                 </div>
                 <?php if ($certificate): ?>
                     <div id="certificate-link" style="margin-top: 10px;">
-                        <p class="text-blue-500">Bạn đã hoàn thành khóa học: 
+                        <p class="text-blue-500">Bạn đã hoàn thành khóa học:
                             <a href="http://localhost:8000/certificate?certificate_url=<?php echo htmlspecialchars($certificate['certificate_url'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="underline">
                                 Xem chứng chỉ
                             </a>
                         </p>
                     </div>
                 <?php endif; ?>
+            <!-- Sidebar ghi chú -->
+<div id="notes-sidebar" class="fixed top-0 right-0 h-full w-80 bg-gray-900 text-white p-4 transform translate-x-full transition-transform duration-300">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg">Ghi chú</h2>
+        <button id="close-notes-btn" class="text-white">✖</button>
+    </div>
+    <!-- Bộ lọc -->
+    <div class="mb-4">
+        <label for="sortOrder" class="mr-2">Sắp xếp:</label>
+        <select id="sortOrder" class="bg-gray-700 text-white p-1 rounded">
+            <option value="lesson_order" selected>Theo thứ tự bài học</option>
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
+        </select>
+    </div>
+    <div id="notes-list" class="overflow-y-auto h-5/6"></div>
+</div>
             </div>
+            <style>
+                #notes-sidebar {
+                    width: 500px;
+                    /* Thay 500px bằng giá trị bạn muốn */
+                }
+
+                /* Đảm bảo sidebar nằm trên cùng các phần tử khác */
+                #notes-sidebar {
+                    z-index: 50;
+                    /* Đặt z-index cao để hiển thị trên các phần tử khác */
+                }
+
+                /* Khi sidebar mở */
+                #notes-sidebar.open {
+                    transform: translateX(0);
+                    /* Dịch chuyển vào màn hình */
+                }
+
+                /* Tùy chỉnh giao diện danh sách ghi chú (sau này bạn có thể thêm style cho danh sách) */
+                #notes-list {
+                    max-height: calc(100% - 60px);
+                    /* Trừ chiều cao của header sidebar */
+                    overflow-y: auto;
+                    /* Cuộn nếu danh sách dài */
+                }
+            </style>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+            <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const notesSidebar = document.getElementById('notes-sidebar');
+    const editNoteModal = document.getElementById('editNoteModal');
+    const editNoteContent = document.getElementById('editNoteContent');
+    let currentEditingNoteId = null;
+
+    // Mở / Đóng sidebar ghi chú
+    document.getElementById('toggle-notes-btn').addEventListener('click', function() {
+        notesSidebar.classList.toggle('open');
+        if (notesSidebar.classList.contains('open')) {
+            loadNotes();
+        }
+    });
+
+    document.getElementById('close-notes-btn').addEventListener('click', function() {
+        notesSidebar.classList.remove('open');
+    });
+
+    // Lắng nghe sự thay đổi của bộ lọc
+    const sortOrderSelect = document.getElementById('sortOrder');
+    sortOrderSelect.addEventListener('change', function() {
+        loadNotes(); // Tải lại ghi chú khi thay đổi bộ lọc
+    });
+
+    // Load danh sách ghi chú
+    function loadNotes() {
+        const coursesId = <?php echo json_encode($course['id']); ?>;
+        fetch(`/notes/get?courses_id=${coursesId}`)
+            .then(response => response.json())
+            .then(data => {
+                const notesList = document.getElementById('notes-list');
+                notesList.innerHTML = '';
+
+                if (data.status === 'success' && data.notes.length > 0) {
+                    // Lấy giá trị sắp xếp từ select
+                    const sortOrder = sortOrderSelect.value;
+
+                    // Sao chép mảng để không thay đổi dữ liệu gốc
+                    let sortedNotes = [...data.notes];
+
+                    // Sắp xếp dựa trên giá trị của sortOrder
+                    sortedNotes.sort((a, b) => {
+                        if (sortOrder === 'lesson_order') {
+                            // Sắp xếp theo thứ tự bài học (tăng dần)
+                            return (a.lesson_order || 0) - (b.lesson_order || 0);
+                        } else if (sortOrder === 'newest') {
+                            // Sắp xếp theo mới nhất (giảm dần theo created_at)
+                            const dateA = new Date(a.created_at);
+                            const dateB = new Date(b.created_at);
+                            return dateB - dateA;
+                        } else if (sortOrder === 'oldest') {
+                            // Sắp xếp theo cũ nhất (tăng dần theo created_at)
+                            const dateA = new Date(a.created_at);
+                            const dateB = new Date(b.created_at);
+                            return dateA - dateB;
+                        }
+                    });
+
+                    // Hiển thị danh sách đã sắp xếp
+                    sortedNotes.forEach(note => {
+                        notesList.innerHTML += `
+                            <div class="note-item p-2 border-b" data-id="${note.id}">
+                                <p><strong>${note.video_time}</strong>: <span class="note-text">${note.note}</span></p>
+                                <small>Phần ${note.section_order || 'N/A'} - ${note.section_name || 'Không xác định'} | Bài ${note.lesson_order || 'N/A'} - ${note.lesson_name || 'Không xác định'}</small>
+                                <div class="mt-2">
+                                    <button class="edit-note bg-blue-500 text-white px-2 py-1 rounded">Sửa</button>
+                                    <button class="delete-note bg-red-500 text-white px-2 py-1 rounded">Xóa</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    attachEventListeners();
+                } else {
+                    notesList.innerHTML = '<p>Chưa có ghi chú nào.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi khi tải ghi chú:', error);
+                document.getElementById('notes-list').innerHTML = '<p>Lỗi khi tải ghi chú.</p>';
+            });
+    }
+
+    // Gắn sự kiện cho các nút sửa và xóa
+    function attachEventListeners() {
+        document.querySelectorAll('.edit-note').forEach(button => {
+            button.addEventListener('click', function() {
+                const noteItem = this.closest('.note-item');
+                currentEditingNoteId = noteItem.getAttribute('data-id');
+                const noteText = noteItem.querySelector('.note-text').innerHTML;
+                openEditModal(noteText);
+            });
+        });
+
+        document.querySelectorAll('.delete-note').forEach(button => {
+            button.addEventListener('click', function() {
+                const noteItem = this.closest('.note-item');
+                const noteId = noteItem.getAttribute('data-id');
+                Swal.fire({
+                    title: "Xác nhận xóa?",
+                    text: "Bạn có chắc chắn muốn xóa ghi chú này?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Xóa",
+                    cancelButtonText: "Hủy"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteNote(noteId, noteItem);
+                    }
+                });
+            });
+        });
+    }
+
+    // Mở modal chỉnh sửa ghi chú
+    function openEditModal(noteText) {
+        editNoteContent.innerHTML = noteText;
+        document.getElementById('editNoteId').value = currentEditingNoteId;
+        editNoteModal.classList.remove('hidden');
+    }
+
+    // Xử lý submit form chỉnh sửa
+    document.getElementById('editNoteForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const noteId = document.getElementById('editNoteId').value;
+        const noteContent = editNoteContent.innerHTML;
+        fetch(`/notes/edit/${noteId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `note=${encodeURIComponent(noteContent)}`
+        })
+        .then(response => response.text())
+        .then(text => {
+            console.log('Phản hồi từ server:', text);
+            try {
+                const data = JSON.parse(text);
+                if (data.status === 'success') {
+                    document.querySelector(`.note-item[data-id="${noteId}"] .note-text`).innerHTML = noteContent;
+                    Swal.fire("Thành công!", "Ghi chú đã được cập nhật!", "success");
+                    closeEditModal();
+                } else {
+                    Swal.fire("Lỗi!", data.message || "Có lỗi khi cập nhật ghi chú.", "error");
+                }
+            } catch (error) {
+                console.error("Lỗi phân tích JSON:", error);
+                Swal.fire("Lỗi!", "Dữ liệu trả về không hợp lệ.", "error");
+            }
+        })
+        .catch(error => {
+            console.error("Lỗi khi cập nhật ghi chú:", error);
+            Swal.fire("Lỗi!", "Có lỗi xảy ra khi cập nhật ghi chú.", "error");
+        });
+    });
+
+    // Xóa ghi chú
+    function deleteNote(id, noteItem) {
+        fetch(`/notes/delete/${id}`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                noteItem.remove();
+                Swal.fire("Đã xóa!", "Ghi chú đã được xóa.", "success");
+                loadNotes(); // Tải lại danh sách sau khi xóa
+            } else {
+                Swal.fire("Lỗi!", "Không thể xóa ghi chú.", "error");
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi xóa ghi chú:', error);
+            Swal.fire("Lỗi!", "Có lỗi xảy ra khi xóa ghi chú.", "error");
+        });
+    }
+
+    // Xử lý form tạo ghi chú
+    document.getElementById("noteForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        let noteContent = document.getElementById("noteContent").innerHTML;
+        document.getElementById("note").value = noteContent;
+        let formData = new FormData(this);
+        fetch("/notes", {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: data.message,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    closeModal();
+                    if (notesSidebar.classList.contains('open')) {
+                        loadNotes(); // Tải lại danh sách sau khi thêm
+                    }
+                    document.getElementById("noteContent").innerHTML = "";
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: data.message,
+                    confirmButtonText: 'OK'
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Có lỗi xảy ra khi gửi ghi chú.',
+                confirmButtonText: 'OK'
+            });
+            console.error("Lỗi:", error);
+        });
+    });
+});
+
+// Đưa hàm closeEditModal ra toàn cục
+function closeEditModal() {
+    const editNoteModal = document.getElementById('editNoteModal');
+    editNoteModal.classList.add('hidden');
+}
+
+// Các hàm hỗ trợ khác
+function openModal() {
+    document.getElementById('noteModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('noteModal').classList.add('hidden');
+}
+
+function toggleActive(button, command) {
+    document.execCommand(command, false, null);
+    button.classList.toggle('bg-gray-500');
+}
+
+function toggleList(button, command) {
+    document.execCommand(command, false, null);
+    button.classList.toggle('bg-gray-500');
+}
+
+function insertImage() {
+    const url = prompt("Nhập URL hình ảnh:");
+    if (url) {
+        document.execCommand('insertImage', false, url);
+    }
+}
+
+function openColorPopup(popupId) {
+    document.getElementById(popupId).style.display = 'block';
+}
+
+function closeColorPopup(popupId) {
+    document.getElementById(popupId).style.display = 'none';
+}
+
+function changeTextColor() {
+    const color = document.getElementById('textColorPicker').value;
+    document.execCommand('foreColor', false, color);
+}
+
+function changeBgColor() {
+    const color = document.getElementById('bgColorPicker').value;
+    document.execCommand('backColor', false, color);
+}
+</script>
+
+            <!-- Modal chỉnh sửa ghi chú -->
+            <div id="editNoteModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+                <div class="w-full max-w-2xl p-4 bg-gray-900 text-white rounded-lg">
+                    <div class="mb-2 text-lg">
+                        <p id="note-time" class="text-lg mb-3">Chỉnh sửa ghi chú</p>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg">
+                        <form id="editNoteForm">
+                            <div contenteditable="true" id="editNoteContent" class="w-full bg-gray-700 text-white p-2 rounded h-32 overflow-auto" style="outline: none;"></div>
+                            <input type="hidden" id="editNoteId">
+                            <input type="hidden" id="users_id" name="users_id" value="<?php echo isset($users['id']) ? $users['id'] : ''; ?>">
+                            <input type="hidden" name="courses_id" value="<?php echo $course['id']; ?>">
+                            <input type="hidden" id="lessons_id" name="lessons_id" value="<?php echo $lessons_id = $_POST['lessons_id'] ?? null; ?>">
+                            <div class="flex justify-end mt-4">
+                                <button type="button" onclick="closeEditModal()" class="bg-gray-800 text-white px-4 py-2 rounded mr-2">HỦY BỎ</button>
+                                <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded">LƯU</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <style>
+    /* Đảm bảo editNoteModal hiển thị trên tất cả */
+    #editNoteModal {
+        z-index: 100; /* Giá trị cao hơn sidebar hoặc các phần tử khác */
+    }
+</style>
+
+
+
             <h2 class="text-xl font-semibold mb-2 mt-3">Nội dung khóa học</h2>
             <div class="course-content">
                 <?php
@@ -523,7 +939,16 @@
         window.onYouTubeIframeAPIReady = function() {
             console.log('YouTube IFrame API ready');
 
-            // Gọi updateCourseProgressAndEnrollment khi trang được tải để đảm bảo tiến độ hiển thị ngay
+            // Khởi tạo player
+            player = new YT.Player('video-iframe', {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': (event) => console.log('Player error:', event.data)
+                }
+            });
+
+            // Gọi updateCourseProgressAndEnrollment khi trang được tải
             updateCourseProgressAndEnrollment();
 
             document.querySelectorAll(".lesson-item a:not(.disabled)").forEach(item => {
@@ -565,7 +990,7 @@
             if (player) {
                 player.destroy();
             }
-
+            document.getElementById("lessons_id").value = lessonId;
             let iframe = document.getElementById("video-iframe");
             if (!iframe) {
                 console.error('Iframe not found! Attempting to recover...');
@@ -590,18 +1015,14 @@
             history.pushState(null, "", `?course=<?php echo $course['id']; ?>&lesson=${lessonId}`);
 
             console.log('Initializing YT.Player with iframe:', iframe);
-            try {
-                player = new YT.Player('video-iframe', {
-                    events: {
-                        'onReady': onPlayerReady,
-                        'onStateChange': onPlayerStateChange,
-                        'onError': (event) => console.log('Player error:', event.data)
-                    }
-                });
-                console.log('YT.Player initialized:', player);
-            } catch (error) {
-                console.error('Error initializing YT.Player:', error);
-            }
+            player = new YT.Player('video-iframe', {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': (event) => console.log('Player error:', event.data)
+                }
+            });
+            console.log('YT.Player initialized:', player);
         }
 
         function onPlayerReady(event) {
@@ -621,6 +1042,9 @@
                     let duration = player.getDuration();
                     let progress = (currentTime / duration) * 100 || 0;
                     let completed = progress >= 95;
+
+                    // Cập nhật thời gian trên nút "Thêm Ghi Chú"
+                    updateNoteButtonTime();
 
                     document.getElementById("current-lesson-progress").textContent = `Tiến độ bài học: ${Math.round(progress)}%`;
                     let lessonLink = document.querySelector(`[data-lesson-id='${currentLessonId}']`);
@@ -700,6 +1124,70 @@
                 console.log('Video stopped or paused');
                 clearInterval(progressInterval);
             }
+        }
+
+        // Hàm cập nhật thời gian trên nút "Thêm Ghi Chú"
+        function updateNoteButtonTime() {
+            if (player && typeof player.getCurrentTime === 'function') {
+                let currentTime = player.getCurrentTime();
+                let minutes = Math.floor(currentTime / 60);
+                let seconds = Math.floor(currentTime % 60);
+                let formattedTime = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+                document.getElementById('note-button').innerHTML = `<i class="fas fa-plus mr-2"></i> Thêm Ghi Chú ${formattedTime}`;
+            }
+        }
+
+        // Hàm mở modal
+        function openModal() {
+            player.pauseVideo();
+            let currentTime = player.getCurrentTime();
+            let minutes = Math.floor(currentTime / 60);
+            let seconds = Math.floor(currentTime % 60);
+            let formattedTime = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+            document.getElementById('note-time').innerHTML = `Thêm ghi chú tại <span class="bg-purple-500 text-white px-2 py-1 rounded">${formattedTime}</span>`;
+            document.getElementById('video_time').value = formattedTime;
+            document.getElementById('noteModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('noteModal').classList.add('hidden');
+        }
+
+        function toggleActive(button, command) {
+            document.execCommand(command, false, null);
+            button.classList.toggle('bg-purple-500');
+        }
+
+        function toggleList(button, command) {
+            let editor = document.getElementById("noteContent");
+            editor.focus();
+            document.execCommand(command, false, null);
+        }
+
+        function insertImage() {
+            let url = prompt("Nhập URL hình ảnh:");
+            if (url) {
+                document.execCommand('insertImage', false, url);
+            }
+        }
+
+        function changeTextColor() {
+            let color = document.getElementById('textColorPicker').value;
+            document.execCommand('foreColor', false, color);
+        }
+
+        function changeBgColor() {
+            let color = document.getElementById('bgColorPicker').value;
+            document.getElementById('noteContent').style.backgroundColor = color;
+        }
+
+        function openColorPopup(popupId) {
+            document.getElementById(popupId).style.display = "block";
+        }
+
+        function closeColorPopup(popupId) {
+            document.getElementById(popupId).style.display = "none";
         }
 
         function unlockNextLesson(currentLessonId) {
