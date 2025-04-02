@@ -52,33 +52,23 @@
                         </div>
                         <!-- Form Ghi Chú -->
                         <form id="noteForm" action="/notes" method="POST">
-                            <div id="noteContent" contenteditable="true" class="w-full bg-gray-700 text-white p-2 rounded h-32 overflow-auto" style="outline: none;"></div>
-                            <input type="hidden" name="note" id="note">
-                            <input type="hidden" id="video_time" name="video_time">
-                            <input type="hidden" id="users_id" name="users_id" value="<?php echo isset($users['id']) ? $users['id'] : ''; ?>">
-                            <input type="hidden" name="courses_id" value="<?php echo $course['id']; ?>">
-                            <input type="hidden" id="lessons_id" name="lessons_id" value="<?php echo $lessons_id = $_POST['lessons_id'] ?? null; ?>">
-                            <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded">TẠO GHI CHÚ</button>
-                        </form>
+    <div id="noteContent" contenteditable="true" class="w-full bg-gray-700 text-white p-2 rounded h-32 overflow-auto" style="outline: none;"></div>
+    <input type="hidden" name="note" id="note">
+    <input type="hidden" id="video_time" name="video_time">
+    <input type="hidden" id="users_id" name="users_id" value="<?php echo isset($users['id']) ? $users['id'] : ''; ?>">
+    <input type="hidden" name="courses_id" value="<?php echo $course['id']; ?>">
+    <input type="hidden" id="lessons_id" name="lessons_id" value="<?php echo $lessons_id = $_POST['lessons_id'] ?? null; ?>">
+    
+    <div class="flex justify-between mt-4">
+        <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded">TẠO GHI CHÚ</button>
+        <button type="button" onclick="closeModal()" class="bg-gray-800 text-white px-4 py-2 rounded">HỦY BỎ</button>
+    </div>
+</form>
+
 
 
                     </div>
-                    <div class="flex justify-end mt-4">
-                        <button onclick="closeModal()" class="bg-gray-800 text-white px-4 py-2 rounded mr-2">HỦY BỎ</button>
-                    </div>
-                </div>
-                <!-- Popup chọn màu chữ -->
-                <div id="textColorPopup" class="color-popup">
-                    <p>Chọn màu chữ</p>
-                    <input type="color" id="textColorPicker" onchange="changeTextColor()">
-                    <button onclick="closeColorPopup('textColorPopup')">Đóng</button>
-                </div>
-
-                <!-- Popup chọn màu nền -->
-                <div id="bgColorPopup" class="color-popup">
-                    <p>Chọn màu nền</p>
-                    <input type="color" id="bgColorPicker" onchange="changeBgColor()">
-                    <button onclick="closeColorPopup('bgColorPopup')">Đóng</button>
+                   
                 </div>
             </div>
             <script src="https://www.youtube.com/iframe_api"></script>
@@ -115,7 +105,7 @@
         <h2 class="text-lg">Ghi chú</h2>
         <button id="close-notes-btn" class="text-white">✖</button>
     </div>
-    <!-- Bộ lọc -->
+    <!-- Bộ lọc sắp xếp -->
     <div class="mb-4">
         <label for="sortOrder" class="mr-2">Sắp xếp:</label>
         <select id="sortOrder" class="bg-gray-700 text-white p-1 rounded">
@@ -123,6 +113,11 @@
             <option value="newest">Mới nhất</option>
             <option value="oldest">Cũ nhất</option>
         </select>
+    </div>
+    <!-- Tìm kiếm theo section -->
+    <div class="mb-4 flex items-center">
+        <input type="text" id="sectionFilter" class="bg-gray-700 text-white p-1 rounded w-full mr-2" placeholder="Nhập số phần (ví dụ: 1)">
+        <button id="filterSectionBtn" class="bg-blue-500 text-white px-2 py-1 rounded">Tìm</button>
     </div>
     <div id="notes-list" class="overflow-y-auto h-5/6"></div>
 </div>
@@ -173,10 +168,23 @@ document.addEventListener('DOMContentLoaded', function() {
         notesSidebar.classList.remove('open');
     });
 
-    // Lắng nghe sự thay đổi của bộ lọc
+    // Lắng nghe sự thay đổi của bộ lọc sắp xếp
     const sortOrderSelect = document.getElementById('sortOrder');
     sortOrderSelect.addEventListener('change', function() {
         loadNotes(); // Tải lại ghi chú khi thay đổi bộ lọc
+    });
+
+    // Lắng nghe sự kiện nhấn nút tìm kiếm theo section
+    const sectionFilterInput = document.getElementById('sectionFilter');
+    document.getElementById('filterSectionBtn').addEventListener('click', function() {
+        loadNotes(); // Tải lại ghi chú khi nhấn nút tìm
+    });
+
+    // Cho phép tìm kiếm khi nhấn Enter trong input
+    sectionFilterInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            loadNotes();
+        }
     });
 
     // Load danh sách ghi chú
@@ -189,14 +197,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 notesList.innerHTML = '';
 
                 if (data.status === 'success' && data.notes.length > 0) {
-                    // Lấy giá trị sắp xếp từ select
+                    // Lấy giá trị sắp xếp và bộ lọc section
                     const sortOrder = sortOrderSelect.value;
+                    const sectionFilter = sectionFilterInput.value.trim();
 
                     // Sao chép mảng để không thay đổi dữ liệu gốc
-                    let sortedNotes = [...data.notes];
+                    let filteredNotes = [...data.notes];
 
-                    // Sắp xếp dựa trên giá trị của sortOrder
-                    sortedNotes.sort((a, b) => {
+                    // Lọc theo section_order nếu có giá trị nhập vào
+                    if (sectionFilter !== '') {
+                        filteredNotes = filteredNotes.filter(note => {
+                            const sectionOrder = note.section_order || 'N/A';
+                            return sectionOrder.toString() === sectionFilter;
+                        });
+                    }
+
+                    // Sắp xếp danh sách đã lọc
+                    filteredNotes.sort((a, b) => {
                         if (sortOrder === 'lesson_order') {
                             // Sắp xếp theo thứ tự bài học (tăng dần)
                             return (a.lesson_order || 0) - (b.lesson_order || 0);
@@ -213,20 +230,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
 
-                    // Hiển thị danh sách đã sắp xếp
-                    sortedNotes.forEach(note => {
-                        notesList.innerHTML += `
-                            <div class="note-item p-2 border-b" data-id="${note.id}">
-                                <p><strong>${note.video_time}</strong>: <span class="note-text">${note.note}</span></p>
-                                <small>Phần ${note.section_order || 'N/A'} - ${note.section_name || 'Không xác định'} | Bài ${note.lesson_order || 'N/A'} - ${note.lesson_name || 'Không xác định'}</small>
-                                <div class="mt-2">
-                                    <button class="edit-note bg-blue-500 text-white px-2 py-1 rounded">Sửa</button>
-                                    <button class="delete-note bg-red-500 text-white px-2 py-1 rounded">Xóa</button>
+                    // Hiển thị danh sách đã lọc và sắp xếp
+                    if (filteredNotes.length > 0) {
+                        filteredNotes.forEach(note => {
+                            notesList.innerHTML += `
+                                <div class="note-item p-2 border-b" data-id="${note.id}">
+                                    <p><strong>${note.video_time}</strong>: <span class="note-text">${note.note}</span></p>
+                                    <small>Phần ${note.section_order || 'N/A'} - ${note.section_name || 'Không xác định'} | Bài ${note.lesson_order || 'N/A'} - ${note.lesson_name || 'Không xác định'}</small>
+                                    <div class="mt-2">
+                                        <button class="edit-note bg-blue-500 text-white px-2 py-1 rounded">Sửa</button>
+                                        <button class="delete-note bg-red-500 text-white px-2 py-1 rounded">Xóa</button>
+                                    </div>
                                 </div>
-                            </div>
-                        `;
-                    });
-                    attachEventListeners();
+                            `;
+                        });
+                        attachEventListeners();
+                    } else {
+                        notesList.innerHTML = '<p>Không tìm thấy ghi chú nào cho phần này.</p>';
+                    }
                 } else {
                     notesList.innerHTML = '<p>Chưa có ghi chú nào.</p>';
                 }
