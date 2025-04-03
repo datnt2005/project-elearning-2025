@@ -13,217 +13,290 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
 
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? "Fashion.vn" ?></title>
+    <title><?= $title ?? "E-Learning Admin" ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <style>
-        body {
-            display: flex;
-            background: rgb(255, 255, 255);
+        :root {
+            --primary-color: #dc3545;
+            --primary-hover: #bb2d3b;
+            --secondary-color: #6c757d;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --primary-btn: #dc3545;
+            --border-color: rgba(255,255,255,.1);
         }
 
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: rgb(248, 248, 248);
-            color: white;
-            padding: 20px;
-            position: fixed;
-            transition: 0.3s;
+        .main-sidebar {
+            background: var(--dark-bg);
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
         }
 
-        .sidebar a {
-            color: rgb(71, 164, 5);
-            display: block;
-            padding: 12px;
-            margin: 10px 0;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: 0.3s;
+        .brand-link {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 1rem;
         }
 
-        .sidebar a:hover {
-            background: rgb(161, 231, 112);
+        .brand-text {
+            color: var(--primary-color) !important;
+            font-weight: bold !important;
         }
 
-        .sidebar.collapsed {
-            width: 70px;
+        .user-panel {
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .sidebar.collapsed a span {
-            display: none;
+        .user-panel .image {
+            padding-left: 0.8rem;
         }
 
-        .content {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            padding: 20px;
-            transition: 0.3s;
+        .user-panel .info {
+            padding: 0 1rem;
         }
 
-        .collapsed+.content {
-            margin-left: 70px;
-            width: calc(100% - 70px);
+        .user-panel img {
+            border: 2px solid var(--primary-color);
         }
 
-        .card {
-            border: none;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-            transition: 0.3s;
+        .nav-sidebar .nav-link {
+            color: #fff !important;
         }
 
-        .card:hover {
-            transform: scale(1.05);
+        .nav-sidebar .nav-link:hover,
+        .nav-sidebar .nav-link.active {
+            background: var(--primary-color) !important;
+            color: #fff !important;
         }
 
-        .h3 {
-            color: rgb(97, 188, 31);
+        .nav-treeview .nav-link {
+            padding-left: 2.5rem !important;
         }
 
-        .btn-list {
-            background: rgb(97, 188, 31);
+        .content-wrapper {
+            background: #f4f6f9;
         }
 
-        .btn-list:hover {
-            background: rgb(161, 231, 112);
-            color: black;
+        .navbar-nav.ml-auto {
+            margin-left: auto !important;
         }
 
-        .dropdown {
-            position: relative;
-            display: block;
-            width: 100%;
+        .nav-link {
+            color: #6c757d;
+            transition: color 0.3s;
         }
 
-        .dropdown-toggle {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            color: white;
-            text-decoration: none;
-            cursor: pointer;
+        .nav-link:hover {
+            color: var(--primary-btn);
         }
 
-        .dropdown-menu {
-            display: none;
-            background-color: rgb(233, 233, 233);
-            width: 100%;
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 10px;
-            color: green;
-            text-decoration: none;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: rgb(206, 206, 206);
+        @media (max-width: 768px) {
+            .navbar-nav.ml-auto {
+                margin-right: 0.5rem;
+            }
         }
     </style>
 </head>
 
-<body>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </li>
+            </ul>
 
-    <!-- Sidebar Menu -->
-    <div class="sidebar" id="sidebar">
-        <h3 class="text-center h3">Admin Panel</h3>
-        <!-- <?php
-        var_dump($_SESSION['user_role']);
-        echo "role cua user la " . ($_SESSION['user_role'] ?? 'Not Set') . "<br>";
-        ?> -->
-        <?php if (isset($_SESSION['loggedIn']) && $_SESSION['user_role'] === 'admin'): ?>
-            <div class="text-center mb-3">
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout" role="button">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-                <img src="http://localhost:8000/uploads/<?php echo $_SESSION['user_image'] ?? 'avatar/default-avatar.png'; ?>" alt="User Avatar"
-                    class="rounded-circle " width="60" height="60">
-
-                <p class="mt-2 fw-bold text-dark"><?= $_SESSION['user_name'] ?? 'Admin' ?>(admin)</p>
-            </div>
-        <?php endif; ?>
-
-        <i class="fas fa-bars"></i>
-        </button>
-        <i class="fas fa-bars"></i>
-        </button>
-        <a href="/admin/reports"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
-        <div class="dropdown">
-            <a href="#" class="dropdown-toggle" onclick="toggleDropdown(event, 'courseDropdown')">
-                <i class="fas fa-book-open"></i> <span>Khóa học</span>
+        <!-- Main Sidebar -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="/admin" class="brand-link text-center">
+                <span class="brand-text">Admin Panel</span>
             </a>
-            <div class="dropdown-menu" id="courseDropdown">
-                <a href="/admin/courses"><i class="fas fa-book"></i> <span>Danh sách khóa học</span></a>
-                <a href="/admin/sections"><i class="fas fa-layer-group"></i> <span>Phần bài học</span></a>
-                <a href="/admin/lessons"><i class="fas fa-play-circle"></i> <span>Bài học</span></a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- User Panel -->
+                <?php if (isset($_SESSION['loggedIn']) && $_SESSION['user_role'] === 'admin'): ?>
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="/uploads/<?php echo $_SESSION['user_image'] ?? 'avatar/default-avatar.png'; ?>" 
+                             class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <span class="d-block text-white"><?= $_SESSION['user_name'] ?? 'Admin' ?></span>
+                        <small class="text-muted">Administrator</small>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <li class="nav-item">
+                            <a href="/admin/reports" class="nav-link">
+                                <i class="nav-icon fas fa-chart-line"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+
+                        <!-- Courses Menu -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-book-open"></i>
+                                <p>
+                                    Khóa học
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/admin/courses" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Danh sách khóa học</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/admin/sections" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Phần bài học</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/admin/lessons" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Bài học</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Posts Menu -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-newspaper"></i>
+                                <p>
+                                    Bài viết
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/admin/postCategory" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Danh mục bài viết</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/admin/post" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Bài viết</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Other Menu Items -->
+                        <li class="nav-item">
+                            <a href="/admin/categories" class="nav-link">
+                                <i class="nav-icon fas fa-th-list"></i>
+                                <p>Danh mục</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/subcategories" class="nav-link">
+                                <i class="nav-icon fas fa-list-ul"></i>
+                                <p>Danh mục phụ</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/quizzes" class="nav-link">
+                                <i class="nav-icon fas fa-puzzle-piece"></i>
+                                <p>Bài kiểm tra</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/quizQuests" class="nav-link">
+                                <i class="nav-icon fas fa-question-circle"></i>
+                                <p>Câu hỏi</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/quizAnswers" class="nav-link">
+                                <i class="nav-icon fas fa-check-circle"></i>
+                                <p>Câu trả lời</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/coupons" class="nav-link">
+                                <i class="nav-icon fas fa-tag"></i>
+                                <p>Mã giảm giá</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/orders" class="nav-link">
+                                <i class="nav-icon fas fa-ticket"></i>
+                                <p>Đơn hàng</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/user" class="nav-link">
+                                <i class="nav-icon fas fa-ticket"></i>
+                                <p>Người dùng</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/logout" class="nav-link">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>Đăng xuất</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Content -->
+            <section class="content">
+                <div class="container-fluid pt-4">
+                    <?= $content ?>
+                </div>
+            </section>
         </div>
 
-        <div class="dropdown">
-            <a href="#" class="dropdown-toggle" onclick="toggleDropdown(event, 'postDropdown')">
-                <i class="fas fa-book-open"></i> <span>Bài viết</span>
-            </a>
-            <div class="dropdown-menu" id="postDropdown">
-                <a href="/admin/postCategory"><i class="fas fa-book"></i> <span>Danh mục bài viết</span></a>
-                <a href="/admin/post"><i class="fas fa-play-circle"></i> <span>Bài viết</span></a>
-            </div>
-        </div>
-        <a href="/admin/categories"><i class="fas fa-th-list"></i> <span>Danh mục</span></a>
-        <a href="/admin/subcategories"><i class="fas fa-list-ul"></i> <span>Danh mục phụ</span></a>
-        <a href="/admin/quizzes"><i class="fas fa-puzzle-piece"></i> <span>Bài kiểm tra</span></a>
-        <a href="/admin/quizQuests"><i class="fas fa-question-circle"></i> <span>Câu hỏi</span></a>
-        <a href="/admin/quizAnswers"><i class="fas fa-check-circle"></i> <span>Câu trả lời</span></a>
-
-        <a href="/admin/coupons"><i class="fas fa-tag"></i> <span>Mã giảm giá</span></a>
-        <a href="/admin/orders"><i class="fas fa-ticket"></i> <span>Đơn hàng</span"></a>
-        <a href="/admin/user"><i class="fas fa-ticket"></i> <span>Người dùng</span></a>
-        <a href="/admin/postCategory"><i class="fas fa-ticket"></i> <span>Bài viết</span></a>
-        <a href="/logout"><i class="fas fa-sign-out-alt"></i> <span>Đăng xuất</span></a>
-
-        
-
+        <!-- Footer -->
+        <footer class="main-footer">
+            <strong>Copyright &copy; 2025 E-Learning.</strong>
+            All rights reserved.
+        </footer>
     </div>
 
-    <!-- Nội dung chính -->
-    <div class="content" id="content">
-
-
-        <?= $content ?>
-
-    </div>
-    <!-- <main class="container my-4">
-      
-    </main> -->
-
-
-
-
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 </body>
-
 </html>
-<script>
-    function toggleDropdown(event, dropdownId) {
-        event.preventDefault();  
-        let dropdown = document.getElementById(dropdownId);
-        if (dropdown.style.display === "block") {
-            dropdown.style.display = "none";
-        } else {
-            dropdown.style.display = "block";
-        }
-    }
-
-       function toggleDropdown(event, dropdownId) {
-        event.preventDefault();  
-        let dropdown = document.getElementById(dropdownId);
-        if (dropdown.style.display === "block") {
-            dropdown.style.display = "none";
-        } else {
-            dropdown.style.display = "block";
-        }
-    }
-</script>

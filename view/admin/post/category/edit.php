@@ -1,5 +1,13 @@
 <style>
-    /* Reset margin and padding */
+:root {
+    --header-bg: #343a40;
+    --primary-btn: #dc3545;
+    --primary-btn-hover: #bb2d3b;
+    --text-light: #f8f9fa;
+    --border-color: rgba(255,255,255,0.1);
+}
+
+/* Reset margin and padding */
 * {
     margin: 0;
     padding: 0;
@@ -12,9 +20,6 @@
     max-width: 800px;
     margin: 50px auto;
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Centered header */
@@ -22,14 +27,16 @@
     text-align: center;
     margin-bottom: 20px;
     font-size: 24px;
-    color: #333;
+    color: var(--header-bg);
 }
 
 /* Form container styling */
 .form-container {
-    padding: 20px;
     background-color: #fff;
+    padding: 20px;
     border-radius: 8px;
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
 }
 
 /* Label styling */
@@ -50,7 +57,8 @@
 }
 
 .form-control:focus {
-    border-color: #007bff;
+    border-color: var(--primary-btn);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
 
 /* Button styling */
@@ -66,13 +74,15 @@
 
 /* Submit button */
 .custom-btn-submit {
-    background-color: #007bff;
-    color: white;
-    border: none;
+    background-color: var(--primary-btn);
+    border-color: var(--primary-btn);
+    color: var(--text-light);
 }
 
 .custom-btn-submit:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-btn-hover);
+    border-color: var(--primary-btn-hover);
+    transform: translateY(-1px);
 }
 
 /* Back button */
@@ -90,10 +100,8 @@
 /* Error message */
 .alert {
     background-color: #f8d7da;
-    color: #721c24;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
+    border-color: var(--primary-btn);
+    color: var(--primary-btn);
 }
 
 .alert ul {
@@ -118,7 +126,6 @@
         font-size: 14px;
     }
 }
-
 </style>
 <div class="custom-container">
     <h2 class="text-center custom-header">Chỉnh sửa danh mục</h2>
