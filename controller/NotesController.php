@@ -134,7 +134,8 @@ public function edit($id) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Content-Type: application/json');
 
-        $note = isset($_POST['note']) ? htmlspecialchars($_POST['note'], ENT_QUOTES, 'UTF-8') : null; // sanitize input
+        // Lấy dữ liệu thô từ POST, không mã hóa HTML
+        $note = isset($_POST['note']) ? $_POST['note'] : null;
 
         if (!$note) {
             echo json_encode([
@@ -145,6 +146,9 @@ public function edit($id) {
         }
 
         try {
+            // Ghi log để kiểm tra dữ liệu trước khi lưu
+            error_log("Dữ liệu trước khi lưu: " . $note);
+
             $result = $this->notesModel->updateNote($id, $note);
 
             if ($result) {

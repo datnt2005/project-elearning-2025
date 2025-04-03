@@ -100,78 +100,31 @@
                     </div>
                 <?php endif; ?>
                 <!-- Sidebar ghi chú -->
-<div id="notes-sidebar" class="fixed top-0 right-0 h-full w-80 bg-white text-black p-4 transform translate-x-full transition-transform duration-300">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg">Ghi chú</h2>
-        <button id="close-notes-btn" class="text-black">✖</button>
-    </div>
-    <!-- Bộ lọc sắp xếp -->
-    <div class="mb-4">
-        <label for="sortOrder" class="mr-2">Sắp xếp:</label>
-        <select id="sortOrder" class="bg-gray-200 text-black p-1 rounded">
-            <option value="lesson_order" selected>Theo thứ tự bài học</option>
-            <option value="newest">Mới nhất</option>
-            <option value="oldest">Cũ nhất</option>
-        </select>
-    </div>
-    <!-- Tìm kiếm theo section -->
-    <div class="mb-4 flex items-center">
-        <input type="text" id="sectionFilter" class="bg-gray-200 text-black p-1 rounded w-full mr-2" placeholder="Nhập số phần (ví dụ: 1)">
-        <button id="filterSectionBtn" class="bg-blue-500 text-white px-2 py-1 rounded">Tìm</button>
-    </div>
-    <div id="notes-list" class="overflow-y-auto h-5/6"></div>
-</div>
+                <div id="notes-sidebar" class="fixed top-0 right-0 h-full w-80 bg-white text-black p-4 transform translate-x-full transition-transform duration-300 rounded-l-lg shadow-lg border border-black">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg">Ghi chú</h2>
+                        <button id="close-notes-btn" class="text-black">✖</button>
+                    </div>
+                    <!-- Bộ lọc sắp xếp -->
+                    <div class="mb-4">
+                        <label for="sortOrder" class="mr-2">Sắp xếp:</label>
+                        <select id="sortOrder" class="bg-gray-200 text-black p-1 rounded-lg">
+                            <option value="lesson_order" selected>Theo thứ tự bài học</option>
+                            <option value="newest">Mới nhất</option>
+                            <option value="oldest">Cũ nhất</option>
+                        </select>
+                    </div>
+                    <!-- Tìm kiếm theo section -->
+                    <div class="mb-4 flex items-center">
+                        <input type="text" id="sectionFilter" class="bg-gray-200 text-black p-1 rounded-lg w-full mr-2" placeholder="Nhập số phần (ví dụ: 1)">
+                        <button id="filterSectionBtn" class="bg-blue-500 text-white px-2 py-1 rounded-lg">Tìm</button>
+                    </div>
+                    <div id="notes-list" class="overflow-y-auto h-5/6"></div>
+                </div>
+
             </div>
-            <style>
-    /* Khi Focus Mode được kích hoạt */
-    .focus-mode .video-section,
-    .focus-mode .sidebar:not(#notes-sidebar) {
-        filter: blur(5px); /* Làm mờ các phần tử */
-        opacity: 0.5; /* Giảm độ trong suốt */
-        transition: filter 0.3s ease, opacity 0.3s ease; /* Hiệu ứng mượt mà */
-        pointer-events: none; /* Ngăn tương tác với các phần tử bị mờ */
-    }
 
-    /* Đảm bảo sidebar ghi chú không bị ảnh hưởng */
-    .focus-mode #notes-sidebar {
-        filter: none;
-        opacity: 1;
-        pointer-events: auto;
-    }
 
-    /* Đảm bảo body không bị scroll khi focus mode bật */
-    .focus-mode body {
-        overflow: hidden;
-    }
-</style>
-            <style>
-                #notes-sidebar {
-                    width: 500px;
-                    /* Thay 500px bằng giá trị bạn muốn */
-                }
-
-                /* Đảm bảo sidebar nằm trên cùng các phần tử khác */
-                #notes-sidebar {
-                    z-index: 50;
-                    /* Đặt z-index cao để hiển thị trên các phần tử khác */
-                }
-
-                /* Khi sidebar mở */
-                #notes-sidebar.open {
-                    transform: translateX(0);
-                    /* Dịch chuyển vào màn hình */
-                }
-
-                /* Tùy chỉnh giao diện danh sách ghi chú (sau này bạn có thể thêm style cho danh sách) */
-                #notes-list {
-                    max-height: calc(100% - 60px);
-                    /* Trừ chiều cao của header sidebar */
-                    overflow-y: auto;
-                    /* Cuộn nếu danh sách dài */
-                }
-
-                
-            </style>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
@@ -291,91 +244,82 @@
                     }
 
                     function attachEventListeners() {
-    // Xử lý nút ba chấm
-    document.addEventListener('DOMContentLoaded', function() {
-    const notesSidebar = document.getElementById('notes-sidebar');
+                        // Xử lý nút ba chấm
+                        document.querySelectorAll('.dropdown-btn').forEach(button => {
+                            button.addEventListener('click', function(event) {
+                                const dropdownMenu = this.nextElementSibling;
+                                // Ẩn tất cả các dropdown khác
+                                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                                    if (menu !== dropdownMenu) menu.classList.add('hidden');
+                                });
+                                dropdownMenu.classList.toggle('hidden');
+                                event.stopPropagation(); // Ngăn sự kiện click lan ra ngoài
+                            });
+                        });
 
-    // Mở sidebar ghi chú
-    document.getElementById('toggle-notes-btn').addEventListener('click', function() {
-        notesSidebar.classList.toggle('open');
-        if (notesSidebar.classList.contains('open')) {
-            document.body.classList.add('focus-mode'); // Thêm lớp focus-mode vào body
-            loadNotes();
-        } else {
-            document.body.classList.remove('focus-mode'); // Xóa lớp focus-mode khỏi body
-        }
-    });
+                        // Xử lý nút "Sửa"
+                        document.querySelectorAll('.edit-note').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const noteItem = this.closest('.note-item');
+                                currentEditingNoteId = noteItem.getAttribute('data-id');
+                                const noteText = noteItem.querySelector('.note-text').innerHTML;
+                                openEditModal(noteText);
+                                this.closest('.dropdown-menu').classList.add('hidden'); // Ẩn dropdown sau khi click
+                            });
+                        });
 
-    // Đóng sidebar ghi chú
-    document.getElementById('close-notes-btn').addEventListener('click', function() {
-        notesSidebar.classList.remove('open');
-        document.body.classList.remove('focus-mode'); // Xóa lớp focus-mode khỏi body
-    });
-});
+                        // Xử lý nút "Xóa"
+                        document.querySelectorAll('.delete-note').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const noteItem = this.closest('.note-item');
+                                const noteId = noteItem.getAttribute('data-id');
+                                Swal.fire({
+                                    title: "Xác nhận xóa?",
+                                    text: "Bạn có chắc chắn muốn xóa ghi chú này?",
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#d33",
+                                    cancelButtonColor: "#3085d6",
+                                    confirmButtonText: "Xóa",
+                                    cancelButtonText: "Hủy"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        deleteNote(noteId, noteItem);
+                                    }
+                                });
+                                this.closest('.dropdown-menu').classList.add('hidden'); // Ẩn dropdown sau khi click
+                            });
+                        });
 
-    // Xử lý nút "Sửa"
-    document.querySelectorAll('.edit-note').forEach(button => {
-        button.addEventListener('click', function() {
-            const noteItem = this.closest('.note-item');
-            currentEditingNoteId = noteItem.getAttribute('data-id');
-            const noteText = noteItem.querySelector('.note-text').innerHTML;
-            openEditModal(noteText);
-            this.closest('.dropdown-menu').classList.add('hidden'); // Ẩn dropdown sau khi click
-        });
-    });
+                        // Đóng dropdown khi click ra ngoài
+                        document.addEventListener('click', function(event) {
+                            if (!event.target.closest('.dropdown-btn') && !event.target.closest('.dropdown-menu')) {
+                                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                                    menu.classList.add('hidden');
+                                });
+                            }
+                        });
+                    }
 
-    // Xử lý nút "Xóa"
-    document.querySelectorAll('.delete-note').forEach(button => {
-        button.addEventListener('click', function() {
-            const noteItem = this.closest('.note-item');
-            const noteId = noteItem.getAttribute('data-id');
-            Swal.fire({
-                title: "Xác nhận xóa?",
-                text: "Bạn có chắc chắn muốn xóa ghi chú này?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Xóa",
-                cancelButtonText: "Hủy"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteNote(noteId, noteItem);
-                }
-            });
-            this.closest('.dropdown-menu').classList.add('hidden'); // Ẩn dropdown sau khi click
-        });
-    });
-
-    // Đóng dropdown khi click ra ngoài
-    document.addEventListener('click', function(event) {
-        if (!event.target.closest('.dropdown-btn') && !event.target.closest('.dropdown-menu')) {
-            document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                menu.classList.add('hidden');
-            });
-        }
-    });
-}
-
-// Hàm xóa ghi chú (không load lại trang)
-function deleteNote(id, noteItem) {
-    fetch(`/notes/delete/${id}`, {
-        method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            noteItem.remove(); // Xóa phần tử khỏi DOM mà không load lại trang
-            Swal.fire("Đã xóa!", "Ghi chú đã được xóa.", "success");
-        } else {
-            Swal.fire("Lỗi!", "Không thể xóa ghi chú.", "error");
-        }
-    })
-    .catch(error => {
-        console.error('Lỗi khi xóa ghi chú:', error);
-        Swal.fire("Lỗi!", "Có lỗi xảy ra khi xóa ghi chú.", "error");
-    });
-}
+                    // Hàm xóa ghi chú (không load lại trang)
+                    function deleteNote(id, noteItem) {
+                        fetch(`/notes/delete/${id}`, {
+                                method: 'POST'
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    noteItem.remove(); // Xóa phần tử khỏi DOM mà không load lại trang
+                                    Swal.fire("Đã xóa!", "Ghi chú đã được xóa.", "success");
+                                } else {
+                                    Swal.fire("Lỗi!", "Không thể xóa ghi chú.", "error");
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi xóa ghi chú:', error);
+                                Swal.fire("Lỗi!", "Có lỗi xảy ra khi xóa ghi chú.", "error");
+                            });
+                    }
 
                     // Mở modal chỉnh sửa ghi chú
                     function openEditModal(noteText) {
@@ -571,39 +515,6 @@ function deleteNote(id, noteItem) {
                 </div>
             </div>
 
-            <style>
-                .editor-btn {
-                    @apply bg-gray-700 text-white p-2 rounded-lg hover:bg-gray-600 transition;
-                }
-            </style>
-
-            <style>
-                /* Đảm bảo editNoteModal hiển thị trên tất cả */
-                #editNoteModal {
-                    z-index: 100;
-                    /* Giá trị cao hơn sidebar hoặc các phần tử khác */
-                }
-            </style>
-            <style>
-    .note-item {
-        position: relative;
-    }
-
-    .dropdown-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-    }
-
-    .dropdown-menu {
-        z-index: 50; /* Đảm bảo dropdown hiển thị trên các phần tử khác */
-    }
-
-    .dropdown-menu.hidden {
-        display: none;
-    }
-    
-</style>
 
 
 
@@ -1616,5 +1527,64 @@ function deleteNote(id, noteItem) {
 
     .lock-icon {
         margin-left: 5px;
+    }
+</style>
+<style>
+    .editor-btn {
+        @apply bg-gray-700 text-white p-2 rounded-lg hover:bg-gray-600 transition;
+    }
+</style>
+
+<style>
+    /* Đảm bảo editNoteModal hiển thị trên tất cả */
+    #editNoteModal {
+        z-index: 100;
+        /* Giá trị cao hơn sidebar hoặc các phần tử khác */
+    }
+</style>
+<style>
+    .note-item {
+        position: relative;
+    }
+
+    .dropdown-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        z-index: 50;
+        /* Đảm bảo dropdown hiển thị trên các phần tử khác */
+    }
+
+    .dropdown-menu.hidden {
+        display: none;
+    }
+</style>
+<style>
+    #notes-sidebar {
+        width: 500px;
+        /* Thay 500px bằng giá trị bạn muốn */
+    }
+
+    /* Đảm bảo sidebar nằm trên cùng các phần tử khác */
+    #notes-sidebar {
+        z-index: 50;
+        /* Đặt z-index cao để hiển thị trên các phần tử khác */
+    }
+
+    /* Khi sidebar mở */
+    #notes-sidebar.open {
+        transform: translateX(0);
+        /* Dịch chuyển vào màn hình */
+    }
+
+    /* Tùy chỉnh giao diện danh sách ghi chú (sau này bạn có thể thêm style cho danh sách) */
+    #notes-list {
+        max-height: calc(100% - 60px);
+        /* Trừ chiều cao của header sidebar */
+        overflow-y: auto;
+        /* Cuộn nếu danh sách dài */
     }
 </style>
