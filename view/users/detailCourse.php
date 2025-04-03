@@ -52,23 +52,23 @@
                         </div>
                         <!-- Form Ghi Chú -->
                         <form id="noteForm" action="/notes" method="POST">
-    <div id="noteContent" contenteditable="true" class="w-full bg-gray-700 text-white p-2 rounded h-32 overflow-auto" style="outline: none;"></div>
-    <input type="hidden" name="note" id="note">
-    <input type="hidden" id="video_time" name="video_time">
-    <input type="hidden" id="users_id" name="users_id" value="<?php echo isset($users['id']) ? $users['id'] : ''; ?>">
-    <input type="hidden" name="courses_id" value="<?php echo $course['id']; ?>">
-    <input type="hidden" id="lessons_id" name="lessons_id" value="<?php echo $lessons_id = $_POST['lessons_id'] ?? null; ?>">
-    
-    <div class="flex justify-between mt-4">
-        <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded">TẠO GHI CHÚ</button>
-        <button type="button" onclick="closeModal()" class="bg-gray-800 text-white px-4 py-2 rounded">HỦY BỎ</button>
-    </div>
-</form>
+                            <div id="noteContent" contenteditable="true" class="w-full bg-gray-700 text-white p-2 rounded h-32 overflow-auto" style="outline: none;"></div>
+                            <input type="hidden" name="note" id="note">
+                            <input type="hidden" id="video_time" name="video_time">
+                            <input type="hidden" id="users_id" name="users_id" value="<?php echo isset($users['id']) ? $users['id'] : ''; ?>">
+                            <input type="hidden" name="courses_id" value="<?php echo $course['id']; ?>">
+                            <input type="hidden" id="lessons_id" name="lessons_id" value="<?php echo $lessons_id = $_POST['lessons_id'] ?? null; ?>">
+
+                            <div class="flex justify-between mt-4">
+                                <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded">TẠO GHI CHÚ</button>
+                                <button type="button" onclick="closeModal()" class="bg-gray-800 text-white px-4 py-2 rounded">HỦY BỎ</button>
+                            </div>
+                        </form>
 
 
 
                     </div>
-                   
+
                 </div>
             </div>
             <script src="https://www.youtube.com/iframe_api"></script>
@@ -76,7 +76,7 @@
 
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         </div>
-       
+
         <!-- Sidebar nội dung khóa học -->
         <div class="sidebar">
             <div class="progress-bar mt-4">
@@ -99,16 +99,16 @@
                         </p>
                     </div>
                 <?php endif; ?>
-            <!-- Sidebar ghi chú -->
-<div id="notes-sidebar" class="fixed top-0 right-0 h-full w-80 bg-gray-900 text-white p-4 transform translate-x-full transition-transform duration-300">
+                <!-- Sidebar ghi chú -->
+<div id="notes-sidebar" class="fixed top-0 right-0 h-full w-80 bg-white text-black p-4 transform translate-x-full transition-transform duration-300">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg">Ghi chú</h2>
-        <button id="close-notes-btn" class="text-white">✖</button>
+        <button id="close-notes-btn" class="text-black">✖</button>
     </div>
     <!-- Bộ lọc sắp xếp -->
     <div class="mb-4">
         <label for="sortOrder" class="mr-2">Sắp xếp:</label>
-        <select id="sortOrder" class="bg-gray-700 text-white p-1 rounded">
+        <select id="sortOrder" class="bg-gray-200 text-black p-1 rounded">
             <option value="lesson_order" selected>Theo thứ tự bài học</option>
             <option value="newest">Mới nhất</option>
             <option value="oldest">Cũ nhất</option>
@@ -116,12 +116,34 @@
     </div>
     <!-- Tìm kiếm theo section -->
     <div class="mb-4 flex items-center">
-        <input type="text" id="sectionFilter" class="bg-gray-700 text-white p-1 rounded w-full mr-2" placeholder="Nhập số phần (ví dụ: 1)">
+        <input type="text" id="sectionFilter" class="bg-gray-200 text-black p-1 rounded w-full mr-2" placeholder="Nhập số phần (ví dụ: 1)">
         <button id="filterSectionBtn" class="bg-blue-500 text-white px-2 py-1 rounded">Tìm</button>
     </div>
     <div id="notes-list" class="overflow-y-auto h-5/6"></div>
 </div>
             </div>
+            <style>
+    /* Khi Focus Mode được kích hoạt */
+    .focus-mode .video-section,
+    .focus-mode .sidebar:not(#notes-sidebar) {
+        filter: blur(5px); /* Làm mờ các phần tử */
+        opacity: 0.5; /* Giảm độ trong suốt */
+        transition: filter 0.3s ease, opacity 0.3s ease; /* Hiệu ứng mượt mà */
+        pointer-events: none; /* Ngăn tương tác với các phần tử bị mờ */
+    }
+
+    /* Đảm bảo sidebar ghi chú không bị ảnh hưởng */
+    .focus-mode #notes-sidebar {
+        filter: none;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Đảm bảo body không bị scroll khi focus mode bật */
+    .focus-mode body {
+        overflow: hidden;
+    }
+</style>
             <style>
                 #notes-sidebar {
                     width: 500px;
@@ -147,336 +169,440 @@
                     overflow-y: auto;
                     /* Cuộn nếu danh sách dài */
                 }
+
+                
             </style>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
             <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const notesSidebar = document.getElementById('notes-sidebar');
-    const editNoteModal = document.getElementById('editNoteModal');
-    const editNoteContent = document.getElementById('editNoteContent');
-    let currentEditingNoteId = null;
+                document.addEventListener('DOMContentLoaded', function() {
+                    const notesSidebar = document.getElementById('notes-sidebar');
+                    const editNoteModal = document.getElementById('editNoteModal');
+                    const editNoteContent = document.getElementById('editNoteContent');
+                    let currentEditingNoteId = null;
 
-    // Mở / Đóng sidebar ghi chú
-    document.getElementById('toggle-notes-btn').addEventListener('click', function() {
-        notesSidebar.classList.toggle('open');
-        if (notesSidebar.classList.contains('open')) {
-            loadNotes();
-        }
-    });
-
-    document.getElementById('close-notes-btn').addEventListener('click', function() {
-        notesSidebar.classList.remove('open');
-    });
-
-    // Lắng nghe sự thay đổi của bộ lọc sắp xếp
-    const sortOrderSelect = document.getElementById('sortOrder');
-    sortOrderSelect.addEventListener('change', function() {
-        loadNotes(); // Tải lại ghi chú khi thay đổi bộ lọc
-    });
-
-    // Lắng nghe sự kiện nhấn nút tìm kiếm theo section
-    const sectionFilterInput = document.getElementById('sectionFilter');
-    document.getElementById('filterSectionBtn').addEventListener('click', function() {
-        loadNotes(); // Tải lại ghi chú khi nhấn nút tìm
-    });
-
-    // Cho phép tìm kiếm khi nhấn Enter trong input
-    sectionFilterInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            loadNotes();
-        }
-    });
-
-    // Load danh sách ghi chú
-    function loadNotes() {
-        const coursesId = <?php echo json_encode($course['id']); ?>;
-        fetch(`/notes/get?courses_id=${coursesId}`)
-            .then(response => response.json())
-            .then(data => {
-                const notesList = document.getElementById('notes-list');
-                notesList.innerHTML = '';
-
-                if (data.status === 'success' && data.notes.length > 0) {
-                    // Lấy giá trị sắp xếp và bộ lọc section
-                    const sortOrder = sortOrderSelect.value;
-                    const sectionFilter = sectionFilterInput.value.trim();
-
-                    // Sao chép mảng để không thay đổi dữ liệu gốc
-                    let filteredNotes = [...data.notes];
-
-                    // Lọc theo section_order nếu có giá trị nhập vào
-                    if (sectionFilter !== '') {
-                        filteredNotes = filteredNotes.filter(note => {
-                            const sectionOrder = note.section_order || 'N/A';
-                            return sectionOrder.toString() === sectionFilter;
-                        });
-                    }
-
-                    // Sắp xếp danh sách đã lọc
-                    filteredNotes.sort((a, b) => {
-                        if (sortOrder === 'lesson_order') {
-                            // Sắp xếp theo thứ tự bài học (tăng dần)
-                            return (a.lesson_order || 0) - (b.lesson_order || 0);
-                        } else if (sortOrder === 'newest') {
-                            // Sắp xếp theo mới nhất (giảm dần theo created_at)
-                            const dateA = new Date(a.created_at);
-                            const dateB = new Date(b.created_at);
-                            return dateB - dateA;
-                        } else if (sortOrder === 'oldest') {
-                            // Sắp xếp theo cũ nhất (tăng dần theo created_at)
-                            const dateA = new Date(a.created_at);
-                            const dateB = new Date(b.created_at);
-                            return dateA - dateB;
+                    // Mở / Đóng sidebar ghi chú
+                    document.getElementById('toggle-notes-btn').addEventListener('click', function() {
+                        notesSidebar.classList.toggle('open');
+                        if (notesSidebar.classList.contains('open')) {
+                            loadNotes();
                         }
                     });
 
-                    // Hiển thị danh sách đã lọc và sắp xếp
-                    if (filteredNotes.length > 0) {
-                        filteredNotes.forEach(note => {
-                            notesList.innerHTML += `
-                                <div class="note-item p-2 border-b" data-id="${note.id}">
-                                    <p><strong>${note.video_time}</strong>: <span class="note-text">${note.note}</span></p>
-                                    <small>Phần ${note.section_order || 'N/A'} - ${note.section_name || 'Không xác định'} | Bài ${note.lesson_order || 'N/A'} - ${note.lesson_name || 'Không xác định'}</small>
-                                    <div class="mt-2">
-                                        <button class="edit-note bg-blue-500 text-white px-2 py-1 rounded">Sửa</button>
-                                        <button class="delete-note bg-red-500 text-white px-2 py-1 rounded">Xóa</button>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                        attachEventListeners();
-                    } else {
-                        notesList.innerHTML = '<p>Không tìm thấy ghi chú nào cho phần này.</p>';
+                    document.getElementById('close-notes-btn').addEventListener('click', function() {
+                        notesSidebar.classList.remove('open');
+                    });
+
+                    // Lắng nghe sự thay đổi của bộ lọc sắp xếp
+                    const sortOrderSelect = document.getElementById('sortOrder');
+                    sortOrderSelect.addEventListener('change', function() {
+                        loadNotes(); // Tải lại ghi chú khi thay đổi bộ lọc
+                    });
+
+                    // Lắng nghe sự kiện nhấn nút tìm kiếm theo section
+                    const sectionFilterInput = document.getElementById('sectionFilter');
+                    document.getElementById('filterSectionBtn').addEventListener('click', function() {
+                        loadNotes(); // Tải lại ghi chú khi nhấn nút tìm
+                    });
+
+                    // Cho phép tìm kiếm khi nhấn Enter trong input
+                    sectionFilterInput.addEventListener('keypress', function(event) {
+                        if (event.key === 'Enter') {
+                            loadNotes();
+                        }
+                    });
+
+                    // Load danh sách ghi chú
+                    function loadNotes() {
+                        const coursesId = <?php echo json_encode($course['id']); ?>;
+                        fetch(`/notes/get?courses_id=${coursesId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const notesList = document.getElementById('notes-list');
+                                notesList.innerHTML = '';
+
+                                if (data.status === 'success' && data.notes.length > 0) {
+                                    // Lấy giá trị sắp xếp và bộ lọc section
+                                    const sortOrder = sortOrderSelect.value;
+                                    const sectionFilter = sectionFilterInput.value.trim();
+
+                                    // Sao chép mảng để không thay đổi dữ liệu gốc
+                                    let filteredNotes = [...data.notes];
+
+                                    // Lọc theo section_order nếu có giá trị nhập vào
+                                    if (sectionFilter !== '') {
+                                        filteredNotes = filteredNotes.filter(note => {
+                                            const sectionOrder = note.section_order || 'N/A';
+                                            return sectionOrder.toString() === sectionFilter;
+                                        });
+                                    }
+
+                                    // Sắp xếp danh sách đã lọc
+                                    filteredNotes.sort((a, b) => {
+                                        if (sortOrder === 'lesson_order') {
+                                            // Sắp xếp theo thứ tự bài học (tăng dần)
+                                            return (a.lesson_order || 0) - (b.lesson_order || 0);
+                                        } else if (sortOrder === 'newest') {
+                                            // Sắp xếp theo mới nhất (giảm dần theo created_at)
+                                            const dateA = new Date(a.created_at);
+                                            const dateB = new Date(b.created_at);
+                                            return dateB - dateA;
+                                        } else if (sortOrder === 'oldest') {
+                                            // Sắp xếp theo cũ nhất (tăng dần theo created_at)
+                                            const dateA = new Date(a.created_at);
+                                            const dateB = new Date(b.created_at);
+                                            return dateA - dateB;
+                                        }
+                                    });
+
+                                    // Hiển thị danh sách đã lọc và sắp xếp
+                                    if (filteredNotes.length > 0) {
+                                        // Trong hàm loadNotes(), thay đoạn hiển thị note-item bằng:
+                                        filteredNotes.forEach(note => {
+                                            notesList.innerHTML += `
+        <div class="note-item p-2 border-b relative" data-id="${note.id}">
+            <p><strong>${note.video_time}</strong>: <span class="note-text">${note.note}</span></p>
+            <small>Phần ${note.section_order || 'N/A'} - ${note.section_name || 'Không xác định'} | Bài ${note.lesson_order || 'N/A'} - ${note.lesson_name || 'Không xác định'}</small>
+            <div class="absolute right-2 top-2">
+                <button class="dropdown-btn text-gray-400 hover:text-white focus:outline-none">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
+                    </svg>
+                </button>
+                <div class="dropdown-menu absolute right-0 mt-2 w-28 bg-gray-800 border border-gray-700 rounded-md shadow-lg hidden z-50">
+                    <button class="edit-note w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Sửa</button>
+                    <button class="delete-note w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">Xóa</button>
+                </div>
+            </div>
+        </div>
+    `;
+                                        });
+                                        attachEventListeners();
+                                    } else {
+                                        notesList.innerHTML = '<p>Không tìm thấy ghi chú nào cho phần này.</p>';
+                                    }
+                                } else {
+                                    notesList.innerHTML = '<p>Chưa có ghi chú nào.</p>';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi tải ghi chú:', error);
+                                document.getElementById('notes-list').innerHTML = '<p>Lỗi khi tải ghi chú.</p>';
+                            });
                     }
-                } else {
-                    notesList.innerHTML = '<p>Chưa có ghi chú nào.</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Lỗi khi tải ghi chú:', error);
-                document.getElementById('notes-list').innerHTML = '<p>Lỗi khi tải ghi chú.</p>';
-            });
-    }
 
-    // Gắn sự kiện cho các nút sửa và xóa
-    function attachEventListeners() {
-        document.querySelectorAll('.edit-note').forEach(button => {
-            button.addEventListener('click', function() {
-                const noteItem = this.closest('.note-item');
-                currentEditingNoteId = noteItem.getAttribute('data-id');
-                const noteText = noteItem.querySelector('.note-text').innerHTML;
-                openEditModal(noteText);
-            });
-        });
+                    function attachEventListeners() {
+    // Xử lý nút ba chấm
+    document.addEventListener('DOMContentLoaded', function() {
+    const notesSidebar = document.getElementById('notes-sidebar');
 
-        document.querySelectorAll('.delete-note').forEach(button => {
-            button.addEventListener('click', function() {
-                const noteItem = this.closest('.note-item');
-                const noteId = noteItem.getAttribute('data-id');
-                Swal.fire({
-                    title: "Xác nhận xóa?",
-                    text: "Bạn có chắc chắn muốn xóa ghi chú này?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Xóa",
-                    cancelButtonText: "Hủy"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        deleteNote(noteId, noteItem);
-                    }
-                });
-            });
-        });
-    }
-
-    // Mở modal chỉnh sửa ghi chú
-    function openEditModal(noteText) {
-        editNoteContent.innerHTML = noteText;
-        document.getElementById('editNoteId').value = currentEditingNoteId;
-        editNoteModal.classList.remove('hidden');
-    }
-
-    // Xử lý submit form chỉnh sửa
-    document.getElementById('editNoteForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const noteId = document.getElementById('editNoteId').value;
-        const noteContent = editNoteContent.innerHTML;
-        fetch(`/notes/edit/${noteId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `note=${encodeURIComponent(noteContent)}`
-        })
-        .then(response => response.text())
-        .then(text => {
-            console.log('Phản hồi từ server:', text);
-            try {
-                const data = JSON.parse(text);
-                if (data.status === 'success') {
-                    document.querySelector(`.note-item[data-id="${noteId}"] .note-text`).innerHTML = noteContent;
-                    Swal.fire("Thành công!", "Ghi chú đã được cập nhật!", "success");
-                    closeEditModal();
-                } else {
-                    Swal.fire("Lỗi!", data.message || "Có lỗi khi cập nhật ghi chú.", "error");
-                }
-            } catch (error) {
-                console.error("Lỗi phân tích JSON:", error);
-                Swal.fire("Lỗi!", "Dữ liệu trả về không hợp lệ.", "error");
-            }
-        })
-        .catch(error => {
-            console.error("Lỗi khi cập nhật ghi chú:", error);
-            Swal.fire("Lỗi!", "Có lỗi xảy ra khi cập nhật ghi chú.", "error");
-        });
+    // Mở sidebar ghi chú
+    document.getElementById('toggle-notes-btn').addEventListener('click', function() {
+        notesSidebar.classList.toggle('open');
+        if (notesSidebar.classList.contains('open')) {
+            document.body.classList.add('focus-mode'); // Thêm lớp focus-mode vào body
+            loadNotes();
+        } else {
+            document.body.classList.remove('focus-mode'); // Xóa lớp focus-mode khỏi body
+        }
     });
 
-    // Xóa ghi chú
-    function deleteNote(id, noteItem) {
-        fetch(`/notes/delete/${id}`, {
-            method: 'POST'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                noteItem.remove();
-                Swal.fire("Đã xóa!", "Ghi chú đã được xóa.", "success");
-                loadNotes(); // Tải lại danh sách sau khi xóa
-            } else {
-                Swal.fire("Lỗi!", "Không thể xóa ghi chú.", "error");
-            }
-        })
-        .catch(error => {
-            console.error('Lỗi khi xóa ghi chú:', error);
-            Swal.fire("Lỗi!", "Có lỗi xảy ra khi xóa ghi chú.", "error");
-        });
-    }
-
-    // Xử lý form tạo ghi chú
-    document.getElementById("noteForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        let noteContent = document.getElementById("noteContent").innerHTML;
-        document.getElementById("note").value = noteContent;
-        let formData = new FormData(this);
-        fetch("/notes", {
-            method: "POST",
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === "success") {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Thành công!',
-                    text: data.message,
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    closeModal();
-                    if (notesSidebar.classList.contains('open')) {
-                        loadNotes(); // Tải lại danh sách sau khi thêm
-                    }
-                    document.getElementById("noteContent").innerHTML = "";
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Lỗi!',
-                    text: data.message,
-                    confirmButtonText: 'OK'
-                });
-            }
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Có lỗi xảy ra khi gửi ghi chú.',
-                confirmButtonText: 'OK'
-            });
-            console.error("Lỗi:", error);
-        });
+    // Đóng sidebar ghi chú
+    document.getElementById('close-notes-btn').addEventListener('click', function() {
+        notesSidebar.classList.remove('open');
+        document.body.classList.remove('focus-mode'); // Xóa lớp focus-mode khỏi body
     });
 });
 
-// Đưa hàm closeEditModal ra toàn cục
-function closeEditModal() {
-    const editNoteModal = document.getElementById('editNoteModal');
-    editNoteModal.classList.add('hidden');
+    // Xử lý nút "Sửa"
+    document.querySelectorAll('.edit-note').forEach(button => {
+        button.addEventListener('click', function() {
+            const noteItem = this.closest('.note-item');
+            currentEditingNoteId = noteItem.getAttribute('data-id');
+            const noteText = noteItem.querySelector('.note-text').innerHTML;
+            openEditModal(noteText);
+            this.closest('.dropdown-menu').classList.add('hidden'); // Ẩn dropdown sau khi click
+        });
+    });
+
+    // Xử lý nút "Xóa"
+    document.querySelectorAll('.delete-note').forEach(button => {
+        button.addEventListener('click', function() {
+            const noteItem = this.closest('.note-item');
+            const noteId = noteItem.getAttribute('data-id');
+            Swal.fire({
+                title: "Xác nhận xóa?",
+                text: "Bạn có chắc chắn muốn xóa ghi chú này?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Xóa",
+                cancelButtonText: "Hủy"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteNote(noteId, noteItem);
+                }
+            });
+            this.closest('.dropdown-menu').classList.add('hidden'); // Ẩn dropdown sau khi click
+        });
+    });
+
+    // Đóng dropdown khi click ra ngoài
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.dropdown-btn') && !event.target.closest('.dropdown-menu')) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        }
+    });
 }
 
-// Các hàm hỗ trợ khác
-function openModal() {
-    document.getElementById('noteModal').classList.remove('hidden');
+// Hàm xóa ghi chú (không load lại trang)
+function deleteNote(id, noteItem) {
+    fetch(`/notes/delete/${id}`, {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            noteItem.remove(); // Xóa phần tử khỏi DOM mà không load lại trang
+            Swal.fire("Đã xóa!", "Ghi chú đã được xóa.", "success");
+        } else {
+            Swal.fire("Lỗi!", "Không thể xóa ghi chú.", "error");
+        }
+    })
+    .catch(error => {
+        console.error('Lỗi khi xóa ghi chú:', error);
+        Swal.fire("Lỗi!", "Có lỗi xảy ra khi xóa ghi chú.", "error");
+    });
 }
 
-function closeModal() {
-    document.getElementById('noteModal').classList.add('hidden');
-}
+                    // Mở modal chỉnh sửa ghi chú
+                    function openEditModal(noteText) {
+                        editNoteContent.innerHTML = noteText;
+                        document.getElementById('editNoteId').value = currentEditingNoteId;
+                        editNoteModal.classList.remove('hidden');
+                    }
 
-function toggleActive(button, command) {
-    document.execCommand(command, false, null);
-    button.classList.toggle('bg-gray-500');
-}
+                    // Xử lý submit form chỉnh sửa
+                    document.getElementById('editNoteForm').addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const noteId = document.getElementById('editNoteId').value;
+                        const noteContent = editNoteContent.innerHTML;
+                        fetch(`/notes/edit/${noteId}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: `note=${encodeURIComponent(noteContent)}`
+                            })
+                            .then(response => response.text())
+                            .then(text => {
+                                console.log('Phản hồi từ server:', text);
+                                try {
+                                    const data = JSON.parse(text);
+                                    if (data.status === 'success') {
+                                        document.querySelector(`.note-item[data-id="${noteId}"] .note-text`).innerHTML = noteContent;
+                                        Swal.fire("Thành công!", "Ghi chú đã được cập nhật!", "success");
+                                        closeEditModal();
+                                    } else {
+                                        Swal.fire("Lỗi!", data.message || "Có lỗi khi cập nhật ghi chú.", "error");
+                                    }
+                                } catch (error) {
+                                    console.error("Lỗi phân tích JSON:", error);
+                                    Swal.fire("Lỗi!", "Dữ liệu trả về không hợp lệ.", "error");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Lỗi khi cập nhật ghi chú:", error);
+                                Swal.fire("Lỗi!", "Có lỗi xảy ra khi cập nhật ghi chú.", "error");
+                            });
+                    });
 
-function toggleList(button, command) {
-    document.execCommand(command, false, null);
-    button.classList.toggle('bg-gray-500');
-}
+                    // Xóa ghi chú
+                    function deleteNote(id, noteItem) {
+                        fetch(`/notes/delete/${id}`, {
+                                method: 'POST'
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    noteItem.remove();
+                                    Swal.fire("Đã xóa!", "Ghi chú đã được xóa.", "success");
+                                    loadNotes(); // Tải lại danh sách sau khi xóa
+                                } else {
+                                    Swal.fire("Lỗi!", "Không thể xóa ghi chú.", "error");
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi xóa ghi chú:', error);
+                                Swal.fire("Lỗi!", "Có lỗi xảy ra khi xóa ghi chú.", "error");
+                            });
+                    }
 
-function insertImage() {
-    const url = prompt("Nhập URL hình ảnh:");
-    if (url) {
-        document.execCommand('insertImage', false, url);
-    }
-}
+                    // Xử lý form tạo ghi chú
+                    document.getElementById("noteForm").addEventListener("submit", function(event) {
+                        event.preventDefault();
+                        let noteContent = document.getElementById("noteContent").innerHTML;
+                        document.getElementById("note").value = noteContent;
+                        let formData = new FormData(this);
+                        fetch("/notes", {
+                                method: "POST",
+                                body: formData,
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === "success") {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công!',
+                                        text: data.message,
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        closeModal();
+                                        if (notesSidebar.classList.contains('open')) {
+                                            loadNotes(); // Tải lại danh sách sau khi thêm
+                                        }
+                                        document.getElementById("noteContent").innerHTML = "";
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Lỗi!',
+                                        text: data.message,
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi!',
+                                    text: 'Có lỗi xảy ra khi gửi ghi chú.',
+                                    confirmButtonText: 'OK'
+                                });
+                                console.error("Lỗi:", error);
+                            });
+                    });
+                });
 
-function openColorPopup(popupId) {
-    document.getElementById(popupId).style.display = 'block';
-}
+                // Đưa hàm closeEditModal ra toàn cục
+                function closeEditModal() {
+                    const editNoteModal = document.getElementById('editNoteModal');
+                    editNoteModal.classList.add('hidden');
+                }
 
-function closeColorPopup(popupId) {
-    document.getElementById(popupId).style.display = 'none';
-}
+                // Các hàm hỗ trợ khác
+                function openModal() {
+                    document.getElementById('noteModal').classList.remove('hidden');
+                }
 
-function changeTextColor() {
-    const color = document.getElementById('textColorPicker').value;
-    document.execCommand('foreColor', false, color);
-}
+                function closeModal() {
+                    document.getElementById('noteModal').classList.add('hidden');
+                }
 
-function changeBgColor() {
-    const color = document.getElementById('bgColorPicker').value;
-    document.execCommand('backColor', false, color);
-}
-</script>
+                function toggleActive(button, command) {
+                    document.execCommand(command, false, null);
+                    button.classList.toggle('bg-gray-500');
+                }
+
+                function toggleList(button, command) {
+                    document.execCommand(command, false, null);
+                    button.classList.toggle('bg-gray-500');
+                }
+
+                function insertImage() {
+                    const url = prompt("Nhập URL hình ảnh:");
+                    if (url) {
+                        document.execCommand('insertImage', false, url);
+                    }
+                }
+
+                function openColorPopup(popupId) {
+                    document.getElementById(popupId).style.display = 'block';
+                }
+
+                function closeColorPopup(popupId) {
+                    document.getElementById(popupId).style.display = 'none';
+                }
+
+                function changeTextColor() {
+                    const color = document.getElementById('textColorPicker').value;
+                    document.execCommand('foreColor', false, color);
+                }
+
+                function changeBgColor() {
+                    const color = document.getElementById('bgColorPicker').value;
+                    document.execCommand('backColor', false, color);
+                }
+            </script>
 
             <!-- Modal chỉnh sửa ghi chú -->
-            <div id="editNoteModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
-                <div class="w-full max-w-2xl p-4 bg-gray-900 text-white rounded-lg">
-                    <div class="mb-2 text-lg">
-                        <p id="note-time" class="text-lg mb-3">Chỉnh sửa ghi chú</p>
+            <div id="editNoteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 hidden">
+                <div class="w-full max-w-2xl p-6 bg-gray-900 text-white rounded-2xl shadow-lg">
+                    <div class="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                        <p id="note-time" class="text-xl font-semibold">Chỉnh sửa ghi chú</p>
+                        <button onclick="closeEditModal()" class="text-gray-400 hover:text-white">
+                            <i class="fas fa-times text-lg"></i>
+                        </button>
                     </div>
                     <div class="bg-gray-800 p-4 rounded-lg">
                         <form id="editNoteForm">
-                            <div contenteditable="true" id="editNoteContent" class="w-full bg-gray-700 text-white p-2 rounded h-32 overflow-auto" style="outline: none;"></div>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <button type="button" onclick="toggleActive(this, 'bold')" class="editor-btn"><i class="fas fa-bold"></i></button>
+                                <button type="button" onclick="toggleActive(this, 'italic')" class="editor-btn"><i class="fas fa-italic"></i></button>
+                                <button type="button" onclick="toggleList(this, 'insertUnorderedList')" class="editor-btn"><i class="fas fa-list-ul"></i></button>
+                                <button type="button" onclick="toggleList(this, 'insertOrderedList')" class="editor-btn"><i class="fas fa-list-ol"></i></button>
+                                <button type="button" onclick="insertImage()" class="editor-btn"><i class="fas fa-image"></i></button>
+                                <button type="button" onclick="openColorPopup('textColorPopup')" class="editor-btn"><i class="fas fa-paint-brush"></i></button>
+                                <button type="button" onclick="openColorPopup('bgColorPopup')" class="editor-btn"><i class="fas fa-fill-drip"></i></button>
+                            </div>
+                            <div contenteditable="true" id="editNoteContent" class="w-full bg-gray-700 text-white p-3 rounded-lg h-36 overflow-auto border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"></div>
                             <input type="hidden" id="editNoteId">
                             <input type="hidden" id="users_id" name="users_id" value="<?php echo isset($users['id']) ? $users['id'] : ''; ?>">
                             <input type="hidden" name="courses_id" value="<?php echo $course['id']; ?>">
                             <input type="hidden" id="lessons_id" name="lessons_id" value="<?php echo $lessons_id = $_POST['lessons_id'] ?? null; ?>">
-                            <div class="flex justify-end mt-4">
-                                <button type="button" onclick="closeEditModal()" class="bg-gray-800 text-white px-4 py-2 rounded mr-2">HỦY BỎ</button>
-                                <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded">LƯU</button>
+                            <div class="flex justify-end mt-4 gap-2">
+                                <button type="button" onclick="closeEditModal()" class="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition">HỦY</button>
+                                <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-500 transition">LƯU</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+
             <style>
-    /* Đảm bảo editNoteModal hiển thị trên tất cả */
-    #editNoteModal {
-        z-index: 100; /* Giá trị cao hơn sidebar hoặc các phần tử khác */
+                .editor-btn {
+                    @apply bg-gray-700 text-white p-2 rounded-lg hover:bg-gray-600 transition;
+                }
+            </style>
+
+            <style>
+                /* Đảm bảo editNoteModal hiển thị trên tất cả */
+                #editNoteModal {
+                    z-index: 100;
+                    /* Giá trị cao hơn sidebar hoặc các phần tử khác */
+                }
+            </style>
+            <style>
+    .note-item {
+        position: relative;
     }
+
+    .dropdown-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        z-index: 50; /* Đảm bảo dropdown hiển thị trên các phần tử khác */
+    }
+
+    .dropdown-menu.hidden {
+        display: none;
+    }
+    
 </style>
 
 
