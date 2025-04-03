@@ -1,12 +1,19 @@
 <?php
+
 require_once "model/OrderModel.php";
 require_once "model/CourseModel.php";
 require_once "model/CouponModel.php";
 require_once "model/UserModel.php";
 require_once "view/helpers.php";
+require_once 'vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PayPal\Checkout\Orders\OrdersCreateRequest;
+use PayPal\Checkout\Orders\OrdersCaptureRequest;
+use PayPal\Http\PayPalHttpClient;
+use PayPal\Environment\SandboxEnvironment; // Đúng class cho sandbox environment
+use PayPal\Environment\LiveEnvironment; // Đúng class cho live environment
 
 class CheckoutController
 {
@@ -14,6 +21,7 @@ class CheckoutController
     private $courseModel;
     private $couponModel;
     private $userModel;
+    private $paypalClient;
 
     public function __construct()
     {
@@ -21,8 +29,11 @@ class CheckoutController
         $this->courseModel = new Course();
         $this->couponModel = new CouponModel();
         $this->userModel = new UserModel();
-
     }
+
+
+
+
     public function checkout()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -57,7 +68,7 @@ class CheckoutController
                 $_POST['payment_method'],
                 $payment_status
             );
-            
+
             if (!$order_id) {
                 $_SESSION['error_message'] = "Không thể tạo đơn hàng!";
                 header("Location: /checkout");
@@ -65,7 +76,7 @@ class CheckoutController
             }
             // Xử lý thanh toán
             $this->processPayment($order_id, $total_amount);
-        
+
             // Gửi email xác nhận sau khi thanh toán thành công
             $this->sendConfirmationEmail($user_id, $course_id, $order_code, $total_amount);
         }
@@ -122,6 +133,10 @@ class CheckoutController
             echo "Không thể gửi email. Lỗi: {$mail->ErrorInfo}";
         }
     }
+
+    
+
+    
 
     public function processPayment($order_id, $total_amount)
     {
@@ -233,6 +248,8 @@ class CheckoutController
         }
     }
 
+    
+
 
     // Phương thức tạo popup
     public function generatePopup($message)
@@ -293,7 +310,155 @@ class CheckoutController
         </script>
         ";
     }
-    public function getOrderByUserId() {
+
+    public function createPayment()
+    {
+        if (!isset($_SESSION['user'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Bạn cần đăng nhập để thanh toán.']);
+            exit;
+        }
+
+        $user_id = $_SESSION['user']['id'];
+        $amount = (int)$_POST['amount'];
+        $course_id = $_POST['course_id'];
+
+        // ✅ Thông tin Momo Sandbox (Test)
+        $partnerCode = "MOMOBKUN20180529";
+        $accessKey = "klm05TvNBzhg7h7j";
+        $secretKey = "at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa";
+        $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
+
+        // ✅ URL không để trống
+        $redirectUrl = "http://localhost:8000/payment/momo/result";
+        $ipnUrl = "http://localhost:8000/payment/momo/ipn-handler";
+
+        // ✅ Tạo order_code trước khi tạo đơn hàng
+        $order_code = 'ORD' . time() . "_" . $user_id;
+
+        // ✅ Tạo requestId
+        $requestId = time() . "_" . rand(1000, 9999);
+        $requestType = "captureWallet";
+        $extraData = "";
+        $orderInfo = "Thanh toán khóa học #$course_id";
+
+        // ✅ Tạo rawHash đúng thứ tự chuẩn của Momo
+        $rawHash = "accessKey=$accessKey&amount=$amount&extraData=$extraData&ipnUrl=$ipnUrl&orderId=$order_code&orderInfo=$orderInfo&partnerCode=$partnerCode&redirectUrl=$redirectUrl&requestId=$requestId&requestType=$requestType";
+
+        // ✅ Tạo chữ ký đúng
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
+        $expireTime = time() + 1800;
+
+        // ✅ Lưu thông tin đơn hàng vào database bằng hàm createOrder trong model
+        $order = $this->orderModel->createOrderMomo(
+            $user_id,
+            $course_id,
+            $order_code,
+            $amount,
+            $amount,
+            null,
+            0,
+            "pending",
+            "momo",
+            "pending"
+        );
+
+        // Kiểm tra xem đơn hàng có được tạo thành công không
+        if (!$order) {
+            echo json_encode(["status" => "error", "message" => "Lỗi khi tạo đơn hàng"]);
+            exit;
+        }
+
+        // ✅ Gửi dữ liệu đến Momo
+        $requestData = [
+            'partnerCode' => $partnerCode,
+            'accessKey' => $accessKey,
+            'requestId' => $requestId,
+            'amount' => $amount,
+            'orderId' => $order_code,  // Sử dụng order_code đã lấy từ database
+            'orderInfo' => $orderInfo,
+            'redirectUrl' => $redirectUrl,
+            'ipnUrl' => $ipnUrl,
+            'extraData' => $extraData,
+            'requestType' => $requestType,
+            'signature' => $signature,
+            'lang' => 'vi',
+            'expireTime' => $expireTime
+        ];
+
+        // Gửi request đến Momo
+        $ch = curl_init($endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($response, true);
+
+        // ✅ Kiểm tra phản hồi từ Momo
+        if (!isset($result['payUrl'])) {
+            echo json_encode(["status" => "error", "message" => "Thanh toán Momo thất bại", "error" => $result]);
+            exit;
+        }
+
+        // ✅ Chuyển hướng đến trang thanh toán Momo (dùng tài khoản test)
+        header("Location: " . $result['payUrl']);
+        exit;
+    }
+
+
+    public function paymentResult()
+    {
+        // Kiểm tra kết quả trả về từ Momo
+        if (!isset($_GET['resultCode'])) {
+            echo "Không tìm thấy kết quả thanh toán.";
+            exit;
+        }
+
+        $resultCode = $_GET['resultCode'];
+
+        if ($resultCode == 0) {
+            // ✅ Thanh toán thành công
+            $order_code = $_GET['orderId'];  // Lấy orderId từ URL trả về của Momo
+
+            $order = $this->orderModel->getOrderByOrderCode($order_code); // Tìm kiếm trong database theo order_code
+
+            if (!$order) {
+                echo "Không tìm thấy đơn hàng với mã đơn hàng: $order_code";
+                exit;
+            }
+
+            // Kiểm tra trạng thái đơn hàng đã được xử lý chưa
+            if ($order['status'] == 'completed') {
+                echo "Đơn hàng đã được xử lý rồi.";
+                exit;
+            }
+
+            $result1 = $this->orderModel->updateOrderMomoStatus($order_code, 'completed');  // Cập nhật trạng thái đơn hàng
+            $result2 = $this->orderModel->updateOrderPaymentMomoStatus($order_code, 'completed');  // Cập nhật trạng thái thanh toán
+
+            if ($result1 && $result2) {
+                // Gửi email xác nhận thanh toán
+                $user_id = $order['user_id'];
+                $course_id = $order['course_id'];
+                $total_amount = $order['total_amount'];
+
+                // Gửi email thông báo thanh toán thành công
+                $this->sendConfirmationEmail($user_id, $course_id, $order_code, $total_amount);
+
+                // Thông báo thanh toán thành công
+                echo "<script>alert('Thanh toán thành công!'); window.location.href='/';</script>";
+            } else {
+                echo "Lỗi khi cập nhật trạng thái đơn hàng.";
+            }
+        } else {
+            echo "<script>alert('Thanh toán thất bại!'); window.location.href='/checkout';</script>";
+        }
+    }
+
+    public function getOrderByUserId()
+    {
 
         if (!isset($_SESSION['user']['id'])) {
             echo "<script>alert('Vui lòng đăng nhập để xem khóa học đã mua!');</script>";
@@ -307,4 +472,3 @@ class CheckoutController
         renderViewUser("view/users/orderList.php", compact('orders'), "Order List");
     }
 }
-

@@ -132,7 +132,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
 <body>
 
     <!-- Sidebar Menu -->
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar " id="sidebar">
         <h3 class="text-center h3">Admin Panel</h3>
         <!-- <?php
         var_dump($_SESSION['user_role']);
@@ -148,10 +148,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
             </div>
         <?php endif; ?>
 
-        <i class="fas fa-bars"></i>
-        </button>
-        <i class="fas fa-bars"></i>
-        </button>
+    
         <a href="/admin/reports"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a>
         <div class="dropdown">
             <a href="#" class="dropdown-toggle" onclick="toggleDropdown(event, 'courseDropdown')">
@@ -178,6 +175,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
         <a href="/admin/quizzes"><i class="fas fa-puzzle-piece"></i> <span>Bài kiểm tra</span></a>
         <a href="/admin/quizQuests"><i class="fas fa-question-circle"></i> <span>Câu hỏi</span></a>
         <a href="/admin/quizAnswers"><i class="fas fa-check-circle"></i> <span>Câu trả lời</span></a>
+        <a href="/admin/reviews"><i class="fas fa-star"></i> <span>Đánh giá</span></a>
 
         <a href="/admin/coupons"><i class="fas fa-tag"></i> <span>Mã giảm giá</span></a>
         <a href="/admin/orders"><i class="fas fa-ticket"></i> <span>Đơn hàng</span"></a>

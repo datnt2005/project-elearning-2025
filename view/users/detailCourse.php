@@ -36,7 +36,7 @@
                 </div>
                 <?php if ($certificate): ?>
                     <div id="certificate-link" style="margin-top: 10px;">
-                        <p class="text-blue-500">Bạn đã hoàn thành khóa học: 
+                        <p class="text-blue-500">Bạn đã hoàn thành khóa học:
                             <a href="http://localhost:8000/certificate?certificate_url=<?php echo htmlspecialchars($certificate['certificate_url'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" class="underline">
                                 Xem chứng chỉ
                             </a>
@@ -129,6 +129,7 @@
 
         <form id="review-form" class="space-y-4">
             <input type="hidden" name="course_id" value="<?= $courseId ?>">
+            <input type="hidden" id="deleted-images" name="deleted_images">
 
             <!-- Chọn số sao -->
             <label class="block text-lg font-medium text-gray-700">Đánh giá của bạn:</label>
@@ -167,29 +168,52 @@
             const imagePreview = document.getElementById("image-preview");
             const submitButton = document.getElementById("submit-button");
 
+            // Kiểm tra nếu không tìm thấy starButtons
+            if (!starButtons || starButtons.length === 0) {
+                console.error("Không tìm thấy phần tử .star-button nào!");
+                return;
+            }
+
             // Chọn số sao
-            starButtons.forEach((star) => {
+            starButtons.forEach((star, index) => {
                 star.addEventListener("click", function() {
                     let value = this.getAttribute("data-value");
                     ratingInput.value = value;
 
-                    starButtons.forEach((s) => s.classList.remove("text-yellow-400"));
-                    for (let i = 0; i < value; i++) {
-                        starButtons[i].classList.add("text-yellow-400");
-                    }
+                    // Đổi màu các sao theo đánh giá
+                    starButtons.forEach((s, i) => {
+                        if (i < value) {
+                            s.classList.add("text-yellow-400");
+                        } else {
+                            s.classList.remove("text-yellow-400");
+                        }
+                    });
                 });
             });
 
             // Xem trước hình ảnh
             imageInput.addEventListener("change", function() {
-                imagePreview.innerHTML = "";
+                imagePreview.innerHTML = ""; // Xóa ảnh đã có trong preview
                 Array.from(this.files).forEach((file) => {
                     let reader = new FileReader();
                     reader.onload = function(e) {
                         let img = document.createElement("img");
                         img.src = e.target.result;
                         img.classList.add("w-16", "h-16", "object-cover", "rounded-md", "shadow-md");
-                        imagePreview.appendChild(img);
+
+                        // Kiểm tra ảnh đã được thêm chưa để tránh trùng lặp
+                        let existingImgs = imagePreview.getElementsByTagName("img");
+                        let isDuplicate = false;
+                        for (let existingImg of existingImgs) {
+                            if (existingImg.src === img.src) {
+                                isDuplicate = true;
+                                break;
+                            }
+                        }
+
+                        if (!isDuplicate) {
+                            imagePreview.appendChild(img);
+                        }
                     };
                     reader.readAsDataURL(file);
                 });
@@ -197,15 +221,36 @@
 
             // Gửi đánh giá (thêm hoặc sửa)
             form.addEventListener("submit", function(event) {
-                event.preventDefault();
+                event.preventDefault(); // Ngăn chặn hành động mặc định của form
+
                 let formData = new FormData(this);
-                let reviewId = form.dataset.editId || "";
+                let reviewId = form.dataset.editId || ""; // Nếu có reviewId, nghĩa là đang sửa
 
                 if (reviewId) {
-                    formData.append("review_id", reviewId);
+                    formData.append("review_id", reviewId); // Đảm bảo review_id có giá trị hợp lệ
                 }
 
-                let apiUrl = reviewId ? "/courses/review/update" : "/courses/review/add";
+                // Lấy giá trị từ các input
+                let rating = ratingInput.value;
+                formData.append("rating", rating); // Thêm rating vào formData
+
+                let comment = document.getElementById("comment").value;
+                formData.append("comment", comment); // Thêm comment vào formData
+
+                // Thêm ảnh vào formData nếu có (chỉ thêm ảnh mới nếu đang thêm đánh giá)
+                if (imageInput.files.length > 0) {
+                    Array.from(imageInput.files).forEach((file) => {
+                        formData.append("images[]", file); // Thêm mỗi ảnh vào formData
+                    });
+                }
+
+                // Xử lý ảnh đã xóa
+                let deletedImages = document.getElementById("deleted-images").value;
+                if (deletedImages) {
+                    formData.append("deleted_images", deletedImages); // Thêm ảnh đã xóa vào formData
+                }
+
+                let apiUrl = reviewId ? "/courses/review/update" : "/courses/review/add"; // Chọn URL API tùy thuộc vào việc đang thêm hay cập nhật
 
                 fetch(apiUrl, {
                         method: "POST",
@@ -213,13 +258,17 @@
                     })
                     .then((response) => response.json())
                     .then((data) => {
+                        console.log("Response data:", data); // Kiểm tra nội dung trả về từ server
                         document.getElementById("review-message").innerText = data.message;
                         if (data.status === "success") {
-                            location.reload(); // Load lại trang để cập nhật danh sách đánh giá
+                            location.reload(); // Nếu thành công, load lại trang để cập nhật danh sách đánh giá
                         }
                     })
-                    .catch((error) => console.error("Lỗi:", error));
+                    .catch((error) => {
+                        console.error("Lỗi khi gửi yêu cầu:", error);
+                    });
             });
+
 
             // Lấy danh sách đánh giá
             let courseId = <?= json_encode($course['id']) ?>;
@@ -442,6 +491,7 @@
                             body: formData,
                         })
                         .then((response) => response.json())
+
                         .then((data) => {
                             alert(data.message);
                             if (data.status === "success") {
@@ -457,32 +507,53 @@
         document.addEventListener("click", function(event) {
             if (event.target.classList.contains("edit-review")) {
                 let reviewId = event.target.getAttribute("data-id");
-                let rating = event.target.getAttribute("data-rating");
+                let rating = parseInt(event.target.getAttribute("data-rating"));
                 let comment = event.target.getAttribute("data-comment");
                 let images = JSON.parse(event.target.getAttribute("data-images"));
-                const submitButton = document.getElementById("submit-button");
 
                 document.getElementById("rating").value = rating;
                 document.getElementById("comment").value = comment;
                 document.getElementById("review-form").dataset.editId = reviewId;
-                submitButton.textContent = "Cập nhật đánh giá";
+                document.getElementById("submit-button").textContent = "Cập nhật đánh giá";
 
                 // Cập nhật giao diện sao
-                starButtons.forEach((s) => s.classList.remove("text-yellow-400"));
-                for (let i = 0; i < rating; i++) {
-                    starButtons[i].classList.add("text-yellow-400");
-                }
+                document.querySelectorAll(".star-button").forEach((star, index) => {
+                    star.classList.toggle("text-yellow-400", index < rating);
+                });
 
-                // Hiển thị ảnh cũ trong phần xem trước ảnh
-                imagePreview.innerHTML = ""; // Xóa ảnh cũ nếu có
+                // Hiển thị ảnh cũ
+                let imagePreview = document.getElementById("image-preview");
+                imagePreview.innerHTML = "";
+                let deletedImages = [];
+
                 images.forEach((imgSrc) => {
+                    let imgContainer = document.createElement("div");
+                    imgContainer.classList.add("relative", "inline-block", "mr-2");
+
                     let img = document.createElement("img");
-                    img.src = imgSrc;
-                    img.classList.add("w-16", "h-16", "object-cover", "rounded-md", "shadow-md", "mr-2");
-                    imagePreview.appendChild(img);
+                    img.src = "/" + imgSrc;
+                    img.classList.add("w-16", "h-16", "object-cover", "rounded-md", "shadow-md");
+
+                    let removeBtn = document.createElement("button");
+                    removeBtn.innerHTML = "x";
+                    removeBtn.classList.add("absolute", "top-0", "right-0", "bg-red-500", "text-white", "text-xs", "rounded-full", "px-1");
+
+                    removeBtn.onclick = function() {
+                        imgContainer.remove();
+                        deletedImages.push(imgSrc); // Thêm ảnh vào mảng deletedImages khi xóa
+                        document.getElementById("deleted-images").value = JSON.stringify(deletedImages); // Cập nhật lại giá trị input hidden
+                    };
+
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(removeBtn);
+                    imagePreview.appendChild(imgContainer);
                 });
             }
         });
+
+
+
+
 
         function toggleLike(reviewId, button) {
             fetch(`/courses/review/like`, {

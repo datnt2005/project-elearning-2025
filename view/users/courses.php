@@ -68,7 +68,7 @@
 
         <aside class="course-info">
             <video controls width="100%" height="200" class="rounded-lg shadow-lg">
-                <source  src="http://localhost:8000/<?php echo $course['video_intro']; ?>" type="video/mp4">
+                <source src="http://localhost:8000/<?php echo $course['video_intro']; ?>" type="video/mp4">
                 Trình duyệt của bạn không hỗ trợ video.
             </video>
             <div class="video-preview text-center text-lg font-semibold mb-3">🎥 Xem giới thiệu khóa học</div>
@@ -124,9 +124,31 @@
 
                     <button type="button" id="applyCouponBtn" class="w-full bg-blue-500 text-white p-2 rounded">Áp dụng</button>
 
-                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded mt-2">Thanh toán</button>
+                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded mt-2">Thanh toán VNPAY</button>
 
                 </form>
+
+                <form action="/payment/momo" method="POST">
+                    <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>">
+                    <input type="hidden" name="amount" value="<?php echo $course['discount_price']; ?>">
+                    <input type="hidden" name="payment_method" value="MOMO">
+                    <button type="submit" class="w-full bg-pink-500 text-white p-2 rounded mt-2">
+                        Thanh toán qua Momo
+                    </button>
+                </form>
+                <!-- Form cho phương thức thanh toán PayPal -->
+                <form action="/payment/paypal" method="POST">
+                    <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>">
+                    <input type="hidden" name="amount" value="<?php echo $course['discount_price']; ?>">
+                    <input type="hidden" name="payment_method" value="paypal">
+                    <button type="submit" class="w-full bg-yellow-500 text-white p-2 rounded mt-2">
+                        Thanh toán qua PayPal
+                    </button>
+                </form>
+
+
+
+
 
                 <p class="text-center text-gray-500 mt-4">Thanh toán an toàn với VNPay</p>
             </div>
