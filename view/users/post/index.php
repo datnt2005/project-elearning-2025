@@ -5,10 +5,11 @@
 <br>
 
 <style>
-    .container {
+    .container1 {
         margin-top: 1rem;
         text-align: center;
-        margin-left: 150px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .post-grid {
@@ -55,7 +56,8 @@
     }
 </style>
 
-<div class="container">
+<link rel="stylesheet" href="style.css">
+<div class="container1">
     <h2 class="text-3xl font-bold mb-4 text-primary">Các bài viết nổi bật</h2>
     <p class="text-decoration">Tổng hợp các bài viết chia sẻ về kinh nghiệm tự học lập trình online và các kỹ thuật lập trình web.
     </p>
