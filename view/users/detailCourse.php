@@ -100,7 +100,8 @@
                     </div>
                 <?php endif; ?>
                 <!-- Sidebar ghi chú -->
-                <div id="notes-sidebar" class="fixed top-0 right-0 h-full w-80 bg-white text-black p-4 transform translate-x-full transition-transform duration-300 rounded-l-lg shadow-lg border border-black">
+                <!-- Sidebar ghi chú -->
+                <div id="notes-sidebar" class="fixed top-0 right-0 h-full w-80 bg-white text-black p-4 transform translate-x-full transition-transform duration-300 rounded-l-lg shadow-lg">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg">Ghi chú</h2>
                         <button id="close-notes-btn" class="text-black">✖</button>
@@ -122,6 +123,8 @@
                     <div id="notes-list" class="overflow-y-auto h-5/6"></div>
                 </div>
 
+                <!-- Thêm overlay cho sidebar -->
+                <div id="notes-overlay" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden"></div>
             </div>
 
 
@@ -129,6 +132,7 @@
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     const notesSidebar = document.getElementById('notes-sidebar');
+                    const notesOverlay = document.getElementById('notes-overlay'); // Thêm overlay
                     const editNoteModal = document.getElementById('editNoteModal');
                     const editNoteContent = document.getElementById('editNoteContent');
                     let currentEditingNoteId = null;
@@ -137,10 +141,23 @@
                     document.getElementById('toggle-notes-btn').addEventListener('click', function() {
                         notesSidebar.classList.toggle('open');
                         if (notesSidebar.classList.contains('open')) {
+                            notesOverlay.classList.remove('hidden'); // Hiển thị overlay khi sidebar mở
                             loadNotes();
+                        } else {
+                            notesOverlay.classList.add('hidden'); // Ẩn overlay khi sidebar đóng
                         }
                     });
 
+                    document.getElementById('close-notes-btn').addEventListener('click', function() {
+                        notesSidebar.classList.remove('open');
+                        notesOverlay.classList.add('hidden'); // Ẩn overlay khi đóng sidebar
+                    });
+
+                    // Đóng overlay và sidebar khi nhấp ra ngoài
+                    notesOverlay.addEventListener('click', function() {
+                        notesSidebar.classList.remove('open');
+                        notesOverlay.classList.add('hidden');
+                    });
                     document.getElementById('close-notes-btn').addEventListener('click', function() {
                         notesSidebar.classList.remove('open');
                     });
