@@ -14,6 +14,8 @@
         border-radius: 12px;
         background: #fff;
         margin-top: -30px;
+        padding: 20px;
+        margin-left: 20px;
     }
 
     
