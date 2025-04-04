@@ -231,23 +231,43 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
                                 <p>Danh mục phụ</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="/admin/quizzes" class="nav-link">
-                                <i class="nav-icon fas fa-puzzle-piece"></i>
-                                <p>Bài kiểm tra</p>
+                    
+                       <!-- Danh sách bài tập (quizzes) -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-book-open"></i>
+                                <p>
+                                Danh sách bài Tập
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/admin/quizQuests" class="nav-link">
-                                <i class="nav-icon fas fa-question-circle"></i>
-                                <p>Câu hỏi</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/admin/quizAnswers" class="nav-link">
-                                <i class="nav-icon fas fa-check-circle"></i>
-                                <p>Câu trả lời</p>
-                            </a>
+                            <ul class="nav nav-treeview">
+                                
+                                <li class="nav-item">
+                                    <a href="/admin/quizzes" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Bài kiểm tra</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/admin/quizQuests" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Câu hỏi</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/admin/quizAnswers" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Câu trả lời</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/admin/uploadQuizzByFile" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Upload file câu hỏi và câu trả lời</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="/admin/coupons" class="nav-link">
