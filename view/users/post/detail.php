@@ -4,7 +4,7 @@
 
 <style>
     .container1 {
-        max-width: 1200px;
+        max-width: 1800px;
         margin: 2rem auto;
         display: flex;
         justify-content: space-between;
@@ -13,8 +13,10 @@
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         border-radius: 12px;
         background: #fff;
+        margin-top: -30px;
     }
 
+    
     .post-content-container {
         flex: 1;
     }
@@ -135,7 +137,7 @@
     .sidebar1 {
         background: #f5f5f5;
         padding: 1rem;
-        width: 250px;
+        width: 300px;
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -249,7 +251,7 @@
 
 <div class="container1">
     <div class="post-content-container">
-        <h2 class="post-title"><?= htmlspecialchars($post['title']) ?></h2>
+        <h2 style="text-align: center;" class="post-title"><?= htmlspecialchars($post['title']) ?></h2>
 
         <?php if (!empty($post['thumbnail'])): ?>
             <div class="post-thumbnail text-center mb-4">

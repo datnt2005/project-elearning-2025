@@ -6,10 +6,11 @@
 
 <style>
     .container1 {
-        margin-top: 1rem;
+        max-width: 1800px;
         text-align: center;
         margin-left: auto;
         margin-right: auto;
+        margin-top: -60px;
     }
 
     .post-grid {
