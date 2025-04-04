@@ -106,7 +106,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <!-- Main Content -->
     <main class="main-content container mx-auto px-4 pt-20 lg:ml-[96px] mb-5">
         <!-- Hero Section -->
-        <div class="relative overflow-hidden rounded-2xl mb-8">
+        <div style="max-width: 1700px;" class="relative overflow-hidden rounded-2xl mb-8">
             <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between">
                 <div class="max-w-xl text-center md:text-left">
                     <h1 class="text-2xl md:text-4xl font-bold text-white mb-4">Học ReactJS Miễn Phí!</h1>

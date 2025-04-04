@@ -16,6 +16,8 @@
         align-items: center;
         min-height: 100vh;
         margin: 0;
+        margin-left: 45px;
+
     }
 
     .register-container {
@@ -26,6 +28,7 @@
         max-width: 400px;
         width: 100%;
         margin: auto auto;
+        
     }
 
     .register-container h2 {

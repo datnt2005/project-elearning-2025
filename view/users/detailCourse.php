@@ -10,18 +10,17 @@
 .container-learning {
     display: flex;
     flex-wrap: wrap;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 1600px;
     gap: 20px;
-    padding: 20px;
+    margin: auto auto;
+    padding-left: 70px;
     align-items: stretch;
     min-height: 100vh;
 }
-/* Video Section - Chiếm 85% */
 .video-section {
     min-width: 0;
-    padding: 10px;
+    width: 100px;
+    padding: 5px;
     display: flex;
     flex-direction: column;
     background-color: #fff;
@@ -64,7 +63,7 @@
 }
 
 .sidebar1 {
-    min-width: 200px;
+    min-width: 400px;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -236,6 +235,18 @@
 
     .lesson-item a {
         font-size: 0.875rem;
+    }
+}
+@media (max-width: 1024px) {
+    .container-learning {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .video-section,
+    .sidebar1 {
+        width: 100%;
+        flex: 1 1 100%;
     }
 }
     </style>
@@ -887,7 +898,12 @@
     <?php
     $courseId = $course['id'] ?? null;
     ?>
-    <div class="reviews-container mt-8 p-4 bg-white rounded shadow">
+
+    <br>
+    <br>
+
+    
+    <div style="margin-left: 90px;" class="reviews-container mt-8 p-4 bg-white rounded shadow">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Đánh giá từ học viên</h2>
 
         <!-- Danh sách đánh giá sẽ được JavaScript cập nhật -->
@@ -898,7 +914,7 @@
 
 
 
-    <div class="review-section mt-8 p-4 bg-white rounded shadow ">
+    <div  style="margin-left: 90px;" class="review-section mt-8 p-4 bg-white rounded shadow ">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Đánh giá khóa học</h2>
 
         <form id="review-form" class="space-y-4">
