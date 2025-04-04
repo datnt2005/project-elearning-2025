@@ -197,6 +197,16 @@ $router->addRoute('/apply-coupon', [$couponController, 'applyCoupon'], ['isUser'
 // Checkout routes
 $router->addRoute("/checkout", [$checkoutController, "checkout"]);
 $router->addRoute("/checkout/vnpay-return", [$checkoutController, "vnpayReturn"]);
+$router->addRoute("/payment/momo", [$checkoutController, "createPayment"]);
+$router->addRoute("/payment/momo/result", [$checkoutController, "paymentResult"]);
+$router->addRoute("/payment/momo/ipn-handler", [$checkoutController, "ipnHandler"]);
+$router->addRoute("/payment/paypal", [$checkoutController, "paypalPayment"]);
+$router->addRoute("/checkout/paypal-return", [$checkoutController, "paypalReturn"]);
+$router->addRoute("/checkout/paypal-cancel", [$checkoutController, "paypalCancel"]);
+
+
+
+
 $router->addRoute("/orderList", [$checkoutController, "getOrderByUserId"], ['isUser']);
 
 // Post category
@@ -241,6 +251,13 @@ $router->addRoute("/admin/orders", [$orderController, "index"], ['isAdmin']);
 $router->addRoute("/admin/orders/edit/{id}", [$orderController, "edit"], ['isAdmin']);
 $router->addRoute("/admin/orders/update/{id}", [$orderController, "update"], ['isAdmin']);
 $router->addRoute("/admin/orders/delete/{id}", [$orderController, "delete"], ['isAdmin']);
+
+$router->addRoute("/admin/reviews", [$reviewController, "index"], ['isAdmin']);
+$router->addRoute("/admin/reviews/create", [$reviewController, "create"], ['isAdmin']);
+$router->addRoute("/admin/reviews/store", [$reviewController, "store"], ['isAdmin']);
+$router->addRoute("/admin/reviews/edit/{id}", [$reviewController, "edit"], ['isAdmin']);
+$router->addRoute("/admin/reviews/update/{id}", [$reviewController, "update"], ['isAdmin']);
+$router->addRoute("/admin/reviews/delete/{id}", [$reviewController, "delete"], ['isAdmin']);
 
 $router->addRoute("/notes", [$notesController, "create"]);
 $router->addRoute("/notes/get", [$notesController, "getNotesByCourse"], ['isUser']);

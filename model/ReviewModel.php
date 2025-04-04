@@ -189,4 +189,104 @@ class ReviewModel
         $stmt->execute([$reviewId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function deleteReviewImageByPath($reviewId, $imagePath)
+    {
+        $query = "DELETE FROM review_images WHERE review_id = ? AND image_path = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$reviewId, $imagePath]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function getLikeCountByReviewId($reviewId)
+    {
+        $sql = "SELECT COUNT(*) as like_count FROM review_likes WHERE review_id = :review_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':review_id', $reviewId);
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+        return $result['like_count'];
+    }
+
+    public function getAllReviews()
+    {
+        $sql = "
+        SELECT r.*, c.title, c.description, c.price, c.discount_price, c.image, 
+               (SELECT COUNT(*) FROM review_likes WHERE review_id = r.id) AS like_count,
+               (SELECT name FROM users WHERE id = r.user_id) AS user_name,
+               (SELECT GROUP_CONCAT(image_path SEPARATOR '||') FROM review_images WHERE review_id = r.id) AS images,
+               (SELECT GROUP_CONCAT(CONCAT(u.name, '::', rr.comment, '::', rr.created_at) SEPARATOR '||') 
+                FROM review_replies rr 
+                JOIN users u ON rr.user_id = u.id
+                WHERE rr.review_id = r.id) AS replies
+        FROM reviews r
+        JOIN courses c ON r.course_id = c.id
+        ORDER BY r.created_at DESC
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($reviews as &$review) {
+            $review['images'] = $review['images'] ? explode('||', $review['images']) : [];
+            $review['replies'] = $review['replies']
+                ? array_map(fn($r) => array_combine(['user_name', 'comment', 'created_at'], explode('::', $r)), explode('||', $review['replies']))
+                : [];
+        }
+
+        return $reviews;
+    }
+
+    public function add($data) {
+        $sql = "INSERT INTO reviews (course_id, user_id, rating, comment, created_at) VALUES (:course_id, :user_id, :rating, :comment, NOW())";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($data);
+        return $this->conn->lastInsertId();
+    }
+    public function addReply($data) {
+        $sql = "INSERT INTO review_replies (review_id, user_id, comment, created_at) VALUES (:review_id, :user_id, :comment, NOW())";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute($data);
+    }
+
+    public function updateReviewReply($reviewId, $data) {
+        $sql = "UPDATE review_replies SET user_id = :user_id, comment = :comment, created_at = NOW() WHERE review_id = :review_id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(array_merge($data, ['review_id' => $reviewId]));
+    }
+
+    public function getReviewReply($reviewId) {
+        $sql = "SELECT * FROM review_replies WHERE review_id = :review_id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['review_id' => $reviewId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function addReviewImage($reviewId, $imagePath) {
+        $sql = "INSERT INTO review_images (review_id, image_path) VALUES (:review_id, :image_path)";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(['review_id' => $reviewId, 'image_path' => $imagePath]);
+    }
+
+    public function getReview($id) {
+        $sql = "SELECT * FROM reviews WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function update($id, $data) {
+        $sql = "UPDATE reviews SET course_id = :course_id, user_id = :user_id, rating = :rating, comment = :comment, updated_at = NOW() WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(array_merge($data, ['id' => $id]));
+    }
+
+    public function delete($id) {
+        $this->conn->prepare("DELETE FROM review_images WHERE review_id = :id")->execute(['id' => $id]);
+        $this->conn->prepare("DELETE FROM review_replies WHERE review_id = :id")->execute(['id' => $id]);
+        $stmt = $this->conn->prepare("DELETE FROM reviews WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
+    }
 }

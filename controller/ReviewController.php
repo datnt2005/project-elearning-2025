@@ -1,6 +1,8 @@
 <?php
 require_once "model/ReviewModel.php";
 require_once "model/OrderModel.php";
+require_once "model/CourseModel.php";
+require_once "model/UserModel.php";
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -10,11 +12,15 @@ class ReviewController
 {
     private $reviewModel;
     private $orderModel;
+    private $courseModel;
+    private $userModel;
 
     public function __construct()
     {
         $this->reviewModel = new ReviewModel();
         $this->orderModel = new OrderModel();
+        $this->courseModel = new Course();
+        $this->userModel = new UserModel();
     }
 
 
@@ -87,18 +93,22 @@ class ReviewController
             exit;
         }
 
+        $deletedImages = json_decode($_POST['deleted_images'] ?? "[]");
+
+        foreach ($deletedImages as $image) {
+            unlink($_SERVER['DOCUMENT_ROOT'] . $image); // Xóa file ảnh vật lý
+            $this->reviewModel->deleteReviewImageByPath($reviewId, $image); // Xóa trong database
+        }
+
+
         // Xử lý upload ảnh mới
         if (!empty($_FILES['images']['name'][0])) {
-            // Xóa ảnh cũ nếu có
-            $this->reviewModel->deleteReviewImages($reviewId);
-
             $imagePaths = [];
             foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-                $fileName = "/uploads/reviews/" . uniqid() . "_" . basename($_FILES['images']['name'][$key]);
-                move_uploaded_file($tmpName, $fileName);
+                $fileName = "uploads/reviews/" . uniqid() . "_" . basename($_FILES['images']['name'][$key]);
+                move_uploaded_file($tmpName, $_SERVER['DOCUMENT_ROOT'] . $fileName);
                 $imagePaths[] = $fileName;
             }
-            // Cập nhật ảnh mới vào database
             $this->reviewModel->addReviewImages($reviewId, $imagePaths);
         }
 
@@ -254,5 +264,112 @@ class ReviewController
             "replies" => $replies
         ]);
         exit;
+    }
+
+    public function index()
+    {
+        $reviews = $this->reviewModel->getAllReviews();
+        renderViewAdmin("view/admin/reviews/index.php", compact('reviews'), "Manage Reviews");
+    }
+
+    public function create() {
+        $courses = $this->courseModel->getAllCourses();
+        $users = $this->userModel->getAllUsers();
+        $admins = $this->userModel->getAllAdmins(); // Lấy danh sách admin
+
+        renderViewAdmin("view/admin/reviews/create.php", compact('courses', 'users', 'admins'), "Add Review");
+    }
+
+    public function store() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'course_id' => $_POST['course_id'],
+                'user_id' => $_POST['user_id'],
+                'rating' => $_POST['rating'],
+                'comment' => $_POST['comment']
+            ];
+
+            // Thêm đánh giá vào bảng `reviews`
+            $reviewId = $this->reviewModel->add($data);
+
+            // Thêm phản hồi của Admin (nếu có)
+            if (!empty($_POST['admin_reply']) && !empty($_POST['admin_id'])) {
+                $replyData = [
+                    'review_id' => $reviewId,
+                    'user_id' => $_POST['admin_id'], // ID của admin
+                    'comment' => $_POST['admin_reply']
+                ];
+                $this->reviewModel->addReply($replyData);
+            }
+
+            // Xử lý ảnh nếu có
+            if (!empty($_FILES['images']['name'][0])) {
+                $imagePaths = [];
+                foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+                    $fileName = "uploads/reviews/" . uniqid() . "_" . basename($_FILES['images']['name'][$key]);
+                    move_uploaded_file($tmpName, $fileName);
+                    $imagePaths[] = $fileName;
+                }
+                $this->reviewModel->addReviewImages($reviewId, $imagePaths);
+            }
+
+            header("Location: /admin/reviews");
+        }
+    }
+
+    public function edit($id) {
+        $review = $this->reviewModel->getReviewById($id);
+        $courses = $this->courseModel->getAllCourses();
+        $users = $this->userModel->getAllUsers();
+        $admins = $this->userModel->getAllAdmins(); // Lấy danh sách admin
+        $reviewReply = $this->reviewModel->getReviewReply($id); // Lấy phản hồi admin nếu có
+
+        renderViewAdmin("view/admin/reviews/edit.php", compact('review', 'courses', 'users', 'admins', 'reviewReply'), "Edit Review");
+    }
+
+    public function update($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'course_id' => $_POST['course_id'],
+                'user_id' => $_POST['user_id'],
+                'rating' => $_POST['rating'],
+                'comment' => $_POST['comment']
+            ];
+            
+            // Cập nhật đánh giá
+            $this->reviewModel->update($id, $data);
+
+            // Cập nhật hoặc thêm mới phản hồi của Admin
+            if (!empty($_POST['admin_reply']) && !empty($_POST['admin_id'])) {
+                $replyData = [
+                    'review_id' => $id,
+                    'user_id' => $_POST['admin_id'], // ID của admin
+                    'comment' => $_POST['admin_reply']
+                ];
+                if ($this->reviewModel->getReviewReply($id)) {
+                    $this->reviewModel->updateReviewReply($id, $replyData);
+                } else {
+                    $this->reviewModel->addReply($replyData);
+                }
+            }
+
+            // Xử lý ảnh nếu có
+            if (!empty($_FILES['images']['name'][0])) {
+                $imagePaths = [];
+                foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+                    $fileName = "uploads/reviews/" . uniqid() . "_" . basename($_FILES['images']['name'][$key]);
+                    move_uploaded_file($tmpName, $fileName);
+                    $imagePaths[] = $fileName;
+                }
+                $this->reviewModel->addReviewImages($id, $imagePaths);
+            }
+
+            header("Location: /admin/reviews");
+        }
+    }
+
+    public function delete($id) {
+        $this->reviewModel->delete($id);
+        header("Location: /admin/reviews");
     }
 }

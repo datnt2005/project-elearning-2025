@@ -23,6 +23,13 @@ class UserModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAllAdmins() {
+        $query = "SELECT * FROM users WHERE role = 'admin'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function updateUser($id, $data) {
         $sql = "UPDATE users SET name = :name, phone = :phone" . 
                (isset($data['image']) ? ", image = :image" : "") . 
