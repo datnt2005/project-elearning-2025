@@ -140,8 +140,8 @@ class CheckoutController
 
     public function processPayment($order_id, $total_amount)
     {
-        $vnp_TmnCode = "BKW22DPU";
-        $vnp_HashSecret = "BGTKQK8L785CZKUM9HSLX5EUX70RQAIN";
+        $vnp_TmnCode = "PN770RI5";
+        $vnp_HashSecret = "3PBZJEL9XBWPCANGTFDHDSQEHT1UILWO";
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = "http://localhost:8000/checkout/vnpay-return";
 
@@ -149,7 +149,7 @@ class CheckoutController
         $vnp_TxnRef = $order_id;
         $vnp_OrderInfo = "Thanh toán khóa học";
         $vnp_OrderType = "billpayment";
-        $vnp_Amount = $total_amount * 100;
+        $vnp_Amount = $total_amount * 100;  
         $vnp_Locale = "vn";
         $vnp_BankCode = "NCB";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
@@ -185,8 +185,9 @@ class CheckoutController
 
         $vnp_Url = $vnp_Url . "?" . $query;
         if (isset($vnp_HashSecret)) {
-            $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
-            $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
+            $vnp_SecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
+            $vnp_Url .= 'vnp_SecureHash=' . $vnp_SecureHash;
+            
         }
 
         header('Location: ' . $vnp_Url);

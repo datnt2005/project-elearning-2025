@@ -132,35 +132,36 @@
         background-color: #45a049;
     }
 
-    .sidebar {
+    .sidebar1 {
         background: #f5f5f5;
         padding: 1rem;
+        width: 250px;
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .sidebar h3 {
+    .sidebar1 h3 {
         font-size: 1.5rem;
         margin-bottom: 1rem;
         color: #2c3e50;
     }
 
-    .sidebar ul {
+    .sidebar1 ul {
         list-style: none;
         padding: 0;
     }
 
-    .sidebar ul li {
+    .sidebar1 ul li {
         margin-bottom: 0.8rem;
     }
 
-    .sidebar ul li a {
+    .sidebar1 ul li a {
         color: #3498db;
         text-decoration: none;
         transition: color 0.3s;
     }
 
-    .sidebar ul li a:hover {
+    .sidebar1 ul li a:hover {
         color: #2980b9;
     }
 
@@ -177,6 +178,73 @@
     .btn-delete:hover {
         background-color: #c0392b;
     }
+
+    @media (max-width: 1024px) {
+    .container1 {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .sidebar1 {
+        order: -1;  
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .post-title {
+        font-size: 1.75rem;
+    }
+
+    .post-meta {
+        font-size: 0.85rem;
+    }
+
+    .post-content {
+        font-size: 0.95rem;
+    }
+
+    .btn-back {
+        padding: 0.7rem 1.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container1 {
+        padding: 0.8rem;
+    }
+
+    .post-title {
+        font-size: 1.5rem;
+    }
+
+    .post-meta {
+        font-size: 0.8rem;
+    }
+
+    .post-content {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .btn-back {
+        width: 100%;
+        text-align: center;
+    }
+
+    .comment {
+        padding: 10px;
+    }
+
+    #commentForm textarea {
+        font-size: 13px;
+    }
+
+    #commentForm .btn-action {
+        width: 100%;
+    }
+}
+
 </style>
 
 <div class="container1">
@@ -199,7 +267,7 @@
         </div>
 
     </div>
-    <aside class="sidebar">
+    <aside class="sidebar1">
     <h3><strong>Bài viết liên quan</strong></h3>
     <ul id="related-posts">
         <?php if (empty($relatedPosts)):  ?>

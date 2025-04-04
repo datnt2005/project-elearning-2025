@@ -1,50 +1,93 @@
 <style>
-    body {
-        font-family: 'Inter', sans-serif;
+.container1 {
+    display: flex;
+    justify-content: space-between;
+    margin: auto auto;
+    gap: 2rem;
+}
+
+.content {
+    flex: 1;
+}
+
+.course-info {
+    width: 300px;
+}
+
+.course-info video {
+    width: 100%;
+    height: auto;
+}
+
+.course-info ul {
+    padding-left: 20px;
+}
+
+#registerBtn {
+    display: block;
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .container1 {
+        flex-direction: column;
+        gap: 1.5rem;
     }
 
-    .main-course {
-        margin: 0 auto;
-        display: flex;
-        gap: 20px;
-    }
-
-    .sidebar,
-    .content,
     .course-info {
-        background: white;
-        padding: 16px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .content h1 {
+        font-size: 1.75rem;
     }
 
-    .sidebar {
-        width: 250px;
+    .content h2 {
+        font-size: 1.25rem;
     }
 
-    .content {
-        flex-grow: 1;
+    .course-info ul {
+        padding-left: 10px;
     }
 
-    .course-info {
-        width: 900px;
+    #registerBtn {
+        padding: 12px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container1 {
+        padding: 1rem;
+        margin: auto auto;
     }
 
-    .hidden {
-        display: none;
+    .content h1 {
+        font-size: 1.5rem;
     }
 
-    .hidden {
-        display: none;
+    .content h2 {
+        font-size: 1.125rem;
     }
+
+    .course-info ul li {
+        font-size: 14px;
+    }
+
+    #registerBtn {
+        font-size: 14px;
+    }
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <main class="ml-24 pt-20 px-4">
 
-    <div class="container main-course p-4">
-
+    <div class="container1 main-course p-4">
         <main class="content">
             <h1 class="text-2xl font-bold mb-2"><?php echo $course['title']; ?></h1>
             <p class="mb-4"><?php echo $course['description']; ?></p>

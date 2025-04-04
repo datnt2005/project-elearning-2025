@@ -17,5 +17,7 @@
         "google/apiclient": "*",
         "phpmailer/phpmailer": "^6.9",
         "paypal/paypal-server-sdk": "^1.0"
+
+        "google/apiclient-services": "^0.396.0"
     }
 }

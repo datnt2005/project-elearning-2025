@@ -60,3 +60,21 @@
         </div>
     </div>
 </div>
+
+<script>
+// Add filter toggle functionality
+document.getElementById('filterToggle')?.addEventListener('click', function() {
+    document.getElementById('filterContainer').classList.toggle('active');
+});
+
+// Close filter when clicking outside
+document.addEventListener('click', function(event) {
+    const filterContainer = document.getElementById('filterContainer');
+    const filterToggle = document.getElementById('filterToggle');
+    
+    if (!filterContainer.contains(event.target) && 
+        !filterToggle.contains(event.target)) {
+        filterContainer.classList.remove('active');
+    }
+});
+</script>
