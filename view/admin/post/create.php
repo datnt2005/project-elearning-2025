@@ -9,11 +9,41 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
     <style>
-        html,
-        body {
+        :root {
+            --header-bg: #343a40;
+            --primary-btn: #dc3545;
+            --primary-btn-hover: #bb2d3b;
+            --text-light: #f8f9fa;
+            --border-color: rgba(255,255,255,0.1);
+        }
+
+        html, body {
             height: 100%;
             margin: 0;
             font-family: 'Arial', sans-serif;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+        }
+
+        .card-header {
+            background: var(--header-bg) !important;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-light);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-btn);
+            border-color: var(--primary-btn);
+            color: var(--text-light);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-btn-hover);
+            border-color: var(--primary-btn-hover);
+            color: var(--text-light);
         }
 
         #editor-container {
@@ -23,16 +53,28 @@
             overflow: hidden;
             background-color: #ffffff;
         }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-btn);
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
+
+        .text-primary {
+            color: var(--header-bg) !important;
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="container p-4 mt-4">
-        <div class="row">
-            <div class="col-lg-9 col-md-8">
-                <h2 class="text-3xl font-bold mb-4 text-primary">Viết Blog</h2>
-
+    <div class="container-fluid px-4">
+        <h1 class="mt-4 text-center" style="color: var(--header-bg);">Viết Blog</h1>
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Thêm bài viết mới</h5>
+            </div>
+            <div class="card-body">
                 <!-- Hiển thị lỗi nếu có -->
                 <?php if (!empty($_SESSION["error"])): ?>
                     <div class="alert alert-danger">

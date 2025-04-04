@@ -1,5 +1,38 @@
+<style>
+:root {
+    --header-bg: #343a40;
+    --primary-btn: #dc3545;
+    --primary-btn-hover: #bb2d3b;
+    --text-light: #f8f9fa;
+    --border-color: rgba(255,255,255,0.1);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-btn);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--primary-btn);
+    border-color: var(--primary-btn);
+    color: var(--text-light);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-btn-hover);
+    border-color: var(--primary-btn-hover);
+    transform: translateY(-1px);
+}
+</style>
+
 <div class="container-fluid px-4">
-  <h1 class="mt-4 text-center" style="color: #69BA31;">Thêm khóa học</h1>
+  <h1 class="mt-4 text-center" style="color: var(--header-bg);">Thêm khóa học</h1>
   <div class="card shadow-sm">
     <div class="card-body">
       <!-- Hiển thị lỗi nếu có -->
