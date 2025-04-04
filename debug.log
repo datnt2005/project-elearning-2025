@@ -1,0 +1,373 @@
+Total lessons for course 5: 15
+Completed lessons for user 4, course 5: 15
+Calculated course progress for user 4, course 5: 100%
+Updating enrollment: Array
+(
+    [user_id] => 4
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 05:59:22
+    [status] => completed
+    [progress] => 100
+)
+
+Enrollment updated successfully for user_id: 4, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 4, course 5: 15
+Calculated course progress for user 4, course 5: 100%
+Updating enrollment: Array
+(
+    [user_id] => 4
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:01:42
+    [status] => completed
+    [progress] => 100
+)
+
+Enrollment updated successfully for user_id: 4, course_id: 5
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 5.1786628797158
+    [completed] => 
+)
+
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 5.1786628797158
+    [completed] => 
+)
+
+Progress updated successfully for user_id: 4, lesson_id: 1
+Progress updated successfully for user_id: 4, lesson_id: 1
+Total lessons for course 5: 15
+Completed lessons for user 4, course 5: 15
+Calculated course progress for user 4, course 5: 100%
+Updating enrollment: Array
+(
+    [user_id] => 4
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:04:56
+    [status] => completed
+    [progress] => 100
+)
+
+Enrollment updated successfully for user_id: 4, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 4, course 5: 15
+Calculated course progress for user 4, course 5: 100%
+Updating enrollment: Array
+(
+    [user_id] => 4
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:06:16
+    [status] => completed
+    [progress] => 100
+)
+
+Enrollment updated successfully for user_id: 4, course_id: 5
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 5.4336887189268
+    [completed] => 
+)
+
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 5.4336887189268
+    [completed] => 
+)
+
+Progress updated successfully for user_id: 4, lesson_id: 1
+Progress updated successfully for user_id: 4, lesson_id: 1
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 10.558748184588
+    [completed] => 
+)
+
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 10.558748184588
+    [completed] => 
+)
+
+Progress updated successfully for user_id: 4, lesson_id: 1
+Progress updated successfully for user_id: 4, lesson_id: 1
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 15.687902530846
+    [completed] => 
+)
+
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 15.687902530846
+    [completed] => 
+)
+
+Progress updated successfully for user_id: 4, lesson_id: 1
+Progress updated successfully for user_id: 4, lesson_id: 1
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 20.819528134703
+    [completed] => 
+)
+
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 20.819528134703
+    [completed] => 
+)
+
+Progress updated successfully for user_id: 4, lesson_id: 1
+Progress updated successfully for user_id: 4, lesson_id: 1
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 25.948912318452
+    [completed] => 
+)
+
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 25.948912318452
+    [completed] => 
+)
+
+Progress updated successfully for user_id: 4, lesson_id: 1
+Progress updated successfully for user_id: 4, lesson_id: 1
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 31.070868685671
+    [completed] => 
+)
+
+Received data: Array
+(
+    [user_id] => 4
+    [lesson_id] => 1
+    [progress] => 31.070868685671
+    [completed] => 
+)
+
+Progress updated successfully for user_id: 4, lesson_id: 1
+Progress updated successfully for user_id: 4, lesson_id: 1
+Total lessons for course 5: 15
+Completed lessons for user 4, course 5: 14
+Calculated course progress for user 4, course 5: 93.333333333333%
+Updating enrollment: Array
+(
+    [user_id] => 4
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:07:45
+    [status] => in-progress
+    [progress] => 93
+)
+
+Enrollment updated successfully for user_id: 4, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 2, course 5: 8
+Calculated course progress for user 2, course 5: 53.333333333333%
+Updating enrollment: Array
+(
+    [user_id] => 2
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:33:12
+    [status] => in-progress
+    [progress] => 53
+)
+
+Enrollment updated successfully for user_id: 2, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 2, course 5: 8
+Calculated course progress for user 2, course 5: 53.333333333333%
+Updating enrollment: Array
+(
+    [user_id] => 2
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:34:05
+    [status] => in-progress
+    [progress] => 53
+)
+
+Enrollment updated successfully for user_id: 2, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 2, course 5: 8
+Calculated course progress for user 2, course 5: 53.333333333333%
+Updating enrollment: Array
+(
+    [user_id] => 2
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:38:18
+    [status] => in-progress
+    [progress] => 53
+)
+
+Enrollment updated successfully for user_id: 2, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 2, course 5: 8
+Calculated course progress for user 2, course 5: 53.333333333333%
+Updating enrollment: Array
+(
+    [user_id] => 2
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:38:48
+    [status] => in-progress
+    [progress] => 53
+)
+
+Enrollment updated successfully for user_id: 2, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 2, course 5: 8
+Calculated course progress for user 2, course 5: 53.333333333333%
+Updating enrollment: Array
+(
+    [user_id] => 2
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:38:53
+    [status] => in-progress
+    [progress] => 53
+)
+
+Enrollment updated successfully for user_id: 2, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 2, course 5: 8
+Calculated course progress for user 2, course 5: 53.333333333333%
+Updating enrollment: Array
+(
+    [user_id] => 2
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:38:59
+    [status] => in-progress
+    [progress] => 53
+)
+
+Enrollment updated successfully for user_id: 2, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 2, course 5: 8
+Calculated course progress for user 2, course 5: 53.333333333333%
+Updating enrollment: Array
+(
+    [user_id] => 2
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:39:30
+    [status] => in-progress
+    [progress] => 53
+)
+
+Enrollment updated successfully for user_id: 2, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 2, course 5: 8
+Calculated course progress for user 2, course 5: 53.333333333333%
+Updating enrollment: Array
+(
+    [user_id] => 2
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 06:39:33
+    [status] => in-progress
+    [progress] => 53
+)
+
+Enrollment updated successfully for user_id: 2, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 0
+Calculated course progress for user 7, course 5: 0%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 09:07:44
+    [status] => enrolled
+    [progress] => 0
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 0
+Calculated course progress for user 7, course 5: 0%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 09:07:44
+    [status] => enrolled
+    [progress] => 0
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 0
+Calculated course progress for user 7, course 5: 0%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 09:08:33
+    [status] => enrolled
+    [progress] => 0
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 0
+Calculated course progress for user 7, course 5: 0%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 09:08:41
+    [status] => enrolled
+    [progress] => 0
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 0
+Calculated course progress for user 7, course 5: 0%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 09:24:10
+    [status] => enrolled
+    [progress] => 0
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 0
+Calculated course progress for user 7, course 5: 0%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-04 09:24:10
+    [status] => enrolled
+    [progress] => 0
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
