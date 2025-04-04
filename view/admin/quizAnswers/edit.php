@@ -58,89 +58,130 @@ function removeAnswer(button) {
 </script>
 
 
-
 <style>
-    .quiz-form {
-        width: 60%;
-        margin: auto;
-        padding: 20px;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
+:root {
+    --header-bg: #343a40;
+    --primary-btn: #dc3545;
+    --primary-btn-hover: #bb2d3b;
+    --text-light: #f8f9fa;
+    --border-color: rgba(255,255,255,0.1);
+}
 
-    h2 {
-        text-align: center;
-        color: #333;
-    }
+.container-fluid {
+    padding: 20px;
+}
 
-    .input-field {
-        width: 100%;
-        padding: 10px;
-        margin: 5px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-    }
+h2 {
+    text-align: center;
+    color: var(--header-bg);
+    margin-bottom: 30px;
+}
 
-    .answer-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
+.quiz-form {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
 
-    .checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    font-size: 16px;
+}
 
-    .remove-btn {
-        background: #ff4d4d;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-    }
+.input-field:focus {
+    border-color: var(--primary-btn);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    outline: none;
+}
 
-    .remove-btn:hover {
-        background: #e60000;
-    }
+.answer-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+}
 
-    .add-btn, .submit-btn {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
 
-    .add-btn {
-        background: #28a745;
-        color: white;
-    }
+.remove-btn {
+    background: var(--primary-btn);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-    .add-btn:hover {
-        background: #218838;
-    }
+.remove-btn:hover {
+    background: var(--primary-btn-hover);
+    transform: translateY(-1px);
+}
 
-    .submit-btn {
-        background: #007bff;
-        color: white;
-    }
+.add-btn, .submit-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-    .submit-btn:hover {
-        background: #0056b3;
-    }
+.add-btn {
+    background: var(--primary-btn);
+    color: white;
+    margin-bottom: 10px;
+}
 
-    .error {
-        color: red;
-        font-size: 14px;
-    }
+.add-btn:hover {
+    background: var(--primary-btn-hover);
+    transform: translateY(-1px);
+}
+
+.submit-btn {
+    background: var(--header-bg);
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+}
+
+.submit-btn:hover {
+    background: #23272b;
+    transform: translateY(-1px);
+}
+
+.error {
+    color: var(--primary-btn);
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.alert {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
 </style>
