@@ -1,4 +1,247 @@
-<main class="ml-24 pt-20 px-4">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khóa học</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+/* Container chính */
+.container-learning {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+    padding: 20px;
+    align-items: stretch;
+    min-height: 100vh;
+}
+/* Video Section - Chiếm 85% */
+.video-section {
+    min-width: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.video-title h1 {
+    font-size: 1.5rem;
+    margin: 0.75rem;
+    color: #333;
+}
+
+.video-player {
+    position: relative;
+    width: 100%;
+}
+
+.video-player iframe {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 8px;
+}
+
+.description {
+    margin-top: 10px;
+}
+
+.description p {
+    font-size: 1rem;
+    margin: 0 1.25rem;
+    color: #666;
+}
+
+.description .text-3xl {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.sidebar1 {
+    min-width: 200px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    margin-top: 1rem;
+}
+
+.progress-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    height: 8px;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+#course-progress, #current-lesson-progress {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.text-green-500 {
+    color: #22c55e;
+}
+
+.text-blue-500 {
+    color: #3b82f6;
+}
+
+.text-red-500 {
+    color: #ef4444;
+}
+
+.course-content {
+    flex-grow: 1;
+}
+
+.course-content h2 {
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+    color: #333;
+}
+
+.course-content .chapter {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.course-content .chapter:hover {
+    background-color: #e5e7eb;
+}
+
+.lesson-list {
+    list-style: none;
+    padding-left: 20px;
+    display: none;
+}
+
+.lesson-list.active {
+    display: block;
+}
+
+.lesson-item {
+    position: relative;
+}
+
+.lesson-item a {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.lesson-item.locked a {
+    color: #999;
+    pointer-events: none;
+}
+
+.lesson-progress {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.lock-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 5px 0;
+    text-decoration: none;
+    background-color: #e5e7eb;
+    color: #6b7280;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    background-color: #d1d5db;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container-learning {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .video-section,
+    .sidebar1 {
+        flex: 1 1 100%;
+    }
+
+    .video-title h1 {
+        font-size: 1.25rem;
+    }
+
+    .description .text-3xl {
+        font-size: 1.5rem;
+    }
+
+    .description p {
+        font-size: 0.9rem;
+    }
+
+    .sidebar1 {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .video-title h1 {
+        font-size: 1rem;
+    }
+
+    .description .text-3xl {
+        font-size: 1.25rem;
+    }
+
+    .description p {
+        font-size: 0.875rem;
+    }
+
+    .lesson-item a {
+        font-size: 0.875rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <br>
     <div class="container-learning">
         <!-- Phần xem video -->
         <div class="video-section">
@@ -14,7 +257,7 @@
                         src="<?php echo htmlspecialchars($currentLesson['video_url'], ENT_QUOTES, 'UTF-8') . '&enablejsapi=1'; ?>"
                         title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
                 <?php endif; ?>
             </div>
             <div class="description" id="video-description">
@@ -23,8 +266,8 @@
             </div>
         </div>
 
-        <!-- Sidebar nội dung khóa học -->
-        <div class="sidebar">
+        <!-- Sidebar1 nội dung khóa học -->
+        <div class="sidebar1">
             <div class="progress-bar mt-4">
                 <span id="course-progress">Tiến độ khóa học: <?php echo number_format($progress['progress'], 2); ?>%</span>
                 <div class="progress-container">
@@ -56,32 +299,36 @@
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <ul class="lesson-list">
-                        <?php if (isset($lessonsBySection[$section['id']])): ?>
+                        <?php if (isset($lessonsBySection[$section['id']]) && is_array($lessonsBySection[$section['id']])): ?>
                             <?php
                             $isSectionLocked = false;
                             if ($section['order_number'] > 1) {
                                 $prevSectionIndex = array_search($section['order_number'] - 1, $sectionOrderNumbers);
-                                $prevSectionId = $sectionIds[$prevSectionIndex];
-                                foreach ($lessonsBySection[$prevSectionId] as $prevLesson) {
-                                    if (!$lessonProgressById[$prevLesson['id']]['completed']) {
-                                        $isSectionLocked = true;
-                                        break;
+                                if ($prevSectionIndex !== false && isset($sectionIds[$prevSectionIndex])) {
+                                    $prevSectionId = $sectionIds[$prevSectionIndex];
+                                    if (isset($lessonsBySection[$prevSectionId]) && is_array($lessonsBySection[$prevSectionId])) {
+                                        foreach ($lessonsBySection[$prevSectionId] as $prevLesson) {
+                                            if (isset($lessonProgressById[$prevLesson['id']]) && !$lessonProgressById[$prevLesson['id']]['completed']) {
+                                                $isSectionLocked = true;
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
                             }
                             ?>
                             <?php foreach ($lessonsBySection[$section['id']] as $lesson): ?>
                                 <?php
-                                $lessonProgress = $lessonProgressById[$lesson['id']];
+                                $lessonProgress = $lessonProgressById[$lesson['id']] ?? ['progress' => 0, 'completed' => false];
                                 $isLocked = $isSectionLocked;
                                 if (!$isSectionLocked && $lesson['order_number'] > 1) {
                                     $prevLessonIndex = $lesson['order_number'] - 2;
                                     if (isset($lessonsBySection[$section['id']][$prevLessonIndex])) {
                                         $prevLessonId = $lessonsBySection[$section['id']][$prevLessonIndex]['id'];
-                                        $isLocked = !$lessonProgressById[$prevLessonId]['completed'];
+                                        $isLocked = !(isset($lessonProgressById[$prevLessonId]) && $lessonProgressById[$prevLessonId]['completed']);
                                     }
                                 }
-                                if ($lessonProgress['completed'] || ($lesson['order_number'] > 1 && isset($lessonsBySection[$section['id']][$prevLessonIndex]) && $lessonProgressById[$lessonsBySection[$section['id']][$prevLessonIndex]['id']]['completed'])) {
+                                if ($lessonProgress['completed'] || ($lesson['order_number'] > 1 && isset($lessonsBySection[$section['id']][$prevLessonIndex]) && (isset($lessonProgressById[$lessonsBySection[$section['id']][$prevLessonIndex]['id']]) && $lessonProgressById[$lessonsBySection[$section['id']][$prevLessonIndex]['id']]['completed']))) {
                                     $isLocked = false;
                                 }
                                 ?>
@@ -110,6 +357,42 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Toggle dropdown cho các chapter
+        function toggleDropdown(element) {
+            const lessonList = element.nextElementSibling;
+            const icon = element.querySelector("i");
+
+            lessonList.classList.toggle("active");
+            icon.classList.toggle("fa-chevron-right");
+            icon.classList.toggle("fa-chevron-down");
+        }
+
+        // Xử lý click vào lesson để cập nhật video
+        document.querySelectorAll(".lesson-item a").forEach(link => {
+            link.addEventListener("click", function(e) {
+                if (this.classList.contains("disabled")) {
+                    e.preventDefault();
+                    return;
+                }
+
+                const videoUrl = this.getAttribute("data-video");
+                const title = this.getAttribute("data-title");
+                const description = this.getAttribute("data-description");
+                const orderNumber = this.getAttribute("data-order-number");
+
+                const iframe = document.getElementById("video-iframe");
+                const videoDescription = document.getElementById("video-description");
+
+                iframe.src = videoUrl + "&enablejsapi=1";
+                videoDescription.innerHTML = `
+                    <p class="text-3xl m-5 mb-0"><strong>Bài ${orderNumber}: ${title}</strong></p>
+                    <p class="mx-5">${description}</p>
+                `;
+            });
+        });
+    </script>
     <?php
     $courseId = $course['id'] ?? null;
     ?>
@@ -897,8 +1180,8 @@
         flex: 1;
         background: white;
         padding: 20px;
-        margin-left: 20px;
         border-radius: 10px;
+        
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
@@ -936,7 +1219,6 @@
     .lesson-item a:hover {
         background: #f1f1f1;
     }
-
     .lesson-item.locked a {
         color: #999;
         cursor: not-allowed;
