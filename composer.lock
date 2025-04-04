@@ -4,9 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66f41dcd065c8d5c614ecdb0589c866a",
-
-    //"content-hash": "6b8095fa8ecd4d2e147b7f06b1f0260f",
+    "content-hash": "ec78417dbcd27408884649e1032bd8de",
     "packages": [
         {
             "name": "apimatic/core",
@@ -2130,10 +2128,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

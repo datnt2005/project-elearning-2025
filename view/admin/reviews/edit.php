@@ -1,3 +1,40 @@
+<style>
+:root {
+    --header-bg: #343a40;
+    --primary-btn: #dc3545;
+    --primary-btn-hover: #bb2d3b;
+    --text-light: #f8f9fa;
+    --border-color: rgba(255,255,255,0.1);
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.card-header {
+    background: var(--header-bg) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-btn);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--primary-btn);
+    border-color: var(--primary-btn);
+    color: var(--text-light);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-btn-hover);
+    border-color: var(--primary-btn-hover);
+    transform: translateY(-1px);
+}
+</style>
 <div class="container-fluid px-4">
     <h1 class="mt-4 text-center">Sửa Đánh giá</h1>
     <div class="card mb-4">
@@ -67,8 +104,8 @@
                     <textarea name="admin_reply" id="admin_reply" class="form-control"><?= $reviewReply['comment'] ?? '' ?></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-submit">Cập nhật</button>
-                <a href="/admin/reviews" class="btn btn-secondary">Quay lại</a>
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a href="/admin/reviews" class="btn btn-secondary">Cancel</a>
             </form>
         </div>
     </div>

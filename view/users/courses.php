@@ -11,7 +11,7 @@
 }
 
 .course-info {
-    width: 300px;
+    width: 400px;
 }
 
 .course-info video {
@@ -85,7 +85,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<main class="ml-24 pt-20 px-4">
+<main class="ml-24 pt-10 " >
 
     <div class="container1 main-course p-4">
         <main class="content">

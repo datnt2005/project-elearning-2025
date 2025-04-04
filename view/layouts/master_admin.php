@@ -122,7 +122,7 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout" role="button">
+                    <a class="nav-link" href="/" role="button">
                         <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </li>
@@ -262,9 +262,15 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/admin/user" class="nav-link">
+                            <a href="/admin/users" class="nav-link">
                                 <i class="nav-icon fas fa-ticket"></i>
                                 <p>Người dùng</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/reviews" class="nav-link">
+                                <i class="nav-icon fas fa-comment"></i>
+                                <p>Bình luận</p>
                             </a>
                         </li>
                         <li class="nav-item">

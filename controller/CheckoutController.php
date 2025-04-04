@@ -454,7 +454,7 @@ class CheckoutController
                 echo "Lỗi khi cập nhật trạng thái đơn hàng.";
             }
         } else {
-            echo "<script>alert('Thanh toán thất bại!'); window.location.href='/checkout';</script>";
+            echo "<script>alert('Thanh toán thất bại!'); window.location.href='/';</script>";
         }
     }
 
