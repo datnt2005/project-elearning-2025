@@ -380,6 +380,7 @@ class CourseController
         header('Content-Type: application/json');
         $courses = $this->courseModel->getAllCourses();
         echo json_encode($courses);
+        
     }
 
 }
