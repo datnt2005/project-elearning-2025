@@ -24,7 +24,9 @@ class Course
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+
+   
+}
 
     // Lấy 1 khoá học theo ID
     public function getCourseById($id)
@@ -140,4 +142,5 @@ class Course
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 }

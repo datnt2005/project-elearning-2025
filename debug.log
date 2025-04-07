@@ -1398,3 +1398,9 @@ Updating enrollment: Array
 )
 
 Enrollment updated successfully for user_id: 8, course_id: 16
+Total lessons for course 16: 7
+Completed lessons for user 8, course 16: 1
+Calculated course progress for user 8, course 16: 14.285714285714%
+Total lessons for course 16: 7
+Completed lessons for user 8, course 16: 1
+Calculated course progress for user 8, course 16: 14.285714285714%
