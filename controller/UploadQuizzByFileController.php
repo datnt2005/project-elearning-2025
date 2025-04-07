@@ -23,7 +23,7 @@ class UploadQuizzByFileController {
     public function create() {
         $errors = [];
         $file_name = $file_path = "";
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
         if (!empty($_FILES['file']['name'])) { 
             if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
                 $upload_dir = 'uploads/files/';
@@ -101,9 +101,8 @@ class UploadQuizzByFileController {
             
         }
 
-    } else {
+
         renderViewAdmin("view/admin/uploadQuizzByFile/create.php", compact('errors'));
-    }
     }
 
 

@@ -36,7 +36,6 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <!-- Navbar -->
     <nav class="bg-white shadow-sm fixed w-full top-0 z-10">
         <div class="container mx-auto px-4">
-            
             <div class="flex flex-col sm:flex-row justify-between items-center h-auto sm:h-16 py-4 sm:py-0">
                 <div class="flex items-center justify-between w-full sm:w-auto">
                     <a href="/" class="text-2xl font-bold text-[#f05123]">P6</a>
@@ -105,7 +104,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     </div>
 
     <!-- Main Content -->
-    <main class="main-content container mx-auto px-4 pt-20 sm:ml-[96px] mb-5">
+    <main class="main-content container mx-auto px-4 pt-20 ">
         <?= $content ?>
     </main>
 

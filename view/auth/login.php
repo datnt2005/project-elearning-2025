@@ -1,4 +1,6 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     body {
         background-color: #f8f9fa;
@@ -8,8 +10,6 @@
         align-items: center;
         min-height: 100vh;
         margin: 0;
-        margin-left: 35px;
-
     }
 
     .login-container {

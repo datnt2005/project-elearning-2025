@@ -104,7 +104,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     </div>
 
     <!-- Main Content -->
-    <main class="main-content container mx-auto px-4 pt-20 lg:ml-[96px] mb-5">
+    <main class="main-content container mx-auto px-4 pt-20 mb-5">
         <!-- Hero Section -->
         <div style="max-width: 1700px;" class="relative overflow-hidden rounded-2xl mb-8">
             <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between">

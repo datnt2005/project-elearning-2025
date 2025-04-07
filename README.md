@@ -4,6 +4,9 @@ php -S localhost:8000
 composer install
 composer require vlucas/phpdotenv
 composer require phpmailer/phpmailer
+composer require phpoffice/phpspreadsheet:^1.23
+composer require vlucas/phpdotenv
+composer require google/apiclient:^2.15
 
 
 ---everyone---

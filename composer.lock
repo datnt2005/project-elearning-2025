@@ -4,223 +4,68 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec78417dbcd27408884649e1032bd8de",
+    "content-hash": "785aa43e948ad689ceede668eb247306",
     "packages": [
         {
-            "name": "apimatic/core",
-            "version": "0.3.14",
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.18.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/apimatic/core-lib-php.git",
-                "reference": "c3eaad6cf0c00b793ce6d9bee8b87176247da582"
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "cb56001e54359df7ae76dc522d08845dc741621b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apimatic/core-lib-php/zipball/c3eaad6cf0c00b793ce6d9bee8b87176247da582",
-                "reference": "c3eaad6cf0c00b793ce6d9bee8b87176247da582",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/cb56001e54359df7ae76dc522d08845dc741621b",
+                "reference": "cb56001e54359df7ae76dc522d08845dc741621b",
                 "shasum": ""
             },
             "require": {
-                "apimatic/core-interfaces": "~0.1.5",
-                "apimatic/jsonmapper": "^3.1.1",
-                "ext-curl": "*",
-                "ext-dom": "*",
-                "ext-json": "*",
-                "ext-libxml": "*",
-                "php": "^7.2 || ^8.0",
-                "php-jsonpointer/php-jsonpointer": "^3.0.2",
-                "psr/log": "^1.1.4 || ^2.0.0 || ^3.0.0"
+                "php": "~5.6.0 || ~7.0.0 || ~7.1.0 || ~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
             },
             "require-dev": {
-                "phan/phan": "5.4.5",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
-                "squizlabs/php_codesniffer": "^3.5"
+                "cerdic/css-tidy": "^1.7 || ^2.0",
+                "simpletest/simpletest": "dev-master"
+            },
+            "suggest": {
+                "cerdic/css-tidy": "If you want to use the filter 'Filter.ExtractStyleBlocks'.",
+                "ext-bcmath": "Used for unit conversion and imagecrash protection",
+                "ext-iconv": "Converts text to and from non-UTF-8 encodings",
+                "ext-tidy": "Used for pretty-printing HTML"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Core\\": "src/"
-                }
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ],
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "exclude-from-classmap": [
+                    "/library/HTMLPurifier/Language/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
-            ],
-            "description": "Core logic and the utilities for the Apimatic's PHP SDK",
-            "homepage": "https://github.com/apimatic/core-lib-php",
-            "keywords": [
-                "apimatic",
-                "core",
-                "corelib",
-                "php"
-            ],
-            "support": {
-                "issues": "https://github.com/apimatic/core-lib-php/issues",
-                "source": "https://github.com/apimatic/core-lib-php/tree/0.3.14"
-            },
-            "time": "2025-02-27T06:03:30+00:00"
-        },
-        {
-            "name": "apimatic/core-interfaces",
-            "version": "0.1.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/apimatic/core-interfaces-php.git",
-                "reference": "b4f1bffc8be79584836f70af33c65e097eec155c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/apimatic/core-interfaces-php/zipball/b4f1bffc8be79584836f70af33c65e097eec155c",
-                "reference": "b4f1bffc8be79584836f70af33c65e097eec155c",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2 || ^8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CoreInterfaces\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Definition of the behavior of apimatic/core, apimatic/unirest-php and Apimatic's PHP SDK",
-            "homepage": "https://github.com/apimatic/core-interfaces-php",
-            "keywords": [
-                "apimatic",
-                "core",
-                "corelib",
-                "interface",
-                "php",
-                "unirest"
-            ],
-            "support": {
-                "issues": "https://github.com/apimatic/core-interfaces-php/issues",
-                "source": "https://github.com/apimatic/core-interfaces-php/tree/0.1.5"
-            },
-            "time": "2024-05-09T06:32:07+00:00"
-        },
-        {
-            "name": "apimatic/jsonmapper",
-            "version": "3.1.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/apimatic/jsonmapper.git",
-                "reference": "c6cc21bd56bfe5d5822bbd08f514be465c0b24e7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/apimatic/jsonmapper/zipball/c6cc21bd56bfe5d5822bbd08f514be465c0b24e7",
-                "reference": "c6cc21bd56bfe5d5822bbd08f514be465c0b24e7",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^5.6 || ^7.0 || ^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0",
-                "squizlabs/php_codesniffer": "^3.0.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "apimatic\\jsonmapper\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "OSL-3.0"
+                "LGPL-2.1-or-later"
             ],
             "authors": [
                 {
-                    "name": "Christian Weiske",
-                    "email": "christian.weiske@netresearch.de",
-                    "homepage": "http://www.netresearch.de/",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Mehdi Jaffery",
-                    "email": "mehdi.jaffery@apimatic.io",
-                    "homepage": "http://apimatic.io/",
-                    "role": "Developer"
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
                 }
             ],
-            "description": "Map nested JSON structures onto PHP classes",
-            "support": {
-                "email": "mehdi.jaffery@apimatic.io",
-                "issues": "https://github.com/apimatic/jsonmapper/issues",
-                "source": "https://github.com/apimatic/jsonmapper/tree/3.1.6"
-            },
-            "time": "2024-11-28T09:15:32+00:00"
-        },
-        {
-            "name": "apimatic/unirest-php",
-            "version": "4.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/apimatic/unirest-php.git",
-                "reference": "e16754010c16be5473289470f129d87a0f41b55e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/apimatic/unirest-php/zipball/e16754010c16be5473289470f129d87a0f41b55e",
-                "reference": "e16754010c16be5473289470f129d87a0f41b55e",
-                "shasum": ""
-            },
-            "require": {
-                "apimatic/core-interfaces": "^0.1.0",
-                "ext-curl": "*",
-                "ext-json": "*",
-                "php": "^7.2 || ^8.0"
-            },
-            "require-dev": {
-                "phan/phan": "5.4.2",
-                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
-                "squizlabs/php_codesniffer": "^3.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Unirest\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Mashape",
-                    "email": "opensource@mashape.com",
-                    "homepage": "https://www.mashape.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "APIMATIC",
-                    "email": "opensource@apimatic.io",
-                    "homepage": "https://www.apimatic.io",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Unirest PHP",
-            "homepage": "https://github.com/apimatic/unirest-php",
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
             "keywords": [
-                "client",
-                "curl",
-                "http",
-                "https",
-                "rest"
+                "html"
             ],
             "support": {
-                "email": "opensource@apimatic.io",
-                "issues": "https://github.com/apimatic/unirest-php/issues",
-                "source": "https://github.com/apimatic/unirest-php/tree/4.0.5"
+                "issues": "https://github.com/ezyang/htmlpurifier/issues",
+                "source": "https://github.com/ezyang/htmlpurifier/tree/v4.18.0"
             },
-            "time": "2023-04-25T14:19:45+00:00"
+            "time": "2024-11-01T03:51:45+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -287,35 +132,35 @@
         },
         {
             "name": "google/apiclient",
-            "version": "v2.18.2",
+            "version": "v2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client.git",
-                "reference": "d8d201ba8a189a3cd7fb34e4da569f2ed440eee7"
+                "reference": "49787fa30b8d8313146a61efbf77ed1fede723c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client/zipball/d8d201ba8a189a3cd7fb34e4da569f2ed440eee7",
-                "reference": "d8d201ba8a189a3cd7fb34e4da569f2ed440eee7",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client/zipball/49787fa30b8d8313146a61efbf77ed1fede723c2",
+                "reference": "49787fa30b8d8313146a61efbf77ed1fede723c2",
                 "shasum": ""
             },
             "require": {
-                "firebase/php-jwt": "^6.0",
-                "google/apiclient-services": "~0.350",
-                "google/auth": "^1.37",
-                "guzzlehttp/guzzle": "^7.4.5",
-                "guzzlehttp/psr7": "^2.6",
+                "firebase/php-jwt": "~6.0",
+                "google/apiclient-services": "~0.200",
+                "google/auth": "^1.28",
+                "guzzlehttp/guzzle": "~6.5||~7.0",
+                "guzzlehttp/psr7": "^1.8.4||^2.2.1",
                 "monolog/monolog": "^2.9||^3.0",
-                "php": "^8.0",
-                "phpseclib/phpseclib": "^3.0.36"
+                "php": "^7.4|^8.0",
+                "phpseclib/phpseclib": "^3.0.2"
             },
             "require-dev": {
                 "cache/filesystem-adapter": "^1.1",
-                "composer/composer": "^1.10.23",
+                "composer/composer": "^1.10.22",
                 "phpcompatibility/php-compatibility": "^9.2",
-                "phpspec/prophecy-phpunit": "^2.1",
-                "phpunit/phpunit": "^9.6",
-                "squizlabs/php_codesniffer": "^3.8",
+                "phpspec/prophecy-phpunit": "^2.0",
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "^3.0",
                 "symfony/css-selector": "~2.1",
                 "symfony/dom-crawler": "~2.1"
             },
@@ -350,9 +195,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client/issues",
-                "source": "https://github.com/googleapis/google-api-php-client/tree/v2.18.2"
+                "source": "https://github.com/googleapis/google-api-php-client/tree/v2.15.0"
             },
-            "time": "2024-12-16T22:52:40+00:00"
+            "time": "2023-05-18T13:51:33+00:00"
         },
         {
             "name": "google/apiclient-services",
@@ -847,6 +692,191 @@
             "time": "2025-03-27T12:30:47+00:00"
         },
         {
+            "name": "maennchen/zipstream-php",
+            "version": "2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maennchen/ZipStream-PHP.git",
+                "reference": "3fa72e4c71a43f9e9118752a5c90e476a8dc9eb3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/3fa72e4c71a43f9e9118752a5c90e476a8dc9eb3",
+                "reference": "3fa72e4c71a43f9e9118752a5c90e476a8dc9eb3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "myclabs/php-enum": "^1.5",
+                "php": "^8.0",
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "ext-zip": "*",
+                "friendsofphp/php-cs-fixer": "^3.9",
+                "guzzlehttp/guzzle": "^6.5.3 || ^7.2.0",
+                "mikey179/vfsstream": "^1.6",
+                "php-coveralls/php-coveralls": "^2.4",
+                "phpunit/phpunit": "^8.5.8 || ^9.4.2",
+                "vimeo/psalm": "^5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZipStream\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Duncan",
+                    "email": "pabs@pablotron.org"
+                },
+                {
+                    "name": "Jonatan Männchen",
+                    "email": "jonatan@maennchen.ch"
+                },
+                {
+                    "name": "Jesse Donat",
+                    "email": "donatj@gmail.com"
+                },
+                {
+                    "name": "András Kolesár",
+                    "email": "kolesar@kolesar.hu"
+                }
+            ],
+            "description": "ZipStream is a library for dynamically streaming dynamic zip files from PHP without writing to the disk at all on the server.",
+            "keywords": [
+                "stream",
+                "zip"
+            ],
+            "support": {
+                "issues": "https://github.com/maennchen/ZipStream-PHP/issues",
+                "source": "https://github.com/maennchen/ZipStream-PHP/tree/2.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/maennchen",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/zipstream",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2022-12-08T12:29:14+00:00"
+        },
+        {
+            "name": "markbaker/complex",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MarkBaker/PHPComplex.git",
+                "reference": "95c56caa1cf5c766ad6d65b6344b807c1e8405b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MarkBaker/PHPComplex/zipball/95c56caa1cf5c766ad6d65b6344b807c1e8405b9",
+                "reference": "95c56caa1cf5c766ad6d65b6344b807c1e8405b9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0",
+                "squizlabs/php_codesniffer": "^3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Complex\\": "classes/src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Baker",
+                    "email": "mark@lange.demon.co.uk"
+                }
+            ],
+            "description": "PHP Class for working with complex numbers",
+            "homepage": "https://github.com/MarkBaker/PHPComplex",
+            "keywords": [
+                "complex",
+                "mathematics"
+            ],
+            "support": {
+                "issues": "https://github.com/MarkBaker/PHPComplex/issues",
+                "source": "https://github.com/MarkBaker/PHPComplex/tree/3.0.2"
+            },
+            "time": "2022-12-06T16:21:08+00:00"
+        },
+        {
+            "name": "markbaker/matrix",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MarkBaker/PHPMatrix.git",
+                "reference": "728434227fe21be27ff6d86621a1b13107a2562c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MarkBaker/PHPMatrix/zipball/728434227fe21be27ff6d86621a1b13107a2562c",
+                "reference": "728434227fe21be27ff6d86621a1b13107a2562c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phploc/phploc": "^4.0",
+                "phpmd/phpmd": "2.*",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0",
+                "sebastian/phpcpd": "^4.0",
+                "squizlabs/php_codesniffer": "^3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Matrix\\": "classes/src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Baker",
+                    "email": "mark@demon-angel.eu"
+                }
+            ],
+            "description": "PHP Class for working with matrices",
+            "homepage": "https://github.com/MarkBaker/PHPMatrix",
+            "keywords": [
+                "mathematics",
+                "matrix",
+                "vector"
+            ],
+            "support": {
+                "issues": "https://github.com/MarkBaker/PHPMatrix/issues",
+                "source": "https://github.com/MarkBaker/PHPMatrix/tree/3.0.1"
+            },
+            "time": "2022-12-02T22:17:43+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "3.9.0",
             "source": {
@@ -948,6 +978,69 @@
                 }
             ],
             "time": "2025-03-24T10:02:05+00:00"
+        },
+        {
+            "name": "myclabs/php-enum",
+            "version": "1.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/php-enum.git",
+                "reference": "e7be26966b7398204a234f8673fdad5ac6277802"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/e7be26966b7398204a234f8673fdad5ac6277802",
+                "reference": "e7be26966b7398204a234f8673fdad5ac6277802",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.3 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5",
+                "squizlabs/php_codesniffer": "1.*",
+                "vimeo/psalm": "^4.6.2 || ^5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyCLabs\\Enum\\": "src/"
+                },
+                "classmap": [
+                    "stubs/Stringable.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP Enum contributors",
+                    "homepage": "https://github.com/myclabs/php-enum/graphs/contributors"
+                }
+            ],
+            "description": "PHP Enum implementation",
+            "homepage": "https://github.com/myclabs/php-enum",
+            "keywords": [
+                "enum"
+            ],
+            "support": {
+                "issues": "https://github.com/myclabs/php-enum/issues",
+                "source": "https://github.com/myclabs/php-enum/tree/1.8.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mnapoli",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/myclabs/php-enum",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-01-14T11:49:03+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -1067,184 +1160,108 @@
             "time": "2020-10-15T08:29:30+00:00"
         },
         {
-            "name": "paypal/paypal-server-sdk",
-            "version": "1.0.0",
+            "name": "phpoffice/phpspreadsheet",
+            "version": "1.23.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/paypal/PayPal-PHP-Server-SDK.git",
-                "reference": "66fd3341bbffafe7d650fe7d9d2699fabf355e67"
+                "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
+                "reference": "21e4cf62699eebf007db28775f7d1554e612ed9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paypal/PayPal-PHP-Server-SDK/zipball/66fd3341bbffafe7d650fe7d9d2699fabf355e67",
-                "reference": "66fd3341bbffafe7d650fe7d9d2699fabf355e67",
-                "shasum": ""
-            },
-            "require": {
-                "apimatic/core": "~0.3.13",
-                "apimatic/core-interfaces": "~0.1.5",
-                "apimatic/unirest-php": "^4.0.0",
-                "ext-json": "*",
-                "php": "^7.2 || ^8.0"
-            },
-            "require-dev": {
-                "phan/phan": "5.4.5",
-                "squizlabs/php_codesniffer": "^3.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PaypalServerSdkLib\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PayPal's SDK for interacting with the REST APIs",
-            "homepage": "https://github.com/paypal/PayPal-PHP-Server-SDK",
-            "support": {
-                "issues": "https://github.com/paypal/PayPal-PHP-Server-SDK/issues",
-                "source": "https://github.com/paypal/PayPal-PHP-Server-SDK/tree/1.0.0"
-            },
-            "time": "2025-03-24T18:44:18+00:00"
-        },
-        {
-            "name": "php-jsonpointer/php-jsonpointer",
-            "version": "v3.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/raphaelstolt/php-jsonpointer.git",
-                "reference": "4428f86c6f23846e9faa5a420c4ef14e485b3afb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/raphaelstolt/php-jsonpointer/zipball/4428f86c6f23846e9faa5a420c4ef14e485b3afb",
-                "reference": "4428f86c6f23846e9faa5a420c4ef14e485b3afb",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^1.11",
-                "phpunit/phpunit": "4.6.*"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Rs\\Json": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Raphael Stolt",
-                    "email": "raphael.stolt@gmail.com",
-                    "homepage": "http://raphaelstolt.blogspot.com/"
-                }
-            ],
-            "description": "Implementation of JSON Pointer (http://tools.ietf.org/html/rfc6901)",
-            "homepage": "https://github.com/raphaelstolt/php-jsonpointer",
-            "keywords": [
-                "json",
-                "json pointer",
-                "json traversal"
-            ],
-            "support": {
-                "issues": "https://github.com/raphaelstolt/php-jsonpointer/issues",
-                "source": "https://github.com/raphaelstolt/php-jsonpointer/tree/master"
-            },
-            "time": "2016-08-29T08:51:01+00:00"
-        },
-        {
-            "name": "phpmailer/phpmailer",
-            "version": "v6.9.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "2f5c94fe7493efc213f643c23b1b1c249d40f47e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/2f5c94fe7493efc213f643c23b1b1c249d40f47e",
-                "reference": "2f5c94fe7493efc213f643c23b1b1c249d40f47e",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/21e4cf62699eebf007db28775f7d1554e612ed9e",
+                "reference": "21e4cf62699eebf007db28775f7d1554e612ed9e",
                 "shasum": ""
             },
             "require": {
                 "ext-ctype": "*",
-                "ext-filter": "*",
-                "ext-hash": "*",
-                "php": ">=5.5.0"
+                "ext-dom": "*",
+                "ext-fileinfo": "*",
+                "ext-gd": "*",
+                "ext-iconv": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "ext-simplexml": "*",
+                "ext-xml": "*",
+                "ext-xmlreader": "*",
+                "ext-xmlwriter": "*",
+                "ext-zip": "*",
+                "ext-zlib": "*",
+                "ezyang/htmlpurifier": "^4.13",
+                "maennchen/zipstream-php": "^2.1",
+                "markbaker/complex": "^3.0",
+                "markbaker/matrix": "^3.0",
+                "php": "^7.3 || ^8.0",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/simple-cache": "^1.0 || ^2.0"
             },
             "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-                "doctrine/annotations": "^1.2.6 || ^1.13.3",
-                "php-parallel-lint/php-console-highlighter": "^1.0.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3.2",
-                "phpcompatibility/php-compatibility": "^9.3.5",
-                "roave/security-advisories": "dev-latest",
-                "squizlabs/php_codesniffer": "^3.7.2",
-                "yoast/phpunit-polyfills": "^1.0.4"
+                "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
+                "dompdf/dompdf": "^1.0",
+                "friendsofphp/php-cs-fixer": "^3.2",
+                "jpgraph/jpgraph": "^4.0",
+                "mpdf/mpdf": "8.0.17",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpstan/phpstan": "^1.1",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^8.5 || ^9.0",
+                "squizlabs/php_codesniffer": "^3.6",
+                "tecnickcom/tcpdf": "^6.4"
             },
             "suggest": {
-                "decomplexity/SendOauth2": "Adapter for using XOAUTH2 authentication",
-                "ext-mbstring": "Needed to send email in multibyte encoding charset or decode encoded addresses",
-                "ext-openssl": "Needed for secure SMTP sending and DKIM signing",
-                "greew/oauth2-azure-provider": "Needed for Microsoft Azure XOAUTH2 authentication",
-                "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
-                "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
-                "psr/log": "For optional PSR-3 debug logging",
-                "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)",
-                "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
+                "dompdf/dompdf": "Option for rendering PDF with PDF Writer (doesn't yet support PHP8)",
+                "jpgraph/jpgraph": "Option for rendering charts, or including charts with PDF or HTML Writers",
+                "mpdf/mpdf": "Option for rendering PDF with PDF Writer",
+                "tecnickcom/tcpdf": "Option for rendering PDF with PDF Writer (doesn't yet support PHP8)"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "PHPMailer\\PHPMailer\\": "src/"
+                    "PhpOffice\\PhpSpreadsheet\\": "src/PhpSpreadsheet"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-2.1-only"
+                "MIT"
             ],
             "authors": [
                 {
-                    "name": "Marcus Bointon",
-                    "email": "phpmailer@synchromedia.co.uk"
+                    "name": "Maarten Balliauw",
+                    "homepage": "https://blog.maartenballiauw.be"
                 },
                 {
-                    "name": "Jim Jagielski",
-                    "email": "jimjag@gmail.com"
+                    "name": "Mark Baker",
+                    "homepage": "https://markbakeruk.net"
                 },
                 {
-                    "name": "Andy Prevost",
-                    "email": "codeworxtech@users.sourceforge.net"
+                    "name": "Franck Lefevre",
+                    "homepage": "https://rootslabs.net"
                 },
                 {
-                    "name": "Brent R. Matzelle"
+                    "name": "Erik Tilt"
+                },
+                {
+                    "name": "Adrien Crivelli"
                 }
             ],
-            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "description": "PHPSpreadsheet - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+            "homepage": "https://github.com/PHPOffice/PhpSpreadsheet",
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "gnumeric",
+                "ods",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
             "support": {
-                "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.9.3"
+                "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.23.0"
             },
-            "funding": [
-                {
-                    "url": "https://github.com/Synchro",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-11-24T18:04:13+00:00"
+            "time": "2022-04-24T13:53:10+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -1589,16 +1606,16 @@
         },
         {
             "name": "psr/http-message",
-            "version": "2.0",
+            "version": "1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71"
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/402d35bcb92c70c026d1a6a9883f06b2ead23d71",
-                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
                 "shasum": ""
             },
             "require": {
@@ -1607,7 +1624,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -1622,7 +1639,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
+                    "homepage": "http://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for HTTP messages",
@@ -1636,9 +1653,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/2.0"
+                "source": "https://github.com/php-fig/http-message/tree/1.1"
             },
-            "time": "2023-04-04T09:54:51+00:00"
+            "time": "2023-04-04T09:50:52+00:00"
         },
         {
             "name": "psr/log",
@@ -1689,6 +1706,57 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.2"
             },
             "time": "2024-09-11T13:17:53+00:00"
+        },
+        {
+            "name": "psr/simple-cache",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/simple-cache.git",
+                "reference": "8707bf3cea6f710bf6ef05491234e3ab06f6432a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/simple-cache/zipball/8707bf3cea6f710bf6ef05491234e3ab06f6432a",
+                "reference": "8707bf3cea6f710bf6ef05491234e3ab06f6432a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\SimpleCache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for simple caching",
+            "keywords": [
+                "cache",
+                "caching",
+                "psr",
+                "psr-16",
+                "simple-cache"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/simple-cache/tree/2.0.0"
+            },
+            "time": "2021-10-29T13:22:09+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

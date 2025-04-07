@@ -13,7 +13,6 @@
     width: 1600px;
     gap: 20px;
     margin: auto auto;
-    padding-left: 70px;
     align-items: stretch;
     min-height: 100vh;
 }
@@ -236,6 +235,10 @@
     .lesson-item a {
         font-size: 0.875rem;
     }
+    .container-learning{
+        width: 100%;
+        padding: 10px;
+    }
 }
 @media (max-width: 1024px) {
     .container-learning {
@@ -252,7 +255,6 @@
     </style>
 </head>
 <body>
-    <br>
     <div class="container-learning">
         <!-- Phần xem video -->
         <div class="video-section">
@@ -280,7 +282,7 @@
                 </div>
                 <div class="ghichu" id="ghichu">
                     <!-- Nút Thêm Ghi Chú -->
-                    <button id="note-button" class="bg-purple-500 text-white px-4 py-2 rounded mr-5" onclick="openModal()">
+                    <button id="note-button" class="bg-purple-500 text-white px-4 py-2  rounded mr-5" onclick="openModal()">
                         <i class="fas fa-plus mr-2"></i> Thêm Ghi Chú <span id="video-time">00:00</span>
                     </button>
                 </div>
@@ -334,7 +336,7 @@
         <!-- Sidebar1 nội dung khóa học -->
         <div class="sidebar1">
             <div class="progress-bar mt-4">
-                <button id="toggle-notes-btn" class="bg-purple-500 text-white px-4 py-2 rounded">Ghi chú</button>
+                <button id="toggle-notes-btn" class="bg-purple-500 text-white px-4 py-2 rounded mb-2">Ghi chú</button>
                 <br>
                 <span id="course-progress">Tiến độ khóa học: <?php echo number_format($progress['progress'], 2); ?>%</span>
                 <div class="progress-container">
@@ -903,7 +905,7 @@
     <br>
 
     
-    <div style="margin-left: 90px;" class="reviews-container mt-8 p-4 bg-white rounded shadow">
+    <div class="reviews-container mt-8 p-4 bg-white rounded shadow">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Đánh giá từ học viên</h2>
 
         <!-- Danh sách đánh giá sẽ được JavaScript cập nhật -->
@@ -914,7 +916,7 @@
 
 
 
-    <div  style="margin-left: 90px;" class="review-section mt-8 p-4 bg-white rounded shadow ">
+    <div class="review-section mt-8 p-4 bg-white rounded shadow ">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Đánh giá khóa học</h2>
 
         <form id="review-form" class="space-y-4">
@@ -1808,7 +1810,7 @@
 
     .container-learning {
         display: flex;
-        max-width: 1800px;
+        max-width: 1900px;
         margin: 0 auto;
     }
 

@@ -37,7 +37,7 @@
             }
             </style>
 
-            <form method="POST" class="border p-4 rounded shadow bg-white">
+            <form method="POST" enctype="multipart/form-data" class="border p-4 rounded shadow bg-white">
                 <!-- Giữ course_id khi submit -->
                 <div class="mb-3">
                     <label class="form-label">Chọn Khóa Học:</label>
@@ -50,11 +50,9 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
-
                 <?php if (isset($errors['course_id'])) : ?>
-                     <span class='error'><?= $errors['course_id']; ?></span>
-
-                 <?php endif; ?>
+                    <span class='error'><?= $errors['course_id']; ?></span>
+                <?php endif; ?>
 
                 <!-- Giữ section_id khi submit -->
                 <div class="mb-3">
@@ -72,6 +70,7 @@
                     <span class="error"><?= $errors['section_id']; ?></span>
                 <?php endif; ?>
 
+                <!-- Chọn quiz_id -->
                 <div class="mb-3">
                     <label class="form-label">Chọn Bài Kiểm Tra:</label>
                     <select name="quiz_id" class="form-select">
@@ -84,16 +83,20 @@
                     </select>
                 </div>
                 <?php if (isset($errors['quiz_id'])) : ?>
-                    <p class="error"><?= $errors['quiz_id']; ?></p>
+                    <span class="error"><?= $errors['quiz_id']; ?></span>
                 <?php endif; ?>
 
-                <div class="mb-3">
-                    <label class="form-label">Câu hỏi:</label>
-                    <input type="text" name="question" class="form-control" value="<?= htmlspecialchars($question); ?>">
+                <!-- Câu hỏi và file -->
+                <div class="mb-3" style="display: flex; flex-direction: row; gap: 10px;">
+                    <div class="mb-2" style="flex: 1;">
+                        <label class="form-label">Câu hỏi:</label>
+                        <input type="text" name="question" class="form-control" value="<?= htmlspecialchars($question); ?>">
+                    </div>
+                    <div class="mb-2" style="flex: 1;">
+                        <label for="file" class="form-label">File câu hỏi và câu trả lời</label>
+                        <input type="file" name="file" id="file" class="form-control">
+                    </div>
                 </div>
-                <?php if (isset($errors['question'])) : ?>
-                    <p class="error"><?= $errors['question']; ?></p>
-                <?php endif; ?>
 
                 <div class="mb-3">
                     <label class="form-label">Loại câu hỏi:</label>
@@ -111,6 +114,7 @@
 
                 <button type="submit" name="submit_question" class="btn btn-primary w-100">Thêm Câu Hỏi</button>
             </form>
+
         </div>
     </div>
 </div>
