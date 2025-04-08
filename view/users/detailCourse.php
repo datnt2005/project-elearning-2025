@@ -285,9 +285,267 @@
                     <button id="note-button" class="bg-purple-500 text-white px-4 py-2  rounded mr-5" onclick="openModal()">
                         <i class="fas fa-plus mr-2"></i> Thêm Ghi Chú <span id="video-time">00:00</span>
                     </button>
+                    <button id="generate-questions-btn" class="bg-blue-500 text-white px-4 py-2 rounded mr-5">
+    <i class="fas fa-robot mr-2"></i> Bài Tập
+</button>
                 </div>
             </div>
+<!-- Phần hiển thị câu hỏi AI -->
+<div class="questions-section mt-5 p-4 bg-white rounded shadow" id="questions-container" style="display: none;">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Câu hỏi được tạo bởi AI</h2>
+    <form id="quiz-form">
+        <ol id="questions-list" class="space-y-4"></ol>
+        <div class="mt-4 flex space-x-4"> <!-- Thêm div flex để chứa hai nút -->
+            <button type="submit" id="submit-quiz-btn" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" style="display: none;">
+                <i class="fas fa-check mr-2"></i> Nộp bài
+            </button>
+            <button type="button" id="close-quiz-btn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" style="display: none;">
+                <i class="fas fa-times mr-2"></i> Đóng
+            </button>
+        </div>
+    </form>
+    <div id="quiz-result" class="mt-4 text-center" style="display: none;"></div>
+</div>
+<style>
+    .questions-section {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
+    .questions-section h2 {
+        font-size: 1.25rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    #questions-list {
+        list-style-type: decimal;
+        padding-left: 20px;
+    }
+
+    #questions-list li {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .options-list {
+        margin-top: 5px;
+        padding-left: 20px;
+    }
+
+    .options-list label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        cursor: pointer;
+    }
+
+    .options-list input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    #quiz-result {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    #quiz-result.correct {
+        color: #22c55e;
+    }
+
+    #quiz-result.incorrect {
+        color: #ef4444;
+    }
+    #close-quiz-btn {
+    display: none; /* Ẩn mặc định, chỉ hiển thị khi có câu hỏi */
+}
+</style>
+<script>
+const generateBtn = document.getElementById('generate-questions-btn');
+const questionsContainer = document.getElementById('questions-container');
+const questionsList = document.getElementById('questions-list');
+const quizForm = document.getElementById('quiz-form');
+const submitQuizBtn = document.getElementById('submit-quiz-btn');
+const closeQuizBtn = document.getElementById('close-quiz-btn'); // Thêm biến cho nút Đóng
+const quizResult = document.getElementById('quiz-result');
+
+generateBtn.addEventListener('click', generateAIQuestions);
+quizForm.addEventListener('submit', checkAnswers);
+closeQuizBtn.addEventListener('click', closeQuiz); // Thêm sự kiện cho nút Đóng
+
+function generateAIQuestions() {
+    // Reset giao diện trước khi tạo câu hỏi mới
+    questionsList.innerHTML = '<p>Đang tạo câu hỏi...</p>';
+    questionsContainer.style.display = 'block';
+    submitQuizBtn.style.display = 'none'; // Ẩn nút Nộp bài
+    closeQuizBtn.style.display = 'none'; // Ẩn nút Đóng ban đầu
+    quizResult.style.display = 'none'; // Ẩn kết quả cũ
+    quizResult.textContent = ''; // Xóa nội dung kết quả cũ
+
+    const videoUrl = document.getElementById('video-iframe').src;
+    const lessonTitle = document.querySelector('#video-description strong').textContent;
+    const lessonDescription = document.querySelector('#video-description p:nth-child(2)').textContent;
+    const currentLessonId = new URLSearchParams(window.location.search).get('lesson');
+    const currentCourseId = new URLSearchParams(window.location.search).get('course');
+
+    if (!currentLessonId || !currentCourseId) {
+        alert('Thông tin bài học hoặc khóa học không hợp lệ!');
+        return;
+    }
+
+    const payload = {
+        video_url: videoUrl,
+        lesson_title: lessonTitle,
+        lesson_description: lessonDescription,
+        lesson_id: currentLessonId,
+        course_id: currentCourseId
+    };
+
+    console.log('Payload sent to server:', payload);
+
+    fetch('/generate_questions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok: ' + response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Server response:', data);
+
+        if (data.status === 'success') {
+            fetchQuestionsFromDatabase(currentLessonId);
+        } else {
+            questionsList.innerHTML = '<p>Lỗi từ server: ' + (data.message || 'Không thể tạo câu hỏi.') + '</p>';
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        questionsList.innerHTML = '<p>Lỗi khi kết nối tới server. Vui lòng thử lại.</p>';
+    });
+}
+
+function fetchQuestionsFromDatabase(lessonId) {
+    fetch(`/get_questions?lesson_id=${lessonId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+            }
+            return response.text().then(text => {
+                console.log('Phản hồi thô từ /get_questions:', text);
+                try {
+                    const data = JSON.parse(text);
+                    return data;
+                } catch (e) {
+                    console.error('Lỗi phân tích JSON:', e, 'Phản hồi:', text);
+                    throw e;
+                }
+            });
+        })
+        .then(data => {
+            console.log('Dữ liệu đã phân tích:', data);
+            if (data.status === 'success' && Array.isArray(data.questions) && data.questions.length > 0) {
+                displayQuestions(data.questions);
+                submitQuizBtn.style.display = 'block'; // Hiển thị nút Nộp bài
+                closeQuizBtn.style.display = 'block'; // Hiển thị nút Đóng khi có câu hỏi
+            } else {
+                questionsList.innerHTML = '<p>Không có câu hỏi nào trong cơ sở dữ liệu.</p>';
+                submitQuizBtn.style.display = 'none';
+                closeQuizBtn.style.display = 'block'; // Vẫn hiển thị nút Đóng để thoát
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy câu hỏi:', error);
+            questionsList.innerHTML = '<p>Lỗi khi tải câu hỏi từ cơ sở dữ liệu.</p>';
+            submitQuizBtn.style.display = 'none';
+            closeQuizBtn.style.display = 'block'; // Hiển thị nút Đóng trong trường hợp lỗi
+        });
+}
+
+function displayQuestions(questions) {
+    questionsList.innerHTML = ''; // Xóa danh sách câu hỏi cũ
+    if (Array.isArray(questions) && questions.length > 0) {
+        questions.forEach((q, index) => {
+            if (index < 5) { // Giới hạn tối đa 5 câu hỏi
+                const questionItem = document.createElement('li');
+                const questionData = typeof q === 'string' ? JSON.parse(q) : q;
+                const questionText = questionData.question_text || questionData.question;
+                const options = questionData.options || [];
+                const correctAnswer = questionData.correct_answer || '';
+
+                let optionsHtml = '';
+                if (options.length > 0) {
+                    optionsHtml = '<div class="options-list">';
+                    options.forEach((option, optIndex) => {
+                        const optionId = `q${index}-opt${optIndex}`;
+                        const isCorrect = option.trim() === correctAnswer.trim();
+                        optionsHtml += `
+                            <label>
+                                <input type="radio" name="answer-${index}" value="${option}" data-correct="${isCorrect}">
+                                ${option}
+                            </label>
+                        `;
+                        console.log(`Option: "${option}", Correct Answer: "${correctAnswer}", isCorrect: ${isCorrect}`);
+                    });
+                    optionsHtml += '</div>';
+                }
+
+                questionItem.innerHTML = `${questionText}${optionsHtml}`;
+                questionsList.appendChild(questionItem);
+                console.log(`Added question ${index + 1}:`, questionText);
+            }
+        });
+    } else {
+        questionsList.innerHTML = '<p>Không có câu hỏi nào được tạo.</p>';
+        console.log('No valid questions array found');
+    }
+
+    // Reset màu sắc của các đáp án từ lần kiểm tra trước
+    Array.from(questionsList.querySelectorAll('label')).forEach(label => {
+        label.style.color = '#555'; // Màu mặc định
+    });
+}
+
+function checkAnswers(event) {
+    event.preventDefault();
+    let correctCount = 0;
+    const totalQuestions = Math.min(questionsList.children.length, 5);
+
+    Array.from(questionsList.children).forEach((questionItem, index) => {
+        const selectedOption = questionItem.querySelector(`input[name="answer-${index}"]:checked`);
+        if (selectedOption) {
+            const isCorrect = selectedOption.dataset.correct === 'true';
+            if (isCorrect) correctCount++;
+            selectedOption.parentElement.style.color = isCorrect ? '#22c55e' : '#ef4444';
+        }
+    });
+
+    quizResult.style.display = 'block';
+    quizResult.textContent = `Bạn trả lời đúng ${correctCount}/${totalQuestions} câu!`;
+    quizResult.className = correctCount === totalQuestions ? 'correct' : 'incorrect';
+}
+
+function closeQuiz() {
+    // Ẩn toàn bộ khu vực câu hỏi
+    questionsContainer.style.display = 'none';
+    // Reset trạng thái giao diện
+    questionsList.innerHTML = '';
+    submitQuizBtn.style.display = 'none';
+    closeQuizBtn.style.display = 'none';
+    quizResult.style.display = 'none';
+    quizResult.textContent = '';
+    // Reset các lựa chọn đã chọn (nếu có)
+    quizForm.reset();
+}
+</script>
             <script src="https://cdn.tailwindcss.com"></script>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
             <!-- Modal -->
