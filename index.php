@@ -283,6 +283,17 @@ $router->addRoute("/thank-you", function() {
 
 });
 
+if (preg_match('/^\/view-pdf\/(.+)$/', $_SERVER['REQUEST_URI'], $matches)) {
+    $fileName = $matches[1];
+    include 'controllers/FileController.php';
+    $controller = new FileController();
+    $controller->servePdf($fileName);
+    exit;
+}
+
+
+
+
 
 $router->dispatch();
 ?>

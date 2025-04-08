@@ -36,7 +36,22 @@
                 $content      = $_POST['content']      ?? '';
                 $order_number = $_POST['order_number'] ?? 0;
 
-                $this->lessonModel->create($section_id, $title, $description, $video_url, $content, $order_number);
+                $pdfPath = null;
+                if (isset($_FILES['pdf_path']) && $_FILES['pdf_path']['error'] === UPLOAD_ERR_OK) {
+                    $fileTmpPath = $_FILES['pdf_path']['tmp_name'];
+                    $originalName = $_FILES['pdf_path']['name'];
+                    $fileExtension = pathinfo($originalName, PATHINFO_EXTENSION);
+                    $fileName = time() . '_' . basename($originalName);
+                    $destination = __DIR__ . '/../uploads/files/' . $fileName;
+                
+                    if (move_uploaded_file($fileTmpPath, $destination)) {
+                        $pdfPath = '/uploads/files/' . $fileName; // lưu vào DB khớp với file thực
+                    }
+                }
+                
+                
+
+                $this->lessonModel->create($section_id, $title, $description, $video_url, $content, $order_number, $pdfPath);
                 header("Location: /admin/lessons");
                 exit;
             } catch (Exception $e) {
@@ -63,14 +78,39 @@
                 $video_url    = $_POST['video_url']    ?? '';
                 $content      = $_POST['content']      ?? '';
                 $order_number = $_POST['order_number'] ?? 0;
-
-                $this->lessonModel->update($id, $section_id, $title, $description, $video_url, $content, $order_number);
-                header("Location: /admin/lessons");
+        
+                // Giữ giá trị mặc định nếu không upload mới
+                $pdfPath = $_POST['current_pdf_path'] ?? null;
+        
+                // Nếu có upload mới thì xử lý
+                if (isset($_FILES['pdf_path']) && $_FILES['pdf_path']['error'] === UPLOAD_ERR_OK) {
+                    $fileTmpPath = $_FILES['pdf_path']['tmp_name'];
+                    $fileName = time() . '_' . basename($_FILES['pdf_path']['name']);
+                    $destination = __DIR__ . '/../uploads/files/' . $fileName;
+        
+                    if (move_uploaded_file($fileTmpPath, $destination)) {
+                        $pdfPath = '/uploads/files/' . $fileName;
+                    } else {
+                        throw new Exception("Không thể lưu file PDF.");
+                    }
+                }
+        
+                // Gọi model cập nhật
+                $result = $this->lessonModel->update($id, $section_id, $title, $description, $video_url, $content, $order_number, $pdfPath);
+        
+                if ($result) {
+                    // Chuyển hướng kèm thông báo
+                    header("Location: /admin/lessons?success=1");
+                } else {
+                    throw new Exception("Không thể cập nhật bài học.");
+                }
                 exit;
             } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
+                // In ra lỗi nếu có
+                echo "<div style='color:red;'>Lỗi: " . $e->getMessage() . "</div>";
             }
         }
+        
 
         public function destroy($id)
         {

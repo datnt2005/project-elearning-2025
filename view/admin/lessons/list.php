@@ -232,6 +232,16 @@ h1.text-center {
                     </span>
                   </td>
                   <td>
+                  <!-- // view file pdf  -->
+                  <iframe id="video-iframe" width="100%" height="400"
+                    src="http://localhost:8000/<?= htmlspecialchars($lesson['pdf_path'], ENT_QUOTES, 'UTF-8') ?>"
+                    title="PDF Viewer" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy">
+                </iframe>
+
+                  </td>
+                  <td>
                     <div class="btn-group">
                       <a href="/admin/lessons/view/<?= $lesson['id'] ?>" 
                          class="btn btn-sm btn-outline-info" title="Xem">
@@ -248,6 +258,7 @@ h1.text-center {
                     </div>
                   </td>
                 </tr>
+
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
@@ -275,6 +286,7 @@ h1.text-center {
     </div>
   </div>
 </div>
+
 
 <script>
 function confirmDelete(id) {

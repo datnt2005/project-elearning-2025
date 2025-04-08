@@ -44,7 +44,7 @@
             <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Thêm bài học mới</h5>
         </div>
         <div class="card-body">
-            <form action="/admin/lessons/store" method="POST">
+            <form action="/admin/lessons/store" method="POST" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label>Phần học (Section)</label>
                     <select name="section_id" class="form-control" required>
@@ -80,6 +80,10 @@
                 <div class="mb-3">
                     <label>Thứ tự sắp xếp (order_number)</label>
                     <input type="number" name="order_number" class="form-control" value="0">
+                </div>
+                <div class="mb-3">
+                    <label for="pdf_path"> Tải lên file PDF:</label>
+                    <input type="file" name="pdf_path" id="pdf_path" class="form-control" accept="application/pdf">
                 </div>
 
                 <button type="submit" class="btn btn-success">Thêm bài học</button>

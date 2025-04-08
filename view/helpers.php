@@ -16,4 +16,10 @@ function renderViewAdmin($view, $data = [], $title = "My App") {
     $content = ob_get_clean();
     require "view/layouts/master_admin.php";
 }
+
+// chuẩn hoá  không phân biệt hoa thường, không dư khoảng trắng.
+function normalizeAnswer($text) {
+    return strtolower(trim(preg_replace('/\s+/', ' ', $text)));
+}
+
 ?>

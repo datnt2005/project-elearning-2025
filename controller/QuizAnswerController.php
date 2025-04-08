@@ -34,25 +34,42 @@ require_once "model/QuizAnswerModel.php";
             }
     
             if (empty($errors)) {
+                $normalizedAnswers = [];
+    
                 foreach ($answers as $index => $answer_text) {
+                    $normalized = $this->quizAnswerModel->normalizeAnswer($answer_text);
+                    
+                    if (in_array($normalized, $normalizedAnswers)) {
+                        $errors['answers'] = "Có câu trả lời bị trùng.";
+                        break;
+                    }
+    
+                    $normalizedAnswers[] = $normalized;
+    
                     $is_correct = isset($is_corrects[$index]) ? 1 : 0;
-                    $this->quizAnswerModel->addAnswer($question_id, trim($answer_text), $is_correct);
+                    $result = $this->quizAnswerModel->addAnswer($question_id, $normalized, $is_correct);
+    
+                    if (!$result) {
+                        $errors[] = "Lỗi khi thêm câu trả lời.";
+                    }
                 }
-                $_SESSION['success_message'] = "Thêm câu trả lời thành công!";
-                header("Location:/admin/quizAnswers");
-
-                exit();
+    
+                if (empty($errors)) {
+                    $_SESSION['success_message'] = "Thêm câu trả lời thành công!";
+                    header("Location:/admin/quizAnswers");
+                    exit();
+                }
             }
         }
     
-          // Đảm bảo không bị lỗi undefined variable
-            $answers = $answers ?? [];
-            $question_id = $question_id ?? [];
-            $questions = $questions ?? [];
-            $is_corrects = $is_corrects ?? [];
+        $answers = $answers ?? [];
+        $question_id = $question_id ?? '';
+        $questions = $questions ?? [];
+        $is_corrects = $is_corrects ?? [];
+        
         renderViewAdmin("view/admin/quizAnswers/create.php", compact('questions', 'question_id', 'answers', 'is_corrects', 'errors'), "Thêm câu trả lời");
     }
-
+    
     public function delete($id) {
         
         if ($this->quizAnswerModel->deleteAnswer($id)) {
@@ -100,13 +117,8 @@ require_once "model/QuizAnswerModel.php";
             $errors['answers'] = "Vui lòng nhập ít nhất một câu trả lời.";
         }
 
-        // Nếu không có lỗi, tiến hành cập nhật
-        if (empty($errors)) {
-            // Cập nhật câu trả lời
-            foreach ($answers as $index => $answer_text) {
-                $is_correct = isset($is_corrects[$index]) ? 1 : 0;
-                $this->quizAnswerModel->updateAnswer($id, $question_id, trim($answer_text), $is_correct);
-            }
+      if(empty($errors)) {
+         $this->
 
             $_SESSION['success_message'] = "Cập nhật câu trả lời thành công!";
             header("Location: /admin/quizAnswers");

@@ -45,16 +45,16 @@ class Lesson
     }
     // Tạo lesson
     // Cột: section_id, title, description, video_url, content, order_number
-    public function create($section_id, $title, $description, $video_url, $content, $order_number)
+    public function create($section_id, $title, $description, $video_url, $content, $order_number, $pdf_path)
     {
         if (empty($title)) {
             throw new Exception("Lesson title is required.");
         }
 
         $query = "INSERT INTO lessons 
-                    (section_id, title, description, video_url, content, order_number)
+                    (section_id, title, description, video_url, content, order_number, pdf_path)
                   VALUES 
-                    (:section_id, :title, :description, :video_url, :content, :order_number)";
+                    (:section_id, :title, :description, :video_url, :content, :order_number, :pdf_path)";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':section_id', $section_id, PDO::PARAM_INT);
@@ -63,12 +63,13 @@ class Lesson
         $stmt->bindParam(':video_url', $video_url);
         $stmt->bindParam(':content', $content);
         $stmt->bindParam(':order_number', $order_number, PDO::PARAM_INT);
+        $stmt->bindParam(':pdf_path', $pdf_path);
 
         return $stmt->execute();
     }
 
     // Update lesson
-    public function update($id, $section_id, $title, $description, $video_url, $content, $order_number)
+    public function update($id, $section_id, $title, $description, $video_url, $content, $order_number, $pdf_path)
     {
         if (empty($title)) {
             throw new Exception("Lesson title is required.");
@@ -80,7 +81,8 @@ class Lesson
                     description = :description,
                     video_url = :video_url,
                     content = :content,
-                    order_number = :order_number
+                    order_number = :order_number,
+                    pdf_path = :pdf_path
                   WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
@@ -90,6 +92,7 @@ class Lesson
         $stmt->bindParam(':video_url', $video_url);
         $stmt->bindParam(':content', $content);
         $stmt->bindParam(':order_number', $order_number, PDO::PARAM_INT);
+        $stmt->bindParam(':pdf_path', $pdf_path);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
         return $stmt->execute();
