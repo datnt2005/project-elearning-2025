@@ -8,9 +8,9 @@
     .container1 {
         max-width: 1800px;
         text-align: center;
-        margin-left: auto;
         margin-right: auto;
-        margin-top: -60px;
+        margin-top: -40px;
+        margin-left: 80px;
     }
 
     .post-grid {
@@ -21,21 +21,25 @@
     }
 
     .post-card {
-        width: 400px;
+        width: 350px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         border-radius: 12px;
         overflow: hidden;
         transition: transform 0.3s ease;
     }
-
-    .post-card:hover {
-        transform: translateY(-5px);
-    }
+ 
 
     .post-card img {
         width: 100%;
-        height: auto;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #ddd;
+        border-radius: 12px 12px 0 0;
+        transition: transform 0.3s ease;
         display: block;
+    }
+    .post-card img:hover {
+        transform: scale(1.05);
     }
 
     .post-body {

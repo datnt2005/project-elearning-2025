@@ -374,4 +374,13 @@ class CourseController
         echo json_encode($response);
     }
 
+    // get course
+
+    public function getCourses() {
+        header('Content-Type: application/json');
+        $courses = $this->courseModel->getAllCourses();
+        echo json_encode($courses);
+        
+    }
+
 }
