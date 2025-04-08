@@ -8,8 +8,7 @@ const chatbotToggler = document.querySelector("#chatbot-toggler");
 const closeChatbot = document.querySelector("#close-chatbot");
 
 // API setup
-const API_KEY = "cai nit ";
-// https://aistudio.google.com/apikey
+const API_KEY = "AIzaSyB1vzKdeNtRivvx9BI0uXQWemrdbNvE7A0"; // https://aistudio.google.com/apikey
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
 const userData = {
@@ -56,7 +55,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
     });
 
     try {
-        if (userData.message.toLowerCase().includes("khóa học") || userData.message.toLowerCase().includes("course")) {
+        if (userData.message.toLowerCase().includes("Tìm khoá học") || userData.message.toLowerCase().includes("course")) {
             const response = await fetch('http://localhost:8000/api/courses', {
                 method: 'GET',
                 headers: { "Content-Type": "application/json" }
@@ -72,7 +71,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
                 if (course.image) {
                     responseText += `<img src="${course.image}" alt="${course.title}" style="width: 100px; height: auto; border-radius: 5px;"><br>`;
                 }
-                responseText += `<a href="/courses/${course.id}" target="_blank" class="course-link">Đi tới khóa học</a><br><br>`;
+                responseText += `<a href="/courses/show/${course.id}" target="_blank" class="course-link">Đi tới khóa học</a><br><br>`;
             });
             
             messageElement.innerHTML = responseText;
