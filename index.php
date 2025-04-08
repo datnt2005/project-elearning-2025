@@ -35,6 +35,7 @@ require_once "controller/PostController.php";
 require_once "controller/CommentPostController.php";
 require_once "controller/NotesController.php";
 require_once "controller/UploadQuizzByFileController.php";
+require_once "controller/AiController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -62,6 +63,7 @@ $postController = new PostController();
 $commentPostController = new CommentPostController();
 $notesController = new NotesController();
 $uploadQuizzByFileController = new UploadQuizzByFileController;
+$aiController = new AiController();
 
 
 // $router->addMiddleware('logRequest');
@@ -276,6 +278,8 @@ $router->addRoute("/notes/edit/{id}", [$notesController, "edit"], ['isUser']);
 $router->addRoute("/notes/update", [$notesController, "update"], ['isUser']);
 $router->addRoute("/notes/delete/{id}", [$notesController, "delete"], ['isUser']);
 
+$router->addRoute("/generate_questions", [$aiController, "generateQuestions"], ['isUser']);
+$router->addRoute("/get_questions", [$aiController, "getQuestions"], ['isUser']);
 
 
 $router->addRoute("/thank-you", function() {
