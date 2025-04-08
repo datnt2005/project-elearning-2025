@@ -7,6 +7,9 @@ $database = new Database();
 $conn = $database->getConnection();
 
 use Dotenv\Dotenv;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpWord\IOFactory as WordIOFactory;
+
 
 // Load biến môi trường từ file .env
 $dotenv = Dotenv::createImmutable(__DIR__);
@@ -35,6 +38,8 @@ require_once "controller/PostCategoryController.php";
 require_once "controller/PostController.php";
 require_once "controller/CommentPostController.php";
 require_once "controller/NotesController.php";
+require_once "controller/UploadQuizzByFileController.php";
+require_once "controller/AiController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -61,6 +66,8 @@ $postCategoryController = new PostCategoryController();
 $postController = new PostController();
 $commentPostController = new CommentPostController();
 $notesController = new NotesController();
+$uploadQuizzByFileController = new UploadQuizzByFileController;
+$aiController = new AiController();
 
 
 // $router->addMiddleware('logRequest');
@@ -76,6 +83,12 @@ $router->addRoute("/google/login", [$authController, "googleLogin"]);
 $router->addRoute("/google/callback", [$authController, "googleCallback"]);
 $router->addRoute("/forgot_password", [$authController, "forgotPassword"]);
 $router->addRoute("/reset_password", [$authController, "resetPassword"]);
+
+// upload question and answer by file
+$router->addRoute("/admin/uploadQuizzByFile", [$uploadQuizzByFileController, "index"], ['isAdmin']);
+$router->addRoute("/admin/uploadQuizzByFile/create", [$uploadQuizzByFileController, "create"], ['isAdmin']);
+$router->addRoute("/admin/uploadQuizzByFile/update/{id}", [$uploadQuizzByFileController, "update"], ['isAdmin']);
+$router->addRoute("/admin/uploadQuizzByFile/delete/{id}", [$uploadQuizzByFileController, "delete"], ['isAdmin']);
 
 
 //users
@@ -269,6 +282,8 @@ $router->addRoute("/notes/edit/{id}", [$notesController, "edit"], ['isUser']);
 $router->addRoute("/notes/update", [$notesController, "update"], ['isUser']);
 $router->addRoute("/notes/delete/{id}", [$notesController, "delete"], ['isUser']);
 
+$router->addRoute("/generate_questions", [$aiController, "generateQuestions"], ['isUser']);
+$router->addRoute("/get_questions", [$aiController, "getQuestions"], ['isUser']);
 
 
 $router->addRoute("/thank-you", function() {

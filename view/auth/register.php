@@ -16,7 +16,6 @@
         align-items: center;
         min-height: 100vh;
         margin: 0;
-        margin-left: 45px;
 
     }
 
