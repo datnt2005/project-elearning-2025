@@ -280,7 +280,7 @@ $router->addRoute("/notes/delete/{id}", [$notesController, "delete"], ['isUser']
 
 $router->addRoute("/generate_questions", [$aiController, "generateQuestions"], ['isUser']);
 $router->addRoute("/get_questions", [$aiController, "getQuestions"], ['isUser']);
-
+$router->addRoute("/generate_video_content", [$aiController, "generateVideoContent"], ['isUser']);
 
 $router->addRoute("/thank-you", function() {
     include __DIR__ . "/view/thank-you.php";

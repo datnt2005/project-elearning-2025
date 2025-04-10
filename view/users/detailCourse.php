@@ -1,259 +1,265 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khóa học</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-/* Container chính */
-.container-learning {
-    display: flex;
-    flex-wrap: wrap;
-    width: 1600px;
-    gap: 20px;
-    margin: auto auto;
-    align-items: stretch;
-    min-height: 100vh;
-}
-.video-section {
-    min-width: 0;
-    width: 100px;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        /* Container chính */
+        .container-learning {
+            display: flex;
+            flex-wrap: wrap;
+            width: 1600px;
+            gap: 20px;
+            margin: auto auto;
+            align-items: stretch;
+            min-height: 100vh;
+        }
 
-.video-title h1 {
-    font-size: 1.5rem;
-    margin: 0.75rem;
-    color: #333;
-}
+        .video-section {
+            min-width: 0;
+            width: 100px;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.video-player {
-    position: relative;
-    width: 100%;
-}
+        .video-title h1 {
+            font-size: 1.5rem;
+            margin: 0.75rem;
+            color: #333;
+        }
 
-.video-player iframe {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    border: none;
-    border-radius: 8px;
-}
+        .video-player {
+            position: relative;
+            width: 100%;
+        }
 
-.description {
-    margin-top: 10px;
-}
+        .video-player iframe {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            border: none;
+            border-radius: 8px;
+        }
 
-.description p {
-    font-size: 1rem;
-    margin: 0 1.25rem;
-    color: #666;
-}
+        .description {
+            margin-top: 10px;
+        }
 
-.description .text-3xl {
-    font-size: 1.5rem;
-    color: #333;
-}
+        .description p {
+            font-size: 1rem;
+            margin: 0 1.25rem;
+            color: #666;
+        }
 
-.sidebar1 {
-    min-width: 400px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        .description .text-3xl {
+            font-size: 1.5rem;
+            color: #333;
+        }
 
-.progress-bar {
-    margin-top: 1rem;
-}
+        .sidebar1 {
+            min-width: 400px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.progress-container {
-    width: 100%;
-    background-color: #e0e0e0;
-    height: 8px;
-    border-radius: 4px;
-    margin: 5px 0;
-}
+        .progress-bar {
+            margin-top: 1rem;
+        }
 
-.progress-fill {
-    height: 100%;
-    background-color: #4caf50;
-    border-radius: 4px;
-    transition: width 0.3s ease;
-}
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
 
-#course-progress, #current-lesson-progress {
-    display: block;
-    font-size: 0.9rem;
-    color: #666;
-}
+        .progress-fill {
+            height: 100%;
+            background-color: #4caf50;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
 
-.text-green-500 {
-    color: #22c55e;
-}
+        #course-progress,
+        #current-lesson-progress {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
 
-.text-blue-500 {
-    color: #3b82f6;
-}
+        .text-green-500 {
+            color: #22c55e;
+        }
 
-.text-red-500 {
-    color: #ef4444;
-}
+        .text-blue-500 {
+            color: #3b82f6;
+        }
 
-.course-content {
-    flex-grow: 1;
-}
+        .text-red-500 {
+            color: #ef4444;
+        }
 
-.course-content h2 {
-    font-size: 1.25rem;
-    margin: 0.5rem 0;
-    color: #333;
-}
+        .course-content {
+            flex-grow: 1;
+        }
 
-.course-content .chapter {
-    cursor: pointer;
-    padding: 10px;
-    background-color: #f9f9f9;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-}
+        .course-content h2 {
+            font-size: 1.25rem;
+            margin: 0.5rem 0;
+            color: #333;
+        }
 
-.course-content .chapter:hover {
-    background-color: #e5e7eb;
-}
+        .course-content .chapter {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f9f9f9;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
 
-.lesson-list {
-    list-style: none;
-    padding-left: 20px;
-    display: none;
-}
+        .course-content .chapter:hover {
+            background-color: #e5e7eb;
+        }
 
-.lesson-list.active {
-    display: block;
-}
+        .lesson-list {
+            list-style: none;
+            padding-left: 20px;
+            display: none;
+        }
 
-.lesson-item {
-    position: relative;
-}
+        .lesson-list.active {
+            display: block;
+        }
 
-.lesson-item a {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    text-decoration: none;
-    color: #333;
-    font-size: 0.9rem;
-}
+        .lesson-item {
+            position: relative;
+        }
 
-.lesson-item.locked a {
-    color: #999;
-    pointer-events: none;
-}
+        .lesson-item a {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9rem;
+        }
 
-.lesson-progress {
-    font-size: 0.875rem;
-    color: #666;
-}
+        .lesson-item.locked a {
+            color: #999;
+            pointer-events: none;
+        }
 
-.lock-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
+        .lesson-progress {
+            font-size: 0.875rem;
+            color: #666;
+        }
 
-.btn {
-    display: inline-block;
-    padding: 8px 16px;
-    margin: 5px 0;
-    text-decoration: none;
-    background-color: #e5e7eb;
-    color: #6b7280;
-    border-radius: 4px;
-    text-align: center;
-}
+        .lock-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
-.btn-primary:hover {
-    background-color: #d1d5db;
-}
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px 0;
+            text-decoration: none;
+            background-color: #e5e7eb;
+            color: #6b7280;
+            border-radius: 4px;
+            text-align: center;
+        }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container-learning {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+        .btn-primary:hover {
+            background-color: #d1d5db;
+        }
 
-    .video-section,
-    .sidebar1 {
-        flex: 1 1 100%;
-    }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container-learning {
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
-    .video-title h1 {
-        font-size: 1.25rem;
-    }
+            .video-section,
+            .sidebar1 {
+                flex: 1 1 100%;
+            }
 
-    .description .text-3xl {
-        font-size: 1.5rem;
-    }
+            .video-title h1 {
+                font-size: 1.25rem;
+            }
 
-    .description p {
-        font-size: 0.9rem;
-    }
+            .description .text-3xl {
+                font-size: 1.5rem;
+            }
 
-    .sidebar1 {
-        min-width: 0;
-        width: 100%;
-    }
-}
+            .description p {
+                font-size: 0.9rem;
+            }
 
-@media (max-width: 480px) {
-    .video-title h1 {
-        font-size: 1rem;
-    }
+            .sidebar1 {
+                min-width: 0;
+                width: 100%;
+            }
+        }
 
-    .description .text-3xl {
-        font-size: 1.25rem;
-    }
+        @media (max-width: 480px) {
+            .video-title h1 {
+                font-size: 1rem;
+            }
 
-    .description p {
-        font-size: 0.875rem;
-    }
+            .description .text-3xl {
+                font-size: 1.25rem;
+            }
 
-    .lesson-item a {
-        font-size: 0.875rem;
-    }
-    .container-learning{
-        width: 100%;
-        padding: 10px;
-    }
-}
-@media (max-width: 1024px) {
-    .container-learning {
-        flex-direction: column;
-        padding: 20px;
-    }
+            .description p {
+                font-size: 0.875rem;
+            }
 
-    .video-section,
-    .sidebar1 {
-        width: 100%;
-        flex: 1 1 100%;
-    }
-}
+            .lesson-item a {
+                font-size: 0.875rem;
+            }
+
+            .container-learning {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .container-learning {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .video-section,
+            .sidebar1 {
+                width: 100%;
+                flex: 1 1 100%;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="container-learning">
         <!-- Phần xem video -->
@@ -286,106 +292,176 @@
                         <i class="fas fa-plus mr-2"></i> Thêm Ghi Chú <span id="video-time">00:00</span>
                     </button>
                     <button id="generate-questions-btn" class="bg-blue-500 text-white px-4 py-2 rounded mr-5">
-    <i class="fas fa-robot mr-2"></i> Bài Tập
+                        <i class="fas fa-robot mr-2"></i> Bài Tập
+                    </button>
+                    <button id="generate-video-content-btn" class="bg-blue-500 text-white px-4 py-2 rounded mr-5">
+    <i class="fas fa-robot mr-2"></i> Nội dung video
 </button>
                 </div>
             </div>
-<!-- Phần hiển thị câu hỏi AI -->
-<div class="questions-section mt-5 p-4 bg-white rounded shadow" id="questions-container" style="display: none;">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">Câu hỏi được tạo bởi AI</h2>
+            <!-- Modal nhập số lượng câu hỏi -->
+<div id="questionCountModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Chọn số lượng câu hỏi</h2>
+        <form id="questionCountForm">
+            <div class="mb-4">
+                <label for="questionCount" class="block text-lg font-medium text-gray-700 mb-2">Nhập số câu hỏi (5-20):</label>
+                <input type="number" id="questionCount" name="questionCount" min="5" max="20" value="5" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-300 focus:outline-none" placeholder="Từ 5 đến 20">
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" id="cancelQuestionCountBtn" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition">Hủy</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Tạo</button>
+            </div>
+        </form>
+    </div>
+</div>
+          <!-- Phần hiển thị nội dung video -->
+<div class="video-content-section mt-5 p-4 bg-white rounded-lg shadow-lg" id="video-content-container" style="display: none;">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b-2 border-blue-500 pb-2">Nội dung video</h2>
+    <ol id="video-content" class="space-y-6 list-decimal list-inside text-gray-700"></ol>
+
+    <!-- Nút đóng và tải lại nằm cùng hàng -->
+    <div class="flex gap-4 mt-6">
+        <button type="button" id="close-content-btn" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition duration-300" style="display: none;">
+            <i class="fas fa-times mr-2"></i> Đóng
+        </button>
+        <button type="button" id="reload-content-btn" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+            <i class="fas fa-sync-alt mr-2"></i> Tải lại nội dung
+        </button>
+    </div>
+</div>
+
+            <!-- Phần hiển thị câu hỏi AI -->
+            <div id="questions-container" class="hidden mt-6 p-4 bg-white rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Bài tập trắc nghiệm</h2>
+    <div id="timer-container" class="mb-4 text-lg font-medium text-gray-700">
+        Thời gian còn lại: <span id="timer">00:00</span>
+    </div>
     <form id="quiz-form">
-        <ol id="questions-list" class="space-y-4"></ol>
-        <div class="mt-4 flex space-x-4"> <!-- Thêm div flex để chứa hai nút -->
-            <button type="submit" id="submit-quiz-btn" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" style="display: none;">
-                <i class="fas fa-check mr-2"></i> Nộp bài
-            </button>
-            <button type="button" id="close-quiz-btn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" style="display: none;">
-                <i class="fas fa-times mr-2"></i> Đóng
-            </button>
+        <ol id="questions-list" class="space-y-4 text-gray-700"></ol>
+        <div class="mt-6 flex justify-end gap-2">
+            <button type="submit" id="submit-quiz-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition hidden">Nộp bài</button>
+            <button type="button" id="close-quiz-btn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition hidden">Đóng</button>
         </div>
     </form>
-    <div id="quiz-result" class="mt-4 text-center" style="display: none;"></div>
+    <p id="quiz-result" class="mt-4 font-semibold hidden"></p>
 </div>
-<style>
-    .questions-section {
-        margin-top: 20px;
-        padding: 15px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .questions-section h2 {
-        font-size: 1.25rem;
-        color: #333;
-        margin-bottom: 10px;
-    }
-
-    #questions-list {
-        list-style-type: decimal;
-        padding-left: 20px;
-    }
-
-    #questions-list li {
-        font-size: 1rem;
-        color: #666;
-        margin-bottom: 20px;
-    }
-
-    .options-list {
-        margin-top: 5px;
-        padding-left: 20px;
-    }
-
-    .options-list label {
-        display: block;
-        margin-bottom: 5px;
-        color: #555;
-        cursor: pointer;
-    }
-
-    .options-list input[type="radio"] {
-        margin-right: 10px;
-    }
-
-    #quiz-result {
-        font-size: 1.1rem;
-        font-weight: bold;
-    }
-
-    #quiz-result.correct {
-        color: #22c55e;
-    }
-
-    #quiz-result.incorrect {
-        color: #ef4444;
-    }
-    #close-quiz-btn {
-    display: none; /* Ẩn mặc định, chỉ hiển thị khi có câu hỏi */
+            
+            <style>
+                .video-content-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-</style>
-<script>
-const generateBtn = document.getElementById('generate-questions-btn');
-const questionsContainer = document.getElementById('questions-container');
-const questionsList = document.getElementById('questions-list');
-const quizForm = document.getElementById('quiz-form');
-const submitQuizBtn = document.getElementById('submit-quiz-btn');
-const closeQuizBtn = document.getElementById('close-quiz-btn'); // Thêm biến cho nút Đóng
-const quizResult = document.getElementById('quiz-result');
 
-generateBtn.addEventListener('click', generateAIQuestions);
-quizForm.addEventListener('submit', checkAnswers);
-closeQuizBtn.addEventListener('click', closeQuiz); // Thêm sự kiện cho nút Đóng
+.video-content-section h2 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 10px;
+}
 
-function generateAIQuestions() {
-    // Reset giao diện trước khi tạo câu hỏi mới
-    questionsList.innerHTML = '<p>Đang tạo câu hỏi...</p>';
-    questionsContainer.style.display = 'block';
-    submitQuizBtn.style.display = 'none'; // Ẩn nút Nộp bài
-    closeQuizBtn.style.display = 'none'; // Ẩn nút Đóng ban đầu
-    quizResult.style.display = 'none'; // Ẩn kết quả cũ
-    quizResult.textContent = ''; // Xóa nội dung kết quả cũ
+#video-content {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+}
+                .questions-section {
+                    margin-top: 20px;
+                    padding: 15px;
+                    background-color: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
 
+                .questions-section h2 {
+                    font-size: 1.25rem;
+                    color: #333;
+                    margin-bottom: 10px;
+                }
+
+                #questions-list {
+                    list-style-type: decimal;
+                    padding-left: 20px;
+                }
+
+                #questions-list li {
+                    font-size: 1rem;
+                    color: #666;
+                    margin-bottom: 20px;
+                }
+
+                .options-list {
+                    margin-top: 5px;
+                    padding-left: 20px;
+                }
+
+                .options-list label {
+                    display: block;
+                    margin-bottom: 5px;
+                    color: #555;
+                    cursor: pointer;
+                }
+
+                .options-list input[type="radio"] {
+                    margin-right: 10px;
+                }
+
+                #quiz-result {
+                    font-size: 1.1rem;
+                    font-weight: bold;
+                }
+
+                #quiz-result.correct {
+                    color: #22c55e;
+                }
+
+                #quiz-result.incorrect {
+                    color: #ef4444;
+                }
+
+                #close-quiz-btn {
+                    display: none;
+                    /* Ẩn mặc định, chỉ hiển thị khi có câu hỏi */
+                }
+            </style>
+            
+            <script>
+// Lấy các phần tử DOM
+const generateContentBtn = document.getElementById('generate-video-content-btn');
+const videoContentContainer = document.getElementById('video-content-container');
+const videoContent = document.getElementById('video-content');
+const closeContentBtn = document.getElementById('close-content-btn');
+const reloadContentBtn = document.getElementById('reload-content-btn');
+
+// Gắn sự kiện cho các nút
+generateContentBtn.addEventListener('click', generateVideoContent);
+closeContentBtn.addEventListener('click', closeVideoContent);
+reloadContentBtn.addEventListener('click', reloadVideoContent);
+
+// Hàm tạo nội dung video
+function generateVideoContent() {
+    videoContent.innerHTML = '<li class="text-gray-500">Đang tải nội dung video...</li>';
+    videoContentContainer.style.display = 'block';
+    closeContentBtn.style.display = 'none'; // Ẩn nút Đóng
+    reloadContentBtn.style.display = 'none'; // Ẩn nút Tải lại nội dung
+
+    fetchVideoContent(false); // Không buộc tải lại
+}
+
+// Hàm tải lại nội dung video
+function reloadVideoContent() {
+    videoContent.innerHTML = '<li class="text-gray-500">Đang tải lại nội dung video...</li>';
+    videoContentContainer.style.display = 'block';
+    closeContentBtn.style.display = 'none'; // Ẩn nút Đóng
+    reloadContentBtn.style.display = 'none'; // Ẩn nút Tải lại nội dung
+
+    fetchVideoContent(true); // Buộc tải lại
+}
+
+// Hàm chung để gửi yêu cầu và hiển thị nội dung
+function fetchVideoContent(forceReload) {
     const videoUrl = document.getElementById('video-iframe').src;
     const lessonTitle = document.querySelector('#video-description strong').textContent;
     const lessonDescription = document.querySelector('#video-description p:nth-child(2)').textContent;
@@ -393,7 +469,9 @@ function generateAIQuestions() {
     const currentCourseId = new URLSearchParams(window.location.search).get('course');
 
     if (!currentLessonId || !currentCourseId) {
-        alert('Thông tin bài học hoặc khóa học không hợp lệ!');
+        videoContent.innerHTML = '<li class="text-red-500">Thông tin bài học hoặc khóa học không hợp lệ!</li>';
+        closeContentBtn.style.display = 'block'; // Hiển thị nút Đóng khi có lỗi
+        reloadContentBtn.style.display = 'block'; // Hiển thị nút Tải lại khi có lỗi
         return;
     }
 
@@ -402,7 +480,174 @@ function generateAIQuestions() {
         lesson_title: lessonTitle,
         lesson_description: lessonDescription,
         lesson_id: currentLessonId,
-        course_id: currentCourseId
+        course_id: currentCourseId,
+        force_reload: forceReload
+    };
+
+    fetch('/generate_video_content', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success' && data.content) {
+            displayVideoContent(data.content);
+            closeContentBtn.style.display = 'block'; // Hiển thị nút Đóng khi thành công
+            reloadContentBtn.style.display = 'block'; // Hiển thị nút Tải lại khi thành công
+        } else {
+            videoContent.innerHTML = `<li class="text-red-500">Không thể tải nội dung video: ${data.message || 'Lỗi không xác định'}</li>`;
+            closeContentBtn.style.display = 'block'; // Hiển thị nút Đóng khi lỗi
+            reloadContentBtn.style.display = 'block'; // Hiển thị nút Tải lại khi lỗi
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        videoContent.innerHTML = '<li class="text-red-500">Lỗi khi kết nối tới server. Vui lòng thử lại.</li>';
+        closeContentBtn.style.display = 'block'; // Hiển thị nút Đóng khi lỗi
+        reloadContentBtn.style.display = 'block'; // Hiển thị nút Tải lại khi lỗi
+    });
+}
+
+// Hàm hiển thị nội dung video (giữ nguyên)
+function displayVideoContent(content) {
+    videoContent.innerHTML = '';
+    
+    if (typeof content === 'string') {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="font-semibold text-blue-600">00:00</span> - <span class="text-gray-800">${content}</span>`;
+        videoContent.appendChild(li);
+    } else if (Array.isArray(content)) {
+        content.forEach((item, index) => {
+            const li = document.createElement('li');
+            const timestamp = String(index * 30).padStart(2, '0') + ':00';
+            li.innerHTML = `<span class="font-semibold text-blue-600">${timestamp}</span> - <span class="text-gray-800">${item}</span>`;
+            videoContent.appendChild(li);
+        });
+    } else if (typeof content === 'object') {
+        const timestamps = Object.keys(content).sort(); // Sắp xếp timestamp nếu cần
+        timestamps.forEach(timestamp => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="font-semibold text-blue-600">${timestamp}</span> - <span class="text-gray-800">${content[timestamp]}</span>`;
+            videoContent.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.innerHTML = '<span class="font-semibold text-blue-600">00:00</span> - <span class="text-gray-800">Không có nội dung video để hiển thị.</span>';
+        videoContent.appendChild(li);
+    }
+}
+
+// Hàm đóng container nội dung video (giữ nguyên)
+function closeVideoContent() {
+    videoContentContainer.style.display = 'none';
+    videoContent.innerHTML = '';
+    closeContentBtn.style.display = 'none';
+    reloadContentBtn.style.display = 'none';
+}
+const generateBtn = document.getElementById('generate-questions-btn');
+const questionsContainer = document.getElementById('questions-container');
+const questionsList = document.getElementById('questions-list');
+const quizForm = document.getElementById('quiz-form');
+const submitQuizBtn = document.getElementById('submit-quiz-btn');
+const closeQuizBtn = document.getElementById('close-quiz-btn');
+const quizResult = document.getElementById('quiz-result');
+const questionCountModal = document.getElementById('questionCountModal');
+const questionCountForm = document.getElementById('questionCountForm');
+const cancelQuestionCountBtn = document.getElementById('cancelQuestionCountBtn');
+const timerElement = document.getElementById('timer');
+
+let countdownTimer = null;
+let quizActive = false; // Biến để kiểm tra trạng thái làm bài
+
+generateBtn.addEventListener('click', openQuestionCountModal);
+quizForm.addEventListener('submit', checkAnswers);
+closeQuizBtn.addEventListener('click', closeQuiz);
+cancelQuestionCountBtn.addEventListener('click', closeQuestionCountModal);
+questionCountForm.addEventListener('submit', handleQuestionCountSubmit);
+
+// Thêm sự kiện visibilitychange
+document.addEventListener('visibilitychange', handleVisibilityChange);
+
+// Hàm xử lý khi tab thay đổi trạng thái
+function handleVisibilityChange() {
+    if (document.hidden && quizActive) {
+        clearInterval(countdownTimer);
+        Swal.fire({
+            icon: 'warning',
+            title: 'Bạn đã rời tab!',
+            text: 'Bài của bạn sẽ được nộp tự động vì bạn đã chuyển sang tab khác.',
+            timer: 2000,
+            showConfirmButton: false
+        }).then(() => {
+            checkAnswers(new Event('submit'));
+            disableQuiz();
+            quizActive = false; // Đặt lại trạng thái
+        });
+    }
+}
+
+// Hàm mở modal nhập số lượng câu hỏi
+function openQuestionCountModal() {
+    questionCountModal.classList.remove('hidden');
+}
+
+// Hàm đóng modal nhập số lượng câu hỏi
+function closeQuestionCountModal() {
+    questionCountModal.classList.add('hidden');
+}
+
+// Xử lý khi người dùng submit số lượng câu hỏi
+function handleQuestionCountSubmit(event) {
+    event.preventDefault();
+    const questionCount = parseInt(document.getElementById('questionCount').value);
+
+    if (isNaN(questionCount) || questionCount < 5 || questionCount > 20) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi',
+            text: 'Vui lòng nhập số câu hỏi từ 5 đến 20!',
+        });
+        return;
+    }
+
+    closeQuestionCountModal();
+    generateAIQuestions(questionCount);
+}
+
+// Hàm tạo câu hỏi AI với số lượng đã chọn
+function generateAIQuestions(questionCount) {
+    questionsList.innerHTML = '<p>Đang tạo câu hỏi...</p>';
+    questionsContainer.style.display = 'block';
+    submitQuizBtn.style.display = 'none';
+    closeQuizBtn.style.display = 'none';
+    quizResult.style.display = 'none';
+    quizResult.textContent = '';
+
+    const videoUrl = document.getElementById('video-iframe').src;
+    const lessonTitle = document.querySelector('#video-description strong').textContent;
+    const lessonDescription = document.querySelector('#video-description p:nth-child(2)').textContent;
+    const currentLessonId = new URLSearchParams(window.location.search).get('lesson');
+    const currentCourseId = new URLSearchParams(window.location.search).get('course');
+
+    if (!currentLessonId || !currentCourseId) {
+        questionsList.innerHTML = '<p class="text-red-500">Thông tin bài học hoặc khóa học không hợp lệ!</p>';
+        closeQuizBtn.style.display = 'block';
+        return;
+    }
+
+    const payload = {
+        video_url: videoUrl,
+        lesson_title: lessonTitle,
+        lesson_description: lessonDescription,
+        lesson_id: currentLessonId,
+        course_id: currentCourseId,
+        question_count: questionCount
     };
 
     console.log('Payload sent to server:', payload);
@@ -420,104 +665,138 @@ function generateAIQuestions() {
     })
     .then(data => {
         console.log('Server response:', data);
-
         if (data.status === 'success') {
-            fetchQuestionsFromDatabase(currentLessonId);
+            fetchQuestionsFromDatabase(currentLessonId, data.time_limit);
         } else {
-            questionsList.innerHTML = '<p>Lỗi từ server: ' + (data.message || 'Không thể tạo câu hỏi.') + '</p>';
+            questionsList.innerHTML = '<p class="text-red-500">Lỗi từ server: ' + (data.message || 'Không thể tạo câu hỏi.') + '</p>';
+            closeQuizBtn.style.display = 'block';
         }
     })
     .catch(error => {
         console.error('Fetch error:', error);
-        questionsList.innerHTML = '<p>Lỗi khi kết nối tới server. Vui lòng thử lại.</p>';
+        questionsList.innerHTML = '<p class="text-red-500">Lỗi khi kết nối tới server. Vui lòng thử lại.</p>';
+        closeQuizBtn.style.display = 'block';
     });
 }
 
-function fetchQuestionsFromDatabase(lessonId) {
+// Hàm hiển thị câu hỏi
+function displayQuestions(questions, timeLimit) {
+    questionsList.innerHTML = '';
+    if (Array.isArray(questions) && questions.length > 0) {
+        questions.forEach((q, index) => {
+            const questionItem = document.createElement('li');
+            const questionData = typeof q === 'string' ? JSON.parse(q) : q;
+            const questionText = questionData.question_text || questionData.question;
+            const options = questionData.options || [];
+            const correctAnswer = questionData.correct_answer || '';
+
+            let optionsHtml = '';
+            if (options.length > 0) {
+                optionsHtml = '<div class="options-list">';
+                options.forEach((option, optIndex) => {
+                    const optionId = `q${index}-opt${optIndex}`;
+                    const isCorrect = option.trim() === correctAnswer.trim();
+                    optionsHtml += `
+                        <label>
+                            <input type="radio" name="answer-${index}" value="${option}" data-correct="${isCorrect}">
+                            ${option}
+                        </label>
+                    `;
+                });
+                optionsHtml += '</div>';
+            }
+
+            questionItem.innerHTML = `${questionText}${optionsHtml}`;
+            questionsList.appendChild(questionItem);
+        });
+
+        quizActive = true; // Đánh dấu bài tập đang hoạt động
+        startTimer(timeLimit);
+    } else {
+        questionsList.innerHTML = '<p>Không có câu hỏi nào được tạo.</p>';
+    }
+
+    Array.from(questionsList.querySelectorAll('label')).forEach(label => {
+        label.style.color = '#555';
+    });
+}
+
+// Hàm lấy câu hỏi từ cơ sở dữ liệu
+function fetchQuestionsFromDatabase(lessonId, timeLimit) {
     fetch(`/get_questions?lesson_id=${lessonId}`)
         .then(response => {
-            if (!response.ok) {
-                throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
-            }
-            return response.text().then(text => {
-                console.log('Phản hồi thô từ /get_questions:', text);
-                try {
-                    const data = JSON.parse(text);
-                    return data;
-                } catch (e) {
-                    console.error('Lỗi phân tích JSON:', e, 'Phản hồi:', text);
-                    throw e;
-                }
-            });
+            if (!response.ok) throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+            return response.json();
         })
         .then(data => {
-            console.log('Dữ liệu đã phân tích:', data);
             if (data.status === 'success' && Array.isArray(data.questions) && data.questions.length > 0) {
-                displayQuestions(data.questions);
-                submitQuizBtn.style.display = 'block'; // Hiển thị nút Nộp bài
-                closeQuizBtn.style.display = 'block'; // Hiển thị nút Đóng khi có câu hỏi
+                displayQuestions(data.questions, timeLimit);
+                submitQuizBtn.style.display = 'block';
+                closeQuizBtn.style.display = 'block';
             } else {
                 questionsList.innerHTML = '<p>Không có câu hỏi nào trong cơ sở dữ liệu.</p>';
-                submitQuizBtn.style.display = 'none';
-                closeQuizBtn.style.display = 'block'; // Vẫn hiển thị nút Đóng để thoát
+                closeQuizBtn.style.display = 'block';
             }
         })
         .catch(error => {
             console.error('Lỗi khi lấy câu hỏi:', error);
             questionsList.innerHTML = '<p>Lỗi khi tải câu hỏi từ cơ sở dữ liệu.</p>';
-            submitQuizBtn.style.display = 'none';
-            closeQuizBtn.style.display = 'block'; // Hiển thị nút Đóng trong trường hợp lỗi
+            closeQuizBtn.style.display = 'block';
         });
 }
 
-function displayQuestions(questions) {
-    questionsList.innerHTML = ''; // Xóa danh sách câu hỏi cũ
-    if (Array.isArray(questions) && questions.length > 0) {
-        questions.forEach((q, index) => {
-            if (index < 5) { // Giới hạn tối đa 5 câu hỏi
-                const questionItem = document.createElement('li');
-                const questionData = typeof q === 'string' ? JSON.parse(q) : q;
-                const questionText = questionData.question_text || questionData.question;
-                const options = questionData.options || [];
-                const correctAnswer = questionData.correct_answer || '';
+// Hàm bắt đầu bộ đếm thời gian
+function startTimer(timeLimit) {
+    let timeLeft = timeLimit;
+    updateTimerDisplay(timeLeft);
 
-                let optionsHtml = '';
-                if (options.length > 0) {
-                    optionsHtml = '<div class="options-list">';
-                    options.forEach((option, optIndex) => {
-                        const optionId = `q${index}-opt${optIndex}`;
-                        const isCorrect = option.trim() === correctAnswer.trim();
-                        optionsHtml += `
-                            <label>
-                                <input type="radio" name="answer-${index}" value="${option}" data-correct="${isCorrect}">
-                                ${option}
-                            </label>
-                        `;
-                        console.log(`Option: "${option}", Correct Answer: "${correctAnswer}", isCorrect: ${isCorrect}`);
-                    });
-                    optionsHtml += '</div>';
-                }
+    if (countdownTimer) clearInterval(countdownTimer);
 
-                questionItem.innerHTML = `${questionText}${optionsHtml}`;
-                questionsList.appendChild(questionItem);
-                console.log(`Added question ${index + 1}:`, questionText);
-            }
-        });
-    } else {
-        questionsList.innerHTML = '<p>Không có câu hỏi nào được tạo.</p>';
-        console.log('No valid questions array found');
-    }
+    countdownTimer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay(timeLeft);
 
-    // Reset màu sắc của các đáp án từ lần kiểm tra trước
-    Array.from(questionsList.querySelectorAll('label')).forEach(label => {
-        label.style.color = '#555'; // Màu mặc định
+        if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            quizActive = false; // Đặt lại trạng thái
+            Swal.fire({
+                icon: 'warning',
+                title: 'Hết thời gian!',
+                text: 'Bài của bạn sẽ được nộp tự động.',
+                timer: 7000,
+                showConfirmButton: false
+            }).then(() => {
+                checkAnswers(new Event('submit'));
+                disableQuiz();
+            });
+        }
+    }, 1000);
+}
+
+// Hàm cập nhật hiển thị thời gian
+function updateTimerDisplay(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Hàm vô hiệu hóa bài tập
+function disableQuiz() {
+    Array.from(questionsList.querySelectorAll('input[type="radio"]')).forEach(input => {
+        input.disabled = true;
     });
+    submitQuizBtn.disabled = true;
 }
 
+// Hàm kiểm tra câu trả lời
 function checkAnswers(event) {
     event.preventDefault();
     let correctCount = 0;
-    const totalQuestions = Math.min(questionsList.children.length, 5);
+    const totalQuestions = questionsList.children.length;
+
+    Array.from(questionsList.querySelectorAll('input[type="radio"]')).forEach(input => {
+        input.disabled = true;
+    });
 
     Array.from(questionsList.children).forEach((questionItem, index) => {
         const selectedOption = questionItem.querySelector(`input[name="answer-${index}"]:checked`);
@@ -531,21 +810,26 @@ function checkAnswers(event) {
     quizResult.style.display = 'block';
     quizResult.textContent = `Bạn trả lời đúng ${correctCount}/${totalQuestions} câu!`;
     quizResult.className = correctCount === totalQuestions ? 'correct' : 'incorrect';
+
+    if (countdownTimer) clearInterval(countdownTimer);
+    submitQuizBtn.style.display = 'none';
+    quizActive = false; // Đặt lại trạng thái khi nộp bài
 }
 
+// Hàm đóng bài tập
 function closeQuiz() {
-    // Ẩn toàn bộ khu vực câu hỏi
+    if (countdownTimer) clearInterval(countdownTimer);
     questionsContainer.style.display = 'none';
-    // Reset trạng thái giao diện
     questionsList.innerHTML = '';
     submitQuizBtn.style.display = 'none';
     closeQuizBtn.style.display = 'none';
     quizResult.style.display = 'none';
     quizResult.textContent = '';
-    // Reset các lựa chọn đã chọn (nếu có)
     quizForm.reset();
+    timerElement.textContent = '00:00';
+    quizActive = false; // Đặt lại trạng thái khi đóng
 }
-</script>
+            </script>
             <script src="https://cdn.tailwindcss.com"></script>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
             <!-- Modal -->
@@ -1162,7 +1446,7 @@ function closeQuiz() {
     <br>
     <br>
 
-    
+
     <div class="reviews-container mt-8 p-4 bg-white rounded shadow">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Đánh giá từ học viên</h2>
 
@@ -1632,605 +1916,606 @@ function closeQuiz() {
                 .catch(error => console.error("Lỗi:", error));
         }
     </script>
-</main>
-<script src="https://www.youtube.com/iframe_api"></script>
-<script>
-    console.log('Script loaded');
-    let player;
-    let currentLessonId;
+    </main>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        console.log('Script loaded');
+        let player;
+        let currentLessonId;
 
-    try {
-        console.log('Loading YouTube IFrame API');
-        window.onYouTubeIframeAPIReady = function() {
-            console.log('YouTube IFrame API ready');
+        try {
+            console.log('Loading YouTube IFrame API');
+            window.onYouTubeIframeAPIReady = function() {
+                console.log('YouTube IFrame API ready');
 
-            // Khởi tạo player
-            player = new YT.Player('video-iframe', {
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange,
-                    'onError': (event) => console.log('Player error:', event.data)
-                }
-            });
-
-            // Gọi updateCourseProgressAndEnrollment khi trang được tải
-            updateCourseProgressAndEnrollment();
-
-            document.querySelectorAll(".lesson-item a:not(.disabled)").forEach(item => {
-                item.addEventListener("click", function(e) {
-                    e.preventDefault();
-                    let videoUrl = this.dataset.video;
-                    let title = this.dataset.title;
-                    let description = this.dataset.description;
-                    let lessonId = this.dataset.lessonId;
-                    let orderNumber = this.dataset.orderNumber;
-                    changeVideo(videoUrl, title, description, lessonId, orderNumber);
+                // Khởi tạo player
+                player = new YT.Player('video-iframe', {
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange,
+                        'onError': (event) => console.log('Player error:', event.data)
+                    }
                 });
-            });
 
-            let params = new URLSearchParams(window.location.search);
-            let lessonId = params.get("lesson");
-            console.log('Initial lesson ID:', lessonId);
+                // Gọi updateCourseProgressAndEnrollment khi trang được tải
+                updateCourseProgressAndEnrollment();
 
-            if (lessonId) {
-                let activeLesson = document.querySelector(`[data-lesson-id='${lessonId}']`);
-                if (activeLesson && !activeLesson.classList.contains('disabled')) {
-                    changeVideo(activeLesson.dataset.video, activeLesson.dataset.title, activeLesson.dataset.description, lessonId, activeLesson.dataset.orderNumber);
+                document.querySelectorAll(".lesson-item a:not(.disabled)").forEach(item => {
+                    item.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        let videoUrl = this.dataset.video;
+                        let title = this.dataset.title;
+                        let description = this.dataset.description;
+                        let lessonId = this.dataset.lessonId;
+                        let orderNumber = this.dataset.orderNumber;
+                        changeVideo(videoUrl, title, description, lessonId, orderNumber);
+                    });
+                });
+
+                let params = new URLSearchParams(window.location.search);
+                let lessonId = params.get("lesson");
+                console.log('Initial lesson ID:', lessonId);
+
+                if (lessonId) {
+                    let activeLesson = document.querySelector(`[data-lesson-id='${lessonId}']`);
+                    if (activeLesson && !activeLesson.classList.contains('disabled')) {
+                        changeVideo(activeLesson.dataset.video, activeLesson.dataset.title, activeLesson.dataset.description, lessonId, activeLesson.dataset.orderNumber);
+                    } else {
+                        console.log('Lesson not found or locked:', lessonId);
+                    }
                 } else {
-                    console.log('Lesson not found or locked:', lessonId);
+                    let firstLesson = document.querySelector(".lesson-item a:not(.disabled)");
+                    if (firstLesson) {
+                        changeVideo(firstLesson.dataset.video, firstLesson.dataset.title, firstLesson.dataset.description, firstLesson.dataset.lessonId, firstLesson.dataset.orderNumber);
+                    } else {
+                        console.log('No unlocked lesson found');
+                    }
                 }
-            } else {
-                let firstLesson = document.querySelector(".lesson-item a:not(.disabled)");
-                if (firstLesson) {
-                    changeVideo(firstLesson.dataset.video, firstLesson.dataset.title, firstLesson.dataset.description, firstLesson.dataset.lessonId, firstLesson.dataset.orderNumber);
-                } else {
-                    console.log('No unlocked lesson found');
+            };
+
+            function changeVideo(videoUrl, title, description, lessonId, orderNumber) {
+                console.log('Changing video to:', videoUrl, 'Lesson ID:', lessonId);
+                currentLessonId = lessonId;
+                if (player) {
+                    player.destroy();
                 }
+                document.getElementById("lessons_id").value = lessonId;
+                let iframe = document.getElementById("video-iframe");
+                if (!iframe) {
+                    console.error('Iframe not found! Attempting to recover...');
+                    const videoPlayer = document.querySelector('.video-player');
+                    if (videoPlayer) {
+                        iframe = document.createElement('iframe');
+                        iframe.id = 'video-iframe';
+                        iframe.width = '100%';
+                        iframe.height = '400';
+                        iframe.frameBorder = '0';
+                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                        iframe.allowFullscreen = true;
+                        videoPlayer.prepend(iframe);
+                        console.log('Iframe recreated:', iframe);
+                    } else {
+                        console.error('Video player container not found!');
+                        return;
+                    }
+                }
+                iframe.src = videoUrl + "&enablejsapi=1";
+                document.getElementById("video-description").innerHTML = `<p class="text-3xl m-5 mb-0"><strong>Bài ${orderNumber}: ${title}</strong></p><p class="mx-5">${description}</p>`;
+                history.pushState(null, "", `?course=<?php echo $course['id']; ?>&lesson=${lessonId}`);
+
+                console.log('Initializing YT.Player with iframe:', iframe);
+                player = new YT.Player('video-iframe', {
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange,
+                        'onError': (event) => console.log('Player error:', event.data)
+                    }
+                });
+                console.log('YT.Player initialized:', player);
             }
-        };
 
-        function changeVideo(videoUrl, title, description, lessonId, orderNumber) {
-            console.log('Changing video to:', videoUrl, 'Lesson ID:', lessonId);
-            currentLessonId = lessonId;
-            if (player) {
-                player.destroy();
+            function onPlayerReady(event) {
+                console.log('Player ready');
             }
-            document.getElementById("lessons_id").value = lessonId;
-            let iframe = document.getElementById("video-iframe");
-            if (!iframe) {
-                console.error('Iframe not found! Attempting to recover...');
-                const videoPlayer = document.querySelector('.video-player');
-                if (videoPlayer) {
-                    iframe = document.createElement('iframe');
-                    iframe.id = 'video-iframe';
-                    iframe.width = '100%';
-                    iframe.height = '400';
-                    iframe.frameBorder = '0';
-                    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-                    iframe.allowFullscreen = true;
-                    videoPlayer.prepend(iframe);
-                    console.log('Iframe recreated:', iframe);
-                } else {
-                    console.error('Video player container not found!');
-                    return;
-                }
-            }
-            iframe.src = videoUrl + "&enablejsapi=1";
-            document.getElementById("video-description").innerHTML = `<p class="text-3xl m-5 mb-0"><strong>Bài ${orderNumber}: ${title}</strong></p><p class="mx-5">${description}</p>`;
-            history.pushState(null, "", `?course=<?php echo $course['id']; ?>&lesson=${lessonId}`);
 
-            console.log('Initializing YT.Player with iframe:', iframe);
-            player = new YT.Player('video-iframe', {
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange,
-                    'onError': (event) => console.log('Player error:', event.data)
-                }
-            });
-            console.log('YT.Player initialized:', player);
-        }
+            let progressInterval;
+            let lastProgress = 0;
 
-        function onPlayerReady(event) {
-            console.log('Player ready');
-        }
+            function onPlayerStateChange(event) {
+                console.log('Player state changed:', event.data);
+                if (event.data === YT.PlayerState.PLAYING) {
+                    console.log('Video is playing');
+                    clearInterval(progressInterval);
+                    progressInterval = setInterval(() => {
+                        let currentTime = player.getCurrentTime();
+                        let duration = player.getDuration();
+                        let progress = (currentTime / duration) * 100 || 0;
+                        let completed = progress >= 95;
 
-        let progressInterval;
-        let lastProgress = 0;
+                        // Cập nhật thời gian trên nút "Thêm Ghi Chú"
+                        updateNoteButtonTime();
 
-        function onPlayerStateChange(event) {
-            console.log('Player state changed:', event.data);
-            if (event.data === YT.PlayerState.PLAYING) {
-                console.log('Video is playing');
-                clearInterval(progressInterval);
-                progressInterval = setInterval(() => {
-                    let currentTime = player.getCurrentTime();
-                    let duration = player.getDuration();
-                    let progress = (currentTime / duration) * 100 || 0;
-                    let completed = progress >= 95;
+                        document.getElementById("current-lesson-progress").textContent = `Tiến độ bài học: ${Math.round(progress)}%`;
+                        let lessonLink = document.querySelector(`[data-lesson-id='${currentLessonId}']`);
+                        if (lessonLink) {
+                            lessonLink.querySelector('.lesson-progress').textContent = `${Math.round(progress)}%`;
+                        }
 
-                    // Cập nhật thời gian trên nút "Thêm Ghi Chú"
-                    updateNoteButtonTime();
-
-                    document.getElementById("current-lesson-progress").textContent = `Tiến độ bài học: ${Math.round(progress)}%`;
+                        console.log('Current time:', currentTime, 'Duration:', duration, 'Progress:', progress);
+                        if (Math.abs(progress - lastProgress) >= 5 || completed) {
+                            let payload = {
+                                user_id: <?php echo $_SESSION['user']['id']; ?>,
+                                lesson_id: currentLessonId,
+                                progress: progress,
+                                completed: completed
+                            };
+                            console.log('Sending payload:', payload);
+                            fetch('/update_progress', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(payload)
+                            }).then(response => {
+                                console.log('Response status:', response.status);
+                                if (!response.ok) throw new Error('Network response was not ok');
+                                return response.json();
+                            }).then(data => {
+                                console.log('Response data:', data);
+                                if (data.status === 'success') {
+                                    lastProgress = progress;
+                                    if (completed) {
+                                        unlockNextLesson(currentLessonId);
+                                        goToNextLesson(currentLessonId);
+                                        updateCourseProgressAndEnrollment();
+                                    }
+                                }
+                            }).catch(error => {
+                                console.error('Fetch error:', error);
+                            });
+                        }
+                    }, 1000);
+                } else if (event.data === YT.PlayerState.ENDED) {
+                    console.log('Video ended');
+                    clearInterval(progressInterval);
+                    let payload = {
+                        user_id: <?php echo $_SESSION['user']['id']; ?>,
+                        lesson_id: currentLessonId,
+                        progress: 100,
+                        completed: true
+                    };
+                    document.getElementById("current-lesson-progress").textContent = `Tiến độ bài học: 100%`;
                     let lessonLink = document.querySelector(`[data-lesson-id='${currentLessonId}']`);
                     if (lessonLink) {
-                        lessonLink.querySelector('.lesson-progress').textContent = `${Math.round(progress)}%`;
+                        lessonLink.querySelector('.lesson-progress').textContent = '100%';
                     }
-
-                    console.log('Current time:', currentTime, 'Duration:', duration, 'Progress:', progress);
-                    if (Math.abs(progress - lastProgress) >= 5 || completed) {
-                        let payload = {
-                            user_id: <?php echo $_SESSION['user']['id']; ?>,
-                            lesson_id: currentLessonId,
-                            progress: progress,
-                            completed: completed
-                        };
-                        console.log('Sending payload:', payload);
-                        fetch('/update_progress', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(payload)
-                        }).then(response => {
-                            console.log('Response status:', response.status);
-                            if (!response.ok) throw new Error('Network response was not ok');
-                            return response.json();
-                        }).then(data => {
-                            console.log('Response data:', data);
-                            if (data.status === 'success') {
-                                lastProgress = progress;
-                                if (completed) {
-                                    unlockNextLesson(currentLessonId);
-                                    goToNextLesson(currentLessonId);
-                                    updateCourseProgressAndEnrollment();
-                                }
-                            }
-                        }).catch(error => {
-                            console.error('Fetch error:', error);
-                        });
-                    }
-                }, 1000);
-            } else if (event.data === YT.PlayerState.ENDED) {
-                console.log('Video ended');
-                clearInterval(progressInterval);
-                let payload = {
-                    user_id: <?php echo $_SESSION['user']['id']; ?>,
-                    lesson_id: currentLessonId,
-                    progress: 100,
-                    completed: true
-                };
-                document.getElementById("current-lesson-progress").textContent = `Tiến độ bài học: 100%`;
-                let lessonLink = document.querySelector(`[data-lesson-id='${currentLessonId}']`);
-                if (lessonLink) {
-                    lessonLink.querySelector('.lesson-progress').textContent = '100%';
+                    fetch('/update_progress', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    }).then(response => {
+                        console.log('Response status:', response.status);
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    }).then(data => {
+                        console.log('Response data:', data);
+                        if (data.status === 'success') {
+                            unlockNextLesson(currentLessonId);
+                            goToNextLesson(currentLessonId);
+                            updateCourseProgressAndEnrollment();
+                        }
+                    }).catch(error => {
+                        console.error('Fetch error:', error);
+                    });
+                } else {
+                    console.log('Video stopped or paused');
+                    clearInterval(progressInterval);
                 }
-                fetch('/update_progress', {
+            }
+
+            // Hàm cập nhật thời gian trên nút "Thêm Ghi Chú"
+            function updateNoteButtonTime() {
+                if (player && typeof player.getCurrentTime === 'function') {
+                    let currentTime = player.getCurrentTime();
+                    let minutes = Math.floor(currentTime / 60);
+                    let seconds = Math.floor(currentTime % 60);
+                    let formattedTime = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+                    document.getElementById('note-button').innerHTML = `<i class="fas fa-plus mr-2"></i> Thêm Ghi Chú ${formattedTime}`;
+                }
+            }
+
+            // Hàm mở modal
+            function openModal() {
+                player.pauseVideo();
+                let currentTime = player.getCurrentTime();
+                let minutes = Math.floor(currentTime / 60);
+                let seconds = Math.floor(currentTime % 60);
+                let formattedTime = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+
+                document.getElementById('note-time').innerHTML = `Thêm ghi chú tại <span class="bg-purple-500 text-white px-2 py-1 rounded">${formattedTime}</span>`;
+                document.getElementById('video_time').value = formattedTime;
+                document.getElementById('noteModal').classList.remove('hidden');
+            }
+
+            function closeModal() {
+                document.getElementById('noteModal').classList.add('hidden');
+            }
+
+            function toggleActive(button, command) {
+                document.execCommand(command, false, null);
+                button.classList.toggle('bg-purple-500');
+            }
+
+            function toggleList(button, command) {
+                let editor = document.getElementById("noteContent");
+                editor.focus();
+                document.execCommand(command, false, null);
+            }
+
+            function insertImage() {
+                let url = prompt("Nhập URL hình ảnh:");
+                if (url) {
+                    document.execCommand('insertImage', false, url);
+                }
+            }
+
+            function changeTextColor() {
+                let color = document.getElementById('textColorPicker').value;
+                document.execCommand('foreColor', false, color);
+            }
+
+            function changeBgColor() {
+                let color = document.getElementById('bgColorPicker').value;
+                document.getElementById('noteContent').style.backgroundColor = color;
+            }
+
+            function openColorPopup(popupId) {
+                document.getElementById(popupId).style.display = "block";
+            }
+
+            function closeColorPopup(popupId) {
+                document.getElementById(popupId).style.display = "none";
+            }
+
+            function unlockNextLesson(currentLessonId) {
+                console.log('Unlocking next lesson after:', currentLessonId);
+                let allLessons = document.querySelectorAll('.lesson-item a');
+                let currentLessonIndex = -1;
+                let currentSectionId = null;
+
+                for (let i = 0; i < allLessons.length; i++) {
+                    if (allLessons[i].dataset.lessonId === currentLessonId) {
+                        currentLessonIndex = i;
+                        currentSectionId = allLessons[i].parentElement.dataset.sectionId;
+                        break;
+                    }
+                }
+
+                if (currentLessonIndex !== -1) {
+                    let nextLessonIndex = currentLessonIndex + 1;
+                    if (nextLessonIndex < allLessons.length) {
+                        let nextLesson = allLessons[nextLessonIndex];
+                        let nextLessonItem = nextLesson.parentElement;
+                        let nextSectionId = nextLessonItem.dataset.sectionId;
+
+                        if (currentSectionId !== nextSectionId) {
+                            let currentSectionLessons = document.querySelectorAll(`.lesson-item[data-section-id='${currentSectionId}'] a`);
+                            let allCompleted = true;
+                            currentSectionLessons.forEach(lesson => {
+                                let progress = parseInt(lesson.querySelector('.lesson-progress').textContent);
+                                if (progress < 95) {
+                                    allCompleted = false;
+                                }
+                            });
+
+                            if (allCompleted) {
+                                let nextSectionLessons = document.querySelectorAll(`.lesson-item[data-section-id='${nextSectionId}']`);
+                                nextSectionLessons.forEach(item => {
+                                    let lessonLink = item.querySelector('a');
+                                    lessonLink.classList.remove('disabled');
+                                    item.classList.remove('locked');
+                                    item.querySelector('.lock-icon')?.remove();
+                                    lessonLink.onclick = function(e) {
+                                        e.preventDefault();
+                                        changeVideo(lessonLink.dataset.video, lessonLink.dataset.title, lessonLink.dataset.description, lessonLink.dataset.lessonId, lessonLink.dataset.orderNumber);
+                                    };
+                                });
+                                console.log('Unlocked section:', nextSectionId);
+                            }
+                        } else {
+                            nextLesson.classList.remove('disabled');
+                            nextLessonItem.classList.remove('locked');
+                            nextLessonItem.querySelector('.lock-icon')?.remove();
+                            nextLesson.onclick = function(e) {
+                                e.preventDefault();
+                                changeVideo(nextLesson.dataset.video, nextLesson.dataset.title, nextLesson.dataset.description, nextLesson.dataset.lessonId, nextLesson.dataset.orderNumber);
+                            };
+                            console.log('Unlocked next lesson:', nextLesson.dataset.lessonId);
+                        }
+                    }
+                }
+            }
+
+            function goToNextLesson(currentLessonId) {
+                console.log('Going to next lesson from:', currentLessonId);
+                let allLessons = document.querySelectorAll('.lesson-item a');
+                let currentLessonIndex = -1;
+
+                for (let i = 0; i < allLessons.length; i++) {
+                    if (allLessons[i].dataset.lessonId === currentLessonId) {
+                        currentLessonIndex = i;
+                        break;
+                    }
+                }
+
+                if (currentLessonIndex !== -1) {
+                    let nextLessonIndex = currentLessonIndex + 1;
+                    if (nextLessonIndex < allLessons.length) {
+                        let nextLesson = allLessons[nextLessonIndex];
+                        let videoUrl = nextLesson.dataset.video;
+                        let title = nextLesson.dataset.title;
+                        let description = nextLesson.dataset.description;
+                        let lessonId = nextLesson.dataset.lessonId;
+                        let orderNumber = nextLesson.dataset.orderNumber;
+                        changeVideo(videoUrl, title, description, lessonId, orderNumber);
+                        console.log('Moved to next lesson:', lessonId);
+                    } else {
+                        console.log('No next lesson available');
+                    }
+                }
+            }
+
+            function updateCourseProgressAndEnrollment() {
+                console.log('Starting updateCourseProgressAndEnrollment');
+                const payload = {
+                    user_id: <?php echo $_SESSION['user']['id']; ?>,
+                    course_id: <?php echo $course['id']; ?>
+                };
+                fetch('/calculate_progress', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
                 }).then(response => {
-                    console.log('Response status:', response.status);
                     if (!response.ok) throw new Error('Network response was not ok');
                     return response.json();
                 }).then(data => {
-                    console.log('Response data:', data);
                     if (data.status === 'success') {
-                        unlockNextLesson(currentLessonId);
-                        goToNextLesson(currentLessonId);
-                        updateCourseProgressAndEnrollment();
-                    }
-                }).catch(error => {
-                    console.error('Fetch error:', error);
-                });
-            } else {
-                console.log('Video stopped or paused');
-                clearInterval(progressInterval);
-            }
-        }
+                        let courseProgress = Math.round(data.progress * 100) / 100;
+                        document.getElementById("course-progress").textContent = `Tiến độ khóa học: ${courseProgress}%`;
+                        document.getElementById("progress-bar").style.width = `${courseProgress}%`;
 
-        // Hàm cập nhật thời gian trên nút "Thêm Ghi Chú"
-        function updateNoteButtonTime() {
-            if (player && typeof player.getCurrentTime === 'function') {
-                let currentTime = player.getCurrentTime();
-                let minutes = Math.floor(currentTime / 60);
-                let seconds = Math.floor(currentTime % 60);
-                let formattedTime = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-                document.getElementById('note-button').innerHTML = `<i class="fas fa-plus mr-2"></i> Thêm Ghi Chú ${formattedTime}`;
-            }
-        }
-
-        // Hàm mở modal
-        function openModal() {
-            player.pauseVideo();
-            let currentTime = player.getCurrentTime();
-            let minutes = Math.floor(currentTime / 60);
-            let seconds = Math.floor(currentTime % 60);
-            let formattedTime = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-
-            document.getElementById('note-time').innerHTML = `Thêm ghi chú tại <span class="bg-purple-500 text-white px-2 py-1 rounded">${formattedTime}</span>`;
-            document.getElementById('video_time').value = formattedTime;
-            document.getElementById('noteModal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('noteModal').classList.add('hidden');
-        }
-
-        function toggleActive(button, command) {
-            document.execCommand(command, false, null);
-            button.classList.toggle('bg-purple-500');
-        }
-
-        function toggleList(button, command) {
-            let editor = document.getElementById("noteContent");
-            editor.focus();
-            document.execCommand(command, false, null);
-        }
-
-        function insertImage() {
-            let url = prompt("Nhập URL hình ảnh:");
-            if (url) {
-                document.execCommand('insertImage', false, url);
-            }
-        }
-
-        function changeTextColor() {
-            let color = document.getElementById('textColorPicker').value;
-            document.execCommand('foreColor', false, color);
-        }
-
-        function changeBgColor() {
-            let color = document.getElementById('bgColorPicker').value;
-            document.getElementById('noteContent').style.backgroundColor = color;
-        }
-
-        function openColorPopup(popupId) {
-            document.getElementById(popupId).style.display = "block";
-        }
-
-        function closeColorPopup(popupId) {
-            document.getElementById(popupId).style.display = "none";
-        }
-
-        function unlockNextLesson(currentLessonId) {
-            console.log('Unlocking next lesson after:', currentLessonId);
-            let allLessons = document.querySelectorAll('.lesson-item a');
-            let currentLessonIndex = -1;
-            let currentSectionId = null;
-
-            for (let i = 0; i < allLessons.length; i++) {
-                if (allLessons[i].dataset.lessonId === currentLessonId) {
-                    currentLessonIndex = i;
-                    currentSectionId = allLessons[i].parentElement.dataset.sectionId;
-                    break;
-                }
-            }
-
-            if (currentLessonIndex !== -1) {
-                let nextLessonIndex = currentLessonIndex + 1;
-                if (nextLessonIndex < allLessons.length) {
-                    let nextLesson = allLessons[nextLessonIndex];
-                    let nextLessonItem = nextLesson.parentElement;
-                    let nextSectionId = nextLessonItem.dataset.sectionId;
-
-                    if (currentSectionId !== nextSectionId) {
-                        let currentSectionLessons = document.querySelectorAll(`.lesson-item[data-section-id='${currentSectionId}'] a`);
-                        let allCompleted = true;
-                        currentSectionLessons.forEach(lesson => {
-                            let progress = parseInt(lesson.querySelector('.lesson-progress').textContent);
-                            if (progress < 95) {
-                                allCompleted = false;
-                            }
-                        });
-
-                        if (allCompleted) {
-                            let nextSectionLessons = document.querySelectorAll(`.lesson-item[data-section-id='${nextSectionId}']`);
-                            nextSectionLessons.forEach(item => {
-                                let lessonLink = item.querySelector('a');
-                                lessonLink.classList.remove('disabled');
-                                item.classList.remove('locked');
-                                item.querySelector('.lock-icon')?.remove();
-                                lessonLink.onclick = function(e) {
-                                    e.preventDefault();
-                                    changeVideo(lessonLink.dataset.video, lessonLink.dataset.title, lessonLink.dataset.description, lessonLink.dataset.lessonId, lessonLink.dataset.orderNumber);
-                                };
-                            });
-                            console.log('Unlocked section:', nextSectionId);
-                        }
-                    } else {
-                        nextLesson.classList.remove('disabled');
-                        nextLessonItem.classList.remove('locked');
-                        nextLessonItem.querySelector('.lock-icon')?.remove();
-                        nextLesson.onclick = function(e) {
-                            e.preventDefault();
-                            changeVideo(nextLesson.dataset.video, nextLesson.dataset.title, nextLesson.dataset.description, nextLesson.dataset.lessonId, nextLesson.dataset.orderNumber);
+                        let status = courseProgress >= 100 ? 'completed' : (courseProgress > 0 ? 'in-progress' : 'enrolled');
+                        const enrollmentPayload = {
+                            user_id: <?php echo $_SESSION['user']['id']; ?>,
+                            course_id: <?php echo $course['id']; ?>,
+                            enrollment_date: '<?php echo date('Y-m-d H:i:s'); ?>',
+                            status: status,
+                            progress: courseProgress
                         };
-                        console.log('Unlocked next lesson:', nextLesson.dataset.lessonId);
+                        return fetch('/update_enrollment', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(enrollmentPayload)
+                        });
                     }
-                }
-            }
-        }
-
-        function goToNextLesson(currentLessonId) {
-            console.log('Going to next lesson from:', currentLessonId);
-            let allLessons = document.querySelectorAll('.lesson-item a');
-            let currentLessonIndex = -1;
-
-            for (let i = 0; i < allLessons.length; i++) {
-                if (allLessons[i].dataset.lessonId === currentLessonId) {
-                    currentLessonIndex = i;
-                    break;
-                }
+                }).then(response => {
+                    if (!response) return;
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                }).then(data => {
+                    console.log('Update enrollment response:', data);
+                    if (data.status === 'success' && data.certificate && data.certificate.status === 'success') {
+                        const notice = document.getElementById('certificate-notice');
+                        notice.style.display = 'block';
+                        console.log('Certificate sent to email:', data.certificate.certificate_code);
+                    }
+                }).catch(error => console.error('Error:', error));
             }
 
-            if (currentLessonIndex !== -1) {
-                let nextLessonIndex = currentLessonIndex + 1;
-                if (nextLessonIndex < allLessons.length) {
-                    let nextLesson = allLessons[nextLessonIndex];
-                    let videoUrl = nextLesson.dataset.video;
-                    let title = nextLesson.dataset.title;
-                    let description = nextLesson.dataset.description;
-                    let lessonId = nextLesson.dataset.lessonId;
-                    let orderNumber = nextLesson.dataset.orderNumber;
-                    changeVideo(videoUrl, title, description, lessonId, orderNumber);
-                    console.log('Moved to next lesson:', lessonId);
-                } else {
-                    console.log('No next lesson available');
-                }
+            function toggleDropdown(element) {
+                let content = element.nextElementSibling;
+                let icon = element.querySelector("i");
+                document.querySelectorAll(".lesson-list").forEach(ul => {
+                    if (ul !== content) ul.style.display = "none";
+                });
+                content.style.display = (content.style.display === "block") ? "none" : "block";
+                icon.classList.toggle("rotate-90");
             }
-        }
 
-        function updateCourseProgressAndEnrollment() {
-            console.log('Starting updateCourseProgressAndEnrollment');
-            const payload = {
-                user_id: <?php echo $_SESSION['user']['id']; ?>,
-                course_id: <?php echo $course['id']; ?>
-            };
-            fetch('/calculate_progress', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            }).then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
-                return response.json();
-            }).then(data => {
-                if (data.status === 'success') {
-                    let courseProgress = Math.round(data.progress * 100) / 100;
-                    document.getElementById("course-progress").textContent = `Tiến độ khóa học: ${courseProgress}%`;
-                    document.getElementById("progress-bar").style.width = `${courseProgress}%`;
+            setTimeout(() => {
+                if (!window.YT) console.error('YouTube API not loaded after 5 seconds');
+                else console.log('YouTube API loaded:', window.YT);
+            }, 5000);
 
-                    let status = courseProgress >= 100 ? 'completed' : (courseProgress > 0 ? 'in-progress' : 'enrolled');
-                    const enrollmentPayload = {
-                        user_id: <?php echo $_SESSION['user']['id']; ?>,
-                        course_id: <?php echo $course['id']; ?>,
-                        enrollment_date: '<?php echo date('Y-m-d H:i:s'); ?>',
-                        status: status,
-                        progress: courseProgress
-                    };
-                    return fetch('/update_enrollment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(enrollmentPayload)
-                    });
+            setTimeout(() => {
+                if (typeof window.onYouTubeIframeAPIReady === 'function') {
+                    console.log('Manually triggering onYouTubeIframeAPIReady');
+                    window.onYouTubeIframeAPIReady();
                 }
-            }).then(response => {
-                if (!response) return;
-                if (!response.ok) throw new Error('Network response was not ok');
-                return response.json();
-            }).then(data => {
-                console.log('Update enrollment response:', data);
-                if (data.status === 'success' && data.certificate && data.certificate.status === 'success') {
-                    const notice = document.getElementById('certificate-notice');
-                    notice.style.display = 'block';
-                    console.log('Certificate sent to email:', data.certificate.certificate_code);
-                }
-            }).catch(error => console.error('Error:', error));
+            }, 2000);
+
+        } catch (error) {
+            console.error('JavaScript error:', error);
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
         }
 
-        function toggleDropdown(element) {
-            let content = element.nextElementSibling;
-            let icon = element.querySelector("i");
-            document.querySelectorAll(".lesson-list").forEach(ul => {
-                if (ul !== content) ul.style.display = "none";
-            });
-            content.style.display = (content.style.display === "block") ? "none" : "block";
-            icon.classList.toggle("rotate-90");
+        .container-learning {
+            display: flex;
+            max-width: 1900px;
+            margin: 0 auto;
         }
 
-        setTimeout(() => {
-            if (!window.YT) console.error('YouTube API not loaded after 5 seconds');
-            else console.log('YouTube API loaded:', window.YT);
-        }, 5000);
+        .video-section {
+            flex: 3;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-        setTimeout(() => {
-            if (typeof window.onYouTubeIframeAPIReady === 'function') {
-                console.log('Manually triggering onYouTubeIframeAPIReady');
-                window.onYouTubeIframeAPIReady();
-            }
-        }, 2000);
+        .video-player iframe {
+            width: 100%;
+            height: 600px;
+            border-radius: 10px;
+        }
 
-    } catch (error) {
-        console.error('JavaScript error:', error);
-    }
-</script>
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background-color: #f9f9f9;
-    }
+        .sidebar {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
 
-    .container-learning {
-        display: flex;
-        max-width: 1900px;
-        margin: 0 auto;
-    }
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-    .video-section {
-        flex: 3;
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+        .chapter {
+            font-size: 16px;
+            font-weight: bold;
+            background: #f1f1f1;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .video-player iframe {
-        width: 100%;
-        height: 600px;
-        border-radius: 10px;
-    }
+        .lesson-list {
+            list-style: none;
+            padding-left: 15px;
+            display: none;
+        }
 
-    .sidebar {
-        flex: 1;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+        .lesson-item {
+            padding: 5px 0;
+            font-size: 14px;
+            color: #333;
+            position: relative;
+        }
 
-    .chapter {
-        font-size: 16px;
-        font-weight: bold;
-        background: #f1f1f1;
-        padding: 10px;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        .lesson-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            padding: 5px;
+        }
 
-    .lesson-list {
-        list-style: none;
-        padding-left: 15px;
-        display: none;
-    }
+        .lesson-item a:hover {
+            background: #f1f1f1;
+        }
 
-    .lesson-item {
-        padding: 5px 0;
-        font-size: 14px;
-        color: #333;
-        position: relative;
-    }
+        .lesson-item.locked a {
+            color: #999;
+            cursor: not-allowed;
+        }
 
-    .lesson-item a {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-        padding: 5px;
-    }
+        .lesson-item .disabled {
+            pointer-events: none;
+        }
 
-    .lesson-item a:hover {
-        background: #f1f1f1;
-    }
-    .lesson-item.locked a {
-        color: #999;
-        cursor: not-allowed;
-    }
+        .lesson-progress {
+            float: right;
+            color: #007bff;
+            font-size: 12px;
+        }
 
-    .lesson-item .disabled {
-        pointer-events: none;
-    }
+        .rotate-90 {
+            transform: rotate(90deg);
+            transition: transform 0.3s ease;
+        }
 
-    .lesson-progress {
-        float: right;
-        color: #007bff;
-        font-size: 12px;
-    }
+        .progress-container {
+            width: 100%;
+            background: #e9ecef;
+            border-radius: 5px;
+            height: 10px;
+            margin-top: 5px;
+        }
 
-    .rotate-90 {
-        transform: rotate(90deg);
-        transition: transform 0.3s ease;
-    }
+        .progress-fill {
+            background: #007bff;
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
 
-    .progress-container {
-        width: 100%;
-        background: #e9ecef;
-        border-radius: 5px;
-        height: 10px;
-        margin-top: 5px;
-    }
+        #current-lesson-progress {
+            display: block;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #333;
+        }
 
-    .progress-fill {
-        background: #007bff;
-        height: 100%;
-        border-radius: 5px;
-        transition: width 0.3s ease;
-    }
+        .lock-icon {
+            margin-left: 5px;
+        }
+    </style>
+    <style>
+        .editor-btn {
+            @apply bg-gray-700 text-white p-2 rounded-lg hover:bg-gray-600 transition;
+        }
+    </style>
 
-    #current-lesson-progress {
-        display: block;
-        margin-top: 5px;
-        font-size: 14px;
-        color: #333;
-    }
+    <style>
+        /* Đảm bảo editNoteModal hiển thị trên tất cả */
+        #editNoteModal {
+            z-index: 100;
+            /* Giá trị cao hơn sidebar hoặc các phần tử khác */
+        }
+    </style>
+    <style>
+        .note-item {
+            position: relative;
+        }
 
-    .lock-icon {
-        margin-left: 5px;
-    }
-</style>
-<style>
-    .editor-btn {
-        @apply bg-gray-700 text-white p-2 rounded-lg hover:bg-gray-600 transition;
-    }
-</style>
+        .dropdown-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
 
-<style>
-    /* Đảm bảo editNoteModal hiển thị trên tất cả */
-    #editNoteModal {
-        z-index: 100;
-        /* Giá trị cao hơn sidebar hoặc các phần tử khác */
-    }
-</style>
-<style>
-    .note-item {
-        position: relative;
-    }
+        .dropdown-menu {
+            z-index: 50;
+            /* Đảm bảo dropdown hiển thị trên các phần tử khác */
+        }
 
-    .dropdown-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-    }
+        .dropdown-menu.hidden {
+            display: none;
+        }
+    </style>
+    <style>
+        #notes-sidebar {
+            width: 500px;
+            /* Thay 500px bằng giá trị bạn muốn */
+        }
 
-    .dropdown-menu {
-        z-index: 50;
-        /* Đảm bảo dropdown hiển thị trên các phần tử khác */
-    }
+        /* Đảm bảo sidebar nằm trên cùng các phần tử khác */
+        #notes-sidebar {
+            z-index: 50;
+            /* Đặt z-index cao để hiển thị trên các phần tử khác */
+        }
 
-    .dropdown-menu.hidden {
-        display: none;
-    }
-</style>
-<style>
-    #notes-sidebar {
-        width: 500px;
-        /* Thay 500px bằng giá trị bạn muốn */
-    }
+        /* Khi sidebar mở */
+        #notes-sidebar.open {
+            transform: translateX(0);
+            /* Dịch chuyển vào màn hình */
+        }
 
-    /* Đảm bảo sidebar nằm trên cùng các phần tử khác */
-    #notes-sidebar {
-        z-index: 50;
-        /* Đặt z-index cao để hiển thị trên các phần tử khác */
-    }
-
-    /* Khi sidebar mở */
-    #notes-sidebar.open {
-        transform: translateX(0);
-        /* Dịch chuyển vào màn hình */
-    }
-
-    /* Tùy chỉnh giao diện danh sách ghi chú (sau này bạn có thể thêm style cho danh sách) */
-    #notes-list {
-        max-height: calc(100% - 60px);
-        /* Trừ chiều cao của header sidebar */
-        overflow-y: auto;
-        /* Cuộn nếu danh sách dài */
-    }
-</style>
+        /* Tùy chỉnh giao diện danh sách ghi chú (sau này bạn có thể thêm style cho danh sách) */
+        #notes-list {
+            max-height: calc(100% - 60px);
+            /* Trừ chiều cao của header sidebar */
+            overflow-y: auto;
+            /* Cuộn nếu danh sách dài */
+        }
+    </style>
