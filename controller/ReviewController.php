@@ -3,6 +3,7 @@ require_once "model/ReviewModel.php";
 require_once "model/OrderModel.php";
 require_once "model/CourseModel.php";
 require_once "model/UserModel.php";
+require_once "model/NotificationModel.php";
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -14,6 +15,7 @@ class ReviewController
     private $orderModel;
     private $courseModel;
     private $userModel;
+    private $notificationModel;
 
     public function __construct()
     {
@@ -21,6 +23,7 @@ class ReviewController
         $this->orderModel = new OrderModel();
         $this->courseModel = new Course();
         $this->userModel = new UserModel();
+        $this->notificationModel = new NotificationModel();
     }
 
 
@@ -169,7 +172,10 @@ class ReviewController
 
 
     public function toggleLikeReview()
-    {
+{
+    header('Content-Type: application/json'); // Đảm bảo trả về JSON
+
+    try {
         if (!isset($_SESSION['user']['id'])) {
             echo json_encode(["status" => "error", "message" => "Bạn cần đăng nhập để like"]);
             exit;
@@ -186,25 +192,49 @@ class ReviewController
         $likeExists = $this->reviewModel->checkUserLike($userId, $reviewId);
 
         if ($likeExists) {
-            // Nếu đã like thì hủy like
             $this->reviewModel->removeLike($userId, $reviewId);
             $status = "unliked";
         } else {
-            // Nếu chưa like thì thêm like
             $this->reviewModel->addLike($userId, $reviewId);
             $status = "liked";
+
+            $reviewAuthor = $this->reviewModel->getReviewAuthor($reviewId);
+            if ($reviewAuthor && $reviewAuthor['id'] != $userId) {
+                $authorId = $reviewAuthor['id'];
+
+                $userName = $this->userModel->getUserNameById($userId);
+                $message = "👍 {$userName} đã thích đánh giá của bạn!";
+                $link = "/courses/detail/{$reviewAuthor['course_id']}"; 
+                $adminId = $userId;
+
+                $this->notificationModel->createAutoNotification(
+                    $authorId,
+                    $message,
+                    $link,
+                    $adminId
+                );
+            }
         }
 
-        // Đếm lại số lượng like
+        // Đếm lại số like
         $likeCount = $this->reviewModel->countLikes($reviewId);
 
         echo json_encode([
             "status" => $status,
             "like_count" => $likeCount
         ]);
-
-        exit;
+    } catch (Exception $e) {
+        // Trả về lỗi chi tiết
+        echo json_encode([
+            "status" => "error",
+            "message" => "Đã có lỗi xảy ra: " . $e->getMessage()
+        ]);
     }
+
+    exit;
+}
+
+
 
     public function replyReview()
     {
@@ -235,6 +265,17 @@ class ReviewController
         // Lấy phản hồi mới
         $reply = $this->reviewModel->getReplyById($replyId);
 
+        // Gửi thông báo đến người đã viết đánh giá
+        $review = $this->reviewModel->getReviewById($reviewId);
+        $receiverId = $review['user_id'] ?? null;
+
+        if ($receiverId) {
+            $adminId = $_SESSION['user']['id'];
+            $message = "👨‍🏫 Admin đã phản hồi đánh giá của bạn: '<i>" . htmlspecialchars(mb_substr($comment, 0, 100)) . "</i>'";
+            $link = "/courses/learning/{$review['course_id']}"; // hoặc "/courses/{$review['course_id']}#reviews" nếu bạn muốn chi tiết hơn
+            $this->notificationModel->createAutoNotification($receiverId, $message, $link, $adminId);
+        }
+
         echo json_encode([
             "status" => "success",
             "reply" => [
@@ -246,6 +287,7 @@ class ReviewController
         ]);
         exit;
     }
+
 
 
     public function getReviewReplies()
@@ -272,7 +314,8 @@ class ReviewController
         renderViewAdmin("view/admin/reviews/index.php", compact('reviews'), "Manage Reviews");
     }
 
-    public function create() {
+    public function create()
+    {
         $courses = $this->courseModel->getAllCourses();
         $users = $this->userModel->getAllUsers();
         $admins = $this->userModel->getAllAdmins(); // Lấy danh sách admin
@@ -280,7 +323,8 @@ class ReviewController
         renderViewAdmin("view/admin/reviews/create.php", compact('courses', 'users', 'admins'), "Add Review");
     }
 
-    public function store() {
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'course_id' => $_POST['course_id'],
@@ -317,7 +361,8 @@ class ReviewController
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $review = $this->reviewModel->getReviewById($id);
         $courses = $this->courseModel->getAllCourses();
         $users = $this->userModel->getAllUsers();
@@ -327,7 +372,8 @@ class ReviewController
         renderViewAdmin("view/admin/reviews/edit.php", compact('review', 'courses', 'users', 'admins', 'reviewReply'), "Edit Review");
     }
 
-    public function update($id) {
+    public function update($id)
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'course_id' => $_POST['course_id'],
@@ -335,7 +381,7 @@ class ReviewController
                 'rating' => $_POST['rating'],
                 'comment' => $_POST['comment']
             ];
-            
+
             // Cập nhật đánh giá
             $this->reviewModel->update($id, $data);
 
@@ -368,7 +414,8 @@ class ReviewController
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $this->reviewModel->delete($id);
         header("Location: /admin/reviews");
     }

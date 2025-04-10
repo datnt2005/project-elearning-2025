@@ -4,6 +4,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,19 +12,22 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
+
         @media (max-width: 1024px) {
             .sidebar {
                 display: none;
             }
+
             .main-content {
                 margin-left: 0 !important;
             }
         }
+
         @media (max-width: 640px) {
             .search-input {
                 display: none;
@@ -31,6 +35,19 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
         }
     </style>
 </head>
+<?php
+$notificationModel = new NotificationModel();
+$userId = $_SESSION['user']['id'] ?? null;
+$notifications = [];
+$unreadCount = 0;
+
+if ($userId) {
+    $notifications = $notificationModel->getUserNotifications($userId);
+    $unreadCount = $notificationModel->countUnreadNotifications($userId);
+}
+
+?>
+
 
 <body class="bg-gray-100">
     <!-- Navbar -->
@@ -45,15 +62,59 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                     <button class="text-gray-700 focus:outline-none lg:hidden" @click="menuOpen = !menuOpen">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
-                    <div class="hidden lg:flex lg:items-center" 
-                         :class="{ 'block absolute top-16 left-0 w-full bg-white shadow-lg p-4': menuOpen, 'hidden lg:flex lg:static lg:w-auto lg:bg-transparent lg:shadow-none lg:p-0': !menuOpen }">
+                    <div class="hidden lg:flex lg:items-center"
+                        :class="{ 'block absolute top-16 left-0 w-full bg-white shadow-lg p-4': menuOpen, 'hidden lg:flex lg:static lg:w-auto lg:bg-transparent lg:shadow-none lg:p-0': !menuOpen }">
                         <div class="relative mx-0 lg:mx-4 w-full lg:w-[420px] search-input">
                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center">
                                 <i class="fas fa-search text-gray-400"></i>
                             </span>
-                            <input type="text" placeholder="Tìm kiếm khóa học, bài viết, video, ..." 
-                                   class="pl-10 pr-4 py-2 w-full rounded-full border border-gray-300 focus:outline-none focus:border-[#f05123]">
+                            <input type="text" placeholder="Tìm kiếm khóa học, bài viết, video, ..."
+                                class="pl-10 pr-4 py-2 w-full rounded-full border border-gray-300 focus:outline-none focus:border-[#f05123]">
                         </div>
+                        <!-- Notification Dropdown -->
+                        <div x-data="{ showNotify: false }" class="relative mx-0 sm:mx-4 mt-4 sm:mt-0">
+                            <button @click="showNotify = !showNotify" class="relative focus:outline-none text-gray-700">
+                                <i class="fas fa-bell text-xl"></i>
+                                <?php if (!empty($unreadCount)): ?>
+                                    <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
+                                <?php endif; ?>
+                            </button>
+
+                            <div x-show="showNotify" @click.away="showNotify = false"
+                                class="absolute right-0 mt-2 w-80 max-h-[400px] overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                                <div class="p-4 border-b font-semibold text-gray-700">Thông báo</div>
+
+                                <?php if (!empty($notifications)): ?>
+                                    <?php foreach ($notifications as $notify): ?>
+                                        <a href="/notification/read/<?= $notify['id'] ?>"
+                                            class="block px-4 py-2 text-sm border-b hover:bg-gray-50 
+                                            <?= $notify['status'] === 'unread' ? 'font-semibold text-[#f05123]' : 'text-gray-700' ?>">
+
+                                            <!-- Avatar + Tên admin -->
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <?php
+                                                $avatarPath = !empty($notify['admin_avatar'])
+                                                    ? '/uploads/' . ltrim($notify['admin_avatar'], '/')
+                                                    : '/images/default-avatar.png';
+                                                ?>
+                                                <img src="<?= htmlspecialchars($avatarPath) ?>" alt="avatar" class="w-6 h-6 rounded-full object-cover">
+                                                <span class="text-xs text-gray-500"><?= $notify['admin_name'] ?? 'Admin' ?></span>
+                                            </div>
+
+                                            <!-- Nội dung + Thời gian -->
+                                            <?= htmlspecialchars($notify['message']) ?>
+                                            <div class="text-xs text-gray-400">
+                                                <?= date("d/m/Y H:i", strtotime($notify['created_at'])) ?>
+                                            </div>
+                                        </a>
+                                    <?php endforeach; ?>
+
+                                <?php else: ?>
+                                    <div class="px-4 py-2 text-sm text-gray-500">Không có thông báo nào.</div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
                         <div class="mt-4 lg:mt-0 lg:ml-4" x-data="{ loggedIn: <?= json_encode($loggedIn) ?>, dropdownOpen: false, userName: '<?= $userName ?>' }">
                             <template x-if="!loggedIn">
                                 <div class="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4">
@@ -119,8 +180,8 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                 </div>
                 <div class="flex-shrink-0 mt-6 md:mt-0">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png"
-                         alt="ReactJS Logo"
-                         class="w-40 h-40 md:w-64 md:h-64 object-contain">
+                        alt="ReactJS Logo"
+                        class="w-40 h-40 md:w-64 md:h-64 object-contain">
                 </div>
             </div>
         </div>
@@ -254,32 +315,33 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                     let url = isFavorite ? '/favourite/remove' : '/favourite/add';
 
                     fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            course_id: courseId
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                course_id: courseId
+                            })
                         })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'added') {
-                            this.querySelector('i').classList.remove('text-gray-400');
-                            this.querySelector('i').classList.add('text-red-500');
-                            this.setAttribute('data-favorite', 'true');
-                            favList.push(courseId);
-                        } else if (data.status === 'removed') {
-                            this.querySelector('i').classList.remove('text-red-500');
-                            this.querySelector('i').classList.add('text-gray-400');
-                            this.setAttribute('data-favorite', 'false');
-                            favList = favList.filter(id => id !== courseId);
-                        }
-                        localStorage.setItem('favourites', JSON.stringify(favList));
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'added') {
+                                this.querySelector('i').classList.remove('text-gray-400');
+                                this.querySelector('i').classList.add('text-red-500');
+                                this.setAttribute('data-favorite', 'true');
+                                favList.push(courseId);
+                            } else if (data.status === 'removed') {
+                                this.querySelector('i').classList.remove('text-red-500');
+                                this.querySelector('i').classList.add('text-gray-400');
+                                this.setAttribute('data-favorite', 'false');
+                                favList = favList.filter(id => id !== courseId);
+                            }
+                            localStorage.setItem('favourites', JSON.stringify(favList));
+                        });
                 });
             });
         });
     </script>
 </body>
+
 </html>
