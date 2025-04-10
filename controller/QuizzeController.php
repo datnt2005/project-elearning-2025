@@ -20,7 +20,11 @@ class AdminQuizzeController {
     
     public function index() {
         $quizzes = $this->quizModel->getAllQuizzes();
-        renderViewAdmin("view/admin/quizzes/index.php", compact('quizzes'), "quizzes List");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/quizzes/index.php", compact('quizzes'), "Danh sách bài giải");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/quizzes/index.php", compact('quizzes'), "Danh sách bài giải");
+        }
     }
 
 
@@ -85,18 +89,32 @@ class AdminQuizzeController {
             if (empty($errors)) {
                 if ($this->quizModel->addQuiz($section_id, $title, $description, $course_id)) {
                     $_SESSION['success_message'] = "Thêm bài giải thành công";
-                    header("Location: /admin/quizzes");
+                    // Chuyển hướng về trang danh sách quiz
+                    if ($_SESSION['user']['role'] === 'admin') {
+                        header("Location: /admin/quizzes");
+                    } else if ($_SESSION['user']['role'] === 'instructor') {
+                        header("Location: /instructor/quizzes");
+                    }
                     exit();
                 } else {
                     $_SESSION['error_message'] = "Thêm không thành công";
-                    header("Location: /admin/quizzes");
+                    // Chuyển hướng về trang danh sách quiz
+                    if ($_SESSION['user']['role'] === 'admin') {
+                        header("Location: /admin/quizzes");
+                    } else if ($_SESSION['user']['role'] === 'instructor') {
+                            header("Location: /instructor/quizzes");
+                    }
                     exit();
                 }
             }
         }
     
         // Truyền dữ liệu xuống view
-        renderViewAdmin("view/admin/quizzes/create.php", compact('courses', 'sectionsByCourse', 'course_id', 'section_id', 'title', 'description', 'errors'), "Thêm bài giải");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/quizzes/create.php", compact('courses', 'sectionsByCourse', 'course_id', 'section_id', 'title', 'description', 'errors'), "Thêm bài giải");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/quizzes/create.php", compact('courses', 'sectionsByCourse', 'course_id', 'section_id', 'title', 'description', 'errors'), "Thêm bài giải");
+        }
 
     }
     
@@ -107,7 +125,22 @@ class AdminQuizzeController {
         $message = "";
         $this->quizModel->delete($id);
         $_SESSION['success_message'] = "Xóa bài Tâp thành công";
-        header("Location: /admin/quizzes");
+        // Chuyển hướng về trang danh sách quiz
+        if ($_SESSION['user']['role'] === 'admin') {
+            // Chuyển hướng về trang danh sách quiz
+            if ($_SESSION['user']['role'] === 'admin') {
+                header("Location: /admin/quizzes");
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/quizzes");
+            }
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            // Chuyển hướng về trang danh sách quiz
+            if ($_SESSION['user']['role'] === 'admin') {
+                header("Location: /admin/quizzes");
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/quizzes");
+            }
+        }
         exit();
     }
    
@@ -118,7 +151,24 @@ class AdminQuizzeController {
         $quiz = $this->quizModel->getQuizById($id);
         if (!$quiz) {
             $_SESSION['error_message'] = "Bài kiểm tra không tồn tại";
-            header("Location: /admin/quizzes");
+            // Chuyển hướng về trang danh sách quiz
+            if ($_SESSION['user']['role'] === 'admin') {
+              // Chuyển hướng về trang danh sách quiz
+                if ($_SESSION['user']['role'] === 'admin') {
+                    header("Location: /admin/quizzes");
+                } else if ($_SESSION['user']['role'] === 'instructor') {
+                    header("Location: /instructor/quizzes");
+                }
+               
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                // Chuyển hướng về trang danh sách quiz
+                if ($_SESSION['user']['role'] === 'admin') {
+                    header("Location: /admin/quizzes");
+                } else if ($_SESSION['user']['role'] === 'instructor') {
+                        header("Location: /instructor/quizzes");
+                }
+          
+            }
             exit();
         }
       
@@ -175,15 +225,36 @@ class AdminQuizzeController {
                     $success ? "Cập nhật bài kiểm tra thành công" : "Cập nhật bài kiểm tra thất bại";
     
                 // Chuyển hướng về trang danh sách quiz
-                header("Location: /admin/quizzes");
+                if ($_SESSION['user']['role'] === 'admin') {
+                    // Chuyển hướng về trang danh sách quiz
+                    if ($_SESSION['user']['role'] === 'admin') {
+                        header("Location: /admin/quizzes");
+                    } else if ($_SESSION['user']['role'] === 'instructor') {
+                        header("Location: /instructor/quizzes");
+                    }
+                } else if ($_SESSION['user']['role'] === 'instructor') {
+                    // Chuyển hướng về trang danh sách quiz
+                    if ($_SESSION['user']['role'] === 'admin') {
+                        header("Location: /admin/quizzes");
+                    } else if ($_SESSION['user']['role'] === 'instructor') {
+                        header("Location: /instructor/quizzes");
+                    }
+                }
                 exit();
             }
         }
     
         // Truyền dữ liệu xuống view
-        renderViewAdmin("view/admin/quizzes/edit.php", compact(
-            'courses', 'sectionsByCourse', 'section_id', 'title', 'description', 'course_id', 'errors'
-        ), "Sửa bài kiểm tra");
+    
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/quizzes/edit.php", compact(
+                'courses', 'sectionsByCourse', 'section_id', 'title', 'description', 'course_id', 'errors'
+            ), "Sửa bài kiểm tra");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/quizzes/edit.php", compact(
+                'courses', 'sectionsByCourse', 'section_id', 'title', 'description', 'course_id', 'errors'
+            ), "Sửa bài kiểm tra");
+        }
     }
     
     

@@ -169,7 +169,11 @@ class CourseController
     {
         $courses = $this->courseModel->getAllCourses();
         // Hiển thị danh sách ở view/admin/courses/list.php
-        renderViewAdmin("view/admin/courses/list.php", ["courses" => $courses], "Course List");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/courses/list.php", ["courses" => $courses], "Course List");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/courses/list.php", ["courses" => $courses], "Course List");
+        } 
     }
 
     // GET: /admin/courses/create -> Form tạo course
@@ -177,8 +181,14 @@ class CourseController
     {
         $categories = $this->categoryModel->getAllCategory();
         $subcategories = $this->subcategoryModel->getAllSubcategory();
-        renderViewAdmin("view/admin/courses/create.php", ["categories" => $categories, "subcategories" => $subcategories], "Create Course");
+    
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/courses/create.php", ["categories" => $categories, "subcategories" => $subcategories], "Create Course");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/courses/create.php", ["categories" => $categories, "subcategories" => $subcategories], "Create Course");
+        }
     }
+    
 
     // POST: /admin/courses/store -> Xử lý lưu course
     public function store()
@@ -244,8 +254,22 @@ class CourseController
         $categories = $this->categoryModel->getAllCategory();
         $subcategories = $this->subcategoryModel->getAllSubcategory();
         $course = $this->courseModel->getCourseById($id);
-        renderViewAdmin("view/admin/courses/edit.php", ["course" => $course, "categories" => $categories, "subcategories" => $subcategories],  "Edit Course");
+    
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/courses/edit.php", [
+                "course" => $course,
+                "categories" => $categories,
+                "subcategories" => $subcategories
+            ], "Edit Course");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/courses/edit.php", [
+                "course" => $course,
+                "categories" => $categories,
+                "subcategories" => $subcategories
+            ], "Edit Course");
+        }
     }
+    
 
     // POST: /admin/courses/update/{id} -> Xử lý update
     public function update($id)
@@ -309,9 +333,16 @@ class CourseController
     public function destroy($id)
     {
         $this->courseModel->delete($id);
-        header("Location: /admin/courses");
+    
+        if ($_SESSION['user']['role'] === 'admin') {
+            header("Location: /admin/courses");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            header("Location: /instructor/courses");
+        }
+    
         exit;
     }
+    
 
     public function updateProgress()
     {
