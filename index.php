@@ -40,6 +40,7 @@ require_once "controller/CommentPostController.php";
 require_once "controller/NotesController.php";
 require_once "controller/UploadQuizzByFileController.php";
 require_once "controller/AiController.php";
+require_once "Controller/NotificationController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -68,12 +69,13 @@ $commentPostController = new CommentPostController();
 $notesController = new NotesController();
 $uploadQuizzByFileController = new UploadQuizzByFileController;
 $aiController = new AiController();
+$notificationController = new NotificationController();
 
 
 // $router->addMiddleware('logRequest');
 
-// $router->addRoute("/", [$courseController, 'home']);
-
+$router->addRoute("/", [$courseController, 'home']);
+$router->addRoute("/notification/read/{id}", [$notificationController, 'read']);
 //auth
 $router->addRoute("/login", [$authController, "login"]);
 
@@ -242,6 +244,18 @@ $router->addRoute("/courses/review/like", [$reviewController, "toggleLikeReview"
 
 
 $router->addRoute("/courses/review/reply", [$reviewController, "replyReview"], ['isAdmin']);
+
+
+
+//Notification
+$router->addRoute("/admin/notifications", [$notificationController, "index"], ['isAdmin']);
+$router->addRoute("/admin/notifications/create", [$notificationController, "create"], ['isAdmin']);
+$router->addRoute("/admin/notifications/store", [$notificationController, "store"], ['isAdmin']);
+$router->addRoute("/admin/notifications/edit/{id}", [$notificationController, "edit"], ['isAdmin']);
+$router->addRoute("/admin/notifications/update/{id}", [$notificationController, "update"], ['isAdmin']);
+$router->addRoute("/admin/notifications/delete/{id}", [$notificationController, "delete"], ['isAdmin']);
+$router->addRoute("/admin/notifications/send-selected", [$notificationController, "sendSelected"], ['isAdmin']);
+$router->addRoute("/admin/notifications/delete-selected", [$notificationController, "deleteSelected"], ['isAdmin']);
 
 
 
