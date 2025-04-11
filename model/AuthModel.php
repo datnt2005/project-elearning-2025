@@ -28,24 +28,25 @@ class AuthModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function createUser($name, $email, $password, $image, $role, $status = "active")
+    public function createUser($name, $email, $password, $phone, $image, $role, $status = "active")
     {
-        $query = "INSERT INTO users (name, email, password, image, role, status) VALUES (:name, :email, :password, :image, :role, :status)";
+        $query = "INSERT INTO users (name, email, password, phone, image, role, status) VALUES (:name, :email, :password, :phone, :image, :role, :status)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':phone', $phone);
         $stmt->bindParam(':image', $image);
         $stmt->bindParam(':role', $role);
         $stmt->bindParam(':status', $status);
         return $stmt->execute();
     }
 
-    public function editUser($id, $name, $email, $image, $role, $status)
+    public function editUser($id, $name, $email, $phone, $image, $role, $status)
     {
-        $query = "UPDATE users SET name = ?, email = ?, image = ?, role = ?, status = ?, updated_at = NOW() WHERE id = ?";
+        $query = "UPDATE users SET name = ?, email = ?, phone = ?, image = ?, role = ?, status = ?, updated_at = NOW() WHERE id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->execute([$name, $email, $image, $role, $status, $id]);
+        $stmt->execute([$name, $email, $phone, $image, $role, $status, $id]);
         return $stmt->rowCount();
     }
 

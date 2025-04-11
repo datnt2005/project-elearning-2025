@@ -28,6 +28,10 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="phone" class="form-label">Số điện thoại</label>
+                    <input type="text" class="form-control" id="phone" name="phone">
+                </div>
+                <div class="mb-3">
                     <label for="password" class="form-label">Mật khẩu</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
@@ -55,7 +59,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-success">Thêm người dùng</button>
-                <a href="/user" class="btn btn-secondary">Quay lại</a>
+                <a href="/admin/users" class="btn btn-secondary">Quay lại</a>
             </form>
         </div>
     </div>

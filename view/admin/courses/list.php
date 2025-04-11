@@ -155,6 +155,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Thông tin khóa học</th>
+                            <th>Khóa học</th>
                             <th>Giá</th>
                             <th>Danh mục</th>
                             <th>Trạng thái</th>
@@ -179,6 +180,13 @@
                                                 </small>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <?php if($course['course_type'] == 'paid'): ?>
+                                            <span>Trả phí</span>
+                                        <?php else: ?>
+                                            <span>Miễn phí</span>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <div><?= number_format($course['price']) ?> đ</div>

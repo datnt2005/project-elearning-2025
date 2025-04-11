@@ -1,55 +1,38 @@
 <?php
-
-// Dùng đường dẫn tuyệt đối (__DIR__) để tránh lỗi
-
 use Google\Service\Adsense\Header;
 
-require_once __DIR__ . "/../model/UserModel.php";
 require_once __DIR__ . "/../model/CourseModel.php";
 require_once __DIR__ . "/../model/CategoryModel.php";
 require_once __DIR__ . "/../model/SubcategoryModel.php";
 require_once __DIR__ . "/../model/SectionModel.php";
 require_once __DIR__ . "/../model/LessonModel.php";
 require_once __DIR__ . "/../model/LessonProgressModel.php";
-require_once __DIR__ . "/../model/NotificationModel.php";
 
 require_once __DIR__ . "/../view/helpers.php";
 
 class CourseController
 {
-    private $userModel;
     private $courseModel;
     private $categoryModel;
     private $subcategoryModel;
     private $sectionModel;
     private $lessonModel;
     private $LessonProgressModel;
-    private $notificationModel;
 
     public function __construct()
-    {   
-        $this->userModel = new UserModel();
+    {
         $this->courseModel = new Course();
         $this->categoryModel = new categoryModel();
         $this->subcategoryModel = new Subcategory();
         $this->sectionModel = new Section();
         $this->lessonModel = new Lesson();
         $this->LessonProgressModel = new LessonProgressModel();
-        $this->notificationModel = new NotificationModel();
     }
 
     public function home()
     {
-        $userId = $_SESSION['user']['id'] ?? null;
-        $notifications = [];
-        $unreadCount = 0;
-
-        if ($userId) {
-            $notifications = $this->notificationModel->getUserNotifications($userId);
-            $unreadCount = $this->notificationModel->countUnreadNotifications($userId);
-        }
         $courses = $this->courseModel->getAllCourses();
-        renderViewUser("view/users/home.php", compact('notifications', 'unreadCount', 'courses'), "Course List");
+        renderViewUser("view/users/home.php", ["courses" => $courses], "Course List");
     }
 
     //show user
@@ -70,101 +53,101 @@ class CourseController
         ], "Course Detail");
     }
 
-    public function showCertificate()
-    {
+    public function showCertificate(){
         if (!isset($_GET['certificate_url'])) {
             Header("Location: /404");
         }
-
+    
         $certificate_url = $_GET['certificate_url'];
         $certificate = $this->LessonProgressModel->getCertificateByCode($certificate_url);
-        if (!$certificate) {
+        if(!$certificate){
             Header("Location: /404");
+
         }
         // var_dump($certificate);
         renderViewUser("view/users/certificate.php", ["certificate" => $certificate], "Certificate");
     }
     public function detailCourse($id, $idLesson = null)
-    {
-        $userId = $_SESSION['user']['id'] ?? null;
+{
+    $userId = $_SESSION['user']['id'] ?? null;
 
-        if (!$userId) {
-            header("Location: /login?error=Vui lòng đăng nhập để học khóa học!");
-            exit;
-        }
-
-        $course = $this->courseModel->getCourseById($id);
-        if (!$course) {
-            header("Location: /404");
-            exit;
-        }
-
-        $sections = $this->sectionModel->getSectionsByCourseId($id);
-        $lessonsBySection = [];
-        $lessonProgressById = [];
-        foreach ($sections as $section) {
-            $lessons = $this->lessonModel->getLessonsBySectionId($section['id']);
-            $lessonsBySection[$section['id']] = $lessons;
-            foreach ($lessons as $lesson) {
-                $lessonProgressById[$lesson['id']] = $this->LessonProgressModel->getProgress($userId, $lesson['id']);
-            }
-        }
-
-        if (!$idLesson) {
-            foreach ($lessonsBySection as $lessons) {
-                if (!empty($lessons)) {
-                    $idLesson = $lessons[0]['id'];
-                    break;
-                }
-            }
-        }
-
-        if (!$idLesson) {
-            header("Location: /courses/learning/$id?error=Khóa học này chưa có bài học nào!");
-            exit;
-        }
-
-        $lesson = $this->lessonModel->getLessonById($idLesson);
-        if (!$lesson) {
-            header("Location: /courses/learning/$id?error=Bài học không tồn tại!");
-            exit;
-        }
-
-        // Lấy hoặc tạo enrollment (chỉ tạo nếu chưa tồn tại)
-        $enrollment = $this->LessonProgressModel->getEnrollment($userId, $id);
-        if (!$enrollment) {
-            $initialProgress = $this->LessonProgressModel->calculateCourseProgress($userId, $id);
-            $this->LessonProgressModel->updateEnrollment($userId, $id, date('Y-m-d H:i:s'), 'enrolled', $initialProgress);
-            $enrollment = ['progress' => $initialProgress, 'status' => 'enrolled'];
-        }
-
-        // Kiểm tra khóa/mở bài học
-        $lessons = $this->courseModel->getLessons($id);
-        $prevLessonId = $this->getPreviousLessonId($lessons, $idLesson);
-        $error = null;
-        if ($prevLessonId) {
-            $prevProgress = $this->LessonProgressModel->getProgress($userId, $prevLessonId);
-            if (!$prevProgress['completed']) {
-                $error = "Bạn cần hoàn thành bài học trước đó để tiếp tục!";
-            }
-        }
-
-        // Kiểm tra chứng chỉ
-        $certificate = $this->LessonProgressModel->checkCertificateCourse($userId, $id);
-
-        renderViewUser("view/users/detailCourse.php", [
-            "course" => $course,
-            "sections" => $sections,
-            "lessonsBySection" => $lessonsBySection,
-            "currentLesson" => $lesson,
-            "progress" => $enrollment,
-            "lessonProgressById" => $lessonProgressById,
-            "error" => $error,
-            "lesson" => $lesson,
-            "enrollment" => $enrollment,
-            "certificate" => $certificate // Truyền thông tin chứng chỉ vào view
-        ]);
+    if (!$userId) {
+        header("Location: /login?error=Vui lòng đăng nhập để học khóa học!");
+        exit;
     }
+
+    $course = $this->courseModel->getCourseById($id);
+    if (!$course) {
+        header("Location: /404");
+        exit;
+    }
+
+    $sections = $this->sectionModel->getSectionsByCourseId($id);
+    $lessonsBySection = [];
+    $lessonProgressById = [];
+    foreach ($sections as $section) {
+        $lessons = $this->lessonModel->getLessonsBySectionId($section['id']);
+        $lessonsBySection[$section['id']] = $lessons;
+        foreach ($lessons as $lesson) {
+            $lessonProgressById[$lesson['id']] = $this->LessonProgressModel->getProgress($userId, $lesson['id']);
+        }
+    }
+
+    if (!$idLesson) {
+        foreach ($lessonsBySection as $lessons) {
+            if (!empty($lessons)) {
+                $idLesson = $lessons[0]['id'];
+                break;
+            }
+        }
+    }
+
+    if (!$idLesson) {
+        header("Location: /courses/learning/$id?error=Khóa học này chưa có bài học nào!");
+        exit;
+    }
+
+    $lesson = $this->lessonModel->getLessonById($idLesson);
+    if (!$lesson) {
+        header("Location: /courses/learning/$id?error=Bài học không tồn tại!");
+        exit;
+    }
+
+    // Lấy hoặc tạo enrollment (chỉ tạo nếu chưa tồn tại)
+    $enrollment = $this->LessonProgressModel->getEnrollment($userId, $id);
+    if (!$enrollment) {
+        $initialProgress = $this->LessonProgressModel->calculateCourseProgress($userId, $id);
+        $this->LessonProgressModel->updateEnrollment($userId, $id, date('Y-m-d H:i:s'), 'enrolled', $initialProgress);
+        $enrollment = ['progress' => $initialProgress, 'status' => 'enrolled'];
+    }
+
+    // Kiểm tra khóa/mở bài học
+    $lessons = $this->courseModel->getLessons($id);
+    $prevLessonId = $this->getPreviousLessonId($lessons, $idLesson);
+    $error = null;
+    if ($prevLessonId) {
+        $prevProgress = $this->LessonProgressModel->getProgress($userId, $prevLessonId);
+        if (!$prevProgress['completed']) {
+            $error = "Bạn cần hoàn thành bài học trước đó để tiếp tục!";
+        }
+    }
+
+    // Kiểm tra chứng chỉ
+    $certificate = $this->LessonProgressModel->checkCertificateCourse($userId, $id);
+
+    renderViewUser("view/users/detailCourse.php", [
+        "course" => $course,
+        "sections" => $sections,
+        "lessonsBySection" => $lessonsBySection,
+        "currentLesson" => $lesson,
+        "progress" => $enrollment,
+        "lessonProgressById" => $lessonProgressById,
+        "error" => $error,
+        "lesson" => $lesson,
+        "enrollment" => $enrollment,
+        "certificate" => $certificate // Truyền thông tin chứng chỉ vào view
+    ]);
+}
 
     private function getPreviousLessonId($lessons, $currentLessonId)
     {
@@ -201,6 +184,7 @@ class CourseController
             // Lấy dữ liệu text
             $title          = $_POST['title'];
             $description    = $_POST['description'];
+            $course_type    = $_POST['course_type'] ?? 'paid';
             $instructor_id  = $_SESSION['user']['id'];
             $price          = $_POST['price']          ?? 0;
             $discount_price = $_POST['discount_price'] ?? 0;
@@ -208,8 +192,8 @@ class CourseController
             $status         = $_POST['status'];
             $category_id    = $_POST['category_id'];
             $subcategory_id = $_POST['subcategory_id'];
-
-            // Upload ảnh
+            var_dump($instructor_id);
+            // Upload file image (nếu user chọn)
             $imagePath = '';
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
                 $targetDir  = "uploads/";
@@ -219,19 +203,21 @@ class CourseController
                 $imagePath  = $targetFile;
             }
 
-            // Upload video hoặc nhận link
+            // Upload/hoặc nhận URL video intro
             $videoPath = '';
             if (isset($_FILES['video_intro']) && $_FILES['video_intro']['error'] === 0) {
+                // Admin upload file video
                 $targetDir  = "uploads/";
                 $fileName   = time() . "_" . basename($_FILES['video_intro']['name']);
                 $targetFile = $targetDir . $fileName;
                 move_uploaded_file($_FILES['video_intro']['tmp_name'], $targetFile);
                 $videoPath  = $targetFile;
             } else {
+                // Admin nhập URL thay vì upload
                 $videoPath = $_POST['video_intro'] ?? '';
             }
 
-            // Tạo khóa học
+            // Gọi model -> create
             $this->courseModel->create(
                 $title,
                 $description,
@@ -241,26 +227,15 @@ class CourseController
                 $duration,
                 $imagePath,
                 $videoPath,
+                $course_type,
                 $status,
                 $category_id,
                 $subcategory_id
             );
-
-            // Gửi thông báo đến học viên
-            $message  = "🎓 Khóa học mới: <strong>$title</strong> đã được thêm! Hãy khám phá ngay!";
-            $link     = "/courses"; // hoặc tạo link chi tiết nếu có ID khóa học
-            $adminId  = $_SESSION['user']['id'] ?? null;
-            $students = $this->userModel->getAllUserRole(); // lấy user có role = student
-            foreach ($students as $student) {
-                $userId = $student['id'];
-                $this->notificationModel->createAutoNotification($userId, $message, $link, $adminId);
-            }
-
             header("Location: /admin/courses");
             exit;
         }
     }
-
 
     // GET: /admin/courses/edit/{id} -> Form edit
     public function editForm($id)
@@ -277,6 +252,7 @@ class CourseController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title          = $_POST['title'];
             $description    = $_POST['description'];
+            $course_type    = $_POST['course_type'] ?? 'paid';
             $instructor_id  = $_SESSION['user']['id'];
             $price          = $_POST['price'] ?? 0;
             $discount_price = $_POST['discount_price'] ?? 0;
@@ -321,6 +297,7 @@ class CourseController
                 $duration,
                 $imagePath,
                 $videoPath,
+                $course_type,
                 $status,
                 $category_id,
                 $subcategory_id
@@ -400,10 +377,12 @@ class CourseController
 
     // get course
 
-    public function getCourses()
-    {
+    public function getCourses() {
         header('Content-Type: application/json');
         $courses = $this->courseModel->getAllCourses();
         echo json_encode($courses);
+        
     }
+
 }
+

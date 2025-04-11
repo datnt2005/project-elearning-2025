@@ -57,6 +57,13 @@
           <label for="description" class="form-label">Mô tả</label>
           <textarea id="description" name="description" class="form-control" placeholder="Nhập mô tả"><?= isset($old_data['description']) ? htmlspecialchars($old_data['description']) : htmlspecialchars($course['description']) ?></textarea>
         </div>
+        <div class="mb-3">
+          <label for="type" class="form-label">Loại khóa học</label>
+          <select id="course_type" name="course_type" class="form-control" required>
+            <option value="paid" <?= ($course['course_type'] == 'paid') ? 'selected' : '' ?>>Trả phí</option>
+            <option value="free" <?= ($course['course_type'] == 'free') ? 'selected' : '' ?>>Miễn phí</option>
+          </select>
+        </div>
         <div class="row">
           <div class="col-md-4 mb-3">
             <label for="price" class="form-label">Giá</label>

@@ -25,7 +25,11 @@ class PostController
             $posts = [];
         }
 
-        renderViewAdmin("view/admin/post/index.php", compact('posts'), "Danh sách bài viết");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/post/index.php", compact('posts'), "Danh sách bài viết");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/post/index.php", compact('posts'), "Danh sách bài viết");
+        }
     }
 
     public function show()
@@ -55,6 +59,7 @@ class PostController
 
     // Truyền cả bài viết chính và bài viết liên quan vào view
     renderViewUser("view/users/post/detail.php", compact('post', 'relatedPosts'), $post['title']);
+    
 }
 
     // Tạo bài viết mới
@@ -80,7 +85,6 @@ class PostController
             $uploadDir = "uploads/";
             $fileName = time() . "_" . basename($_FILES["thumbnail"]["name"]);
             $targetFile = $uploadDir . $fileName;
-
             if (move_uploaded_file($_FILES["thumbnail"]["tmp_name"], $targetFile)) {
                 $thumbnail = $fileName;
             } else {
@@ -147,7 +151,14 @@ class PostController
                 $result = $this->post->updatePost($id, $title, $category, $content, $thumbnail);
                 if ($result) {
                     $_SESSION["success"] = "Bài viết đã được cập nhật.";
-                    header("Location: /admin/post");
+                    // Chuyển hướng về danh sách bài viết
+                    if ($_SESSION['user']['role'] === 'admin') {
+                        $_SESSION["success"] = "Bài viết đã được cập nhật.";
+                        header("Location: /admin/post");
+                    } else if ($_SESSION['user']['role'] === 'instructor') {
+                        $_SESSION["success"] = "Bài viết đã được cập nhật.";
+                        header("Location: /instructor/post");
+                    }
                     exit;
                 } else {
                     $errors[] = "Lỗi! Không thể cập nhật bài viết.";
@@ -155,7 +166,11 @@ class PostController
             }
         }
     
-        renderViewAdmin("view/admin/post/edit.php", compact('post', 'categories', 'errors'), "Chỉnh sửa bài viết");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/post/edit.php", compact('post', 'categories', 'errors'), "Chỉnh sửa bài viết");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/post/edit.php", compact('post', 'categories', 'errors'), "Chỉnh sửa bài viết");
+        } 
     }
     
 
@@ -166,7 +181,11 @@ class PostController
 
         if (!$post || isset($post['error'])) {
             $_SESSION["error_message"] = "Bài viết không tồn tại!";
-            header("Location: /admin/posts");
+            if ($_SESSION['user']['role'] === 'admin') {
+                header("Location: /admin/posts");
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/posts");
+            }
             exit;
         }
 
@@ -178,7 +197,13 @@ class PostController
             $_SESSION["error_message"] = "Lỗi! Không thể xóa bài viết.";
         }
 
-        header("Location: /admin/post");
+        // Chuyển hướng về danh sách bài viết
+        if ($_SESSION['user']['role'] === 'admin') {
+            header("Location: /admin/post");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            header("Location: /instructor/post");
+        }
+         // Đảm bảo không bị lỗi undefined variable
         exit;
     }
  

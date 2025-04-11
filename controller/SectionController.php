@@ -17,13 +17,23 @@ class SectionController
     public function index()
     {
         $sections = $this->sectionModel->getAllSections();
-        renderViewAdmin("view/admin/sections/list.php", ["sections" => $sections], "Section List");
+
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/sections/list.php", ["sections" => $sections], "Section List");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/sections/list.php", ["sections" => $sections], "Section List");
+        }
     }
 
     public function createForm()
     {
         $courses = $this->courseModel->getAllCourses();
-        renderViewAdmin("view/admin/sections/create.php", ["courses" => $courses], "Create Section");
+
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/sections/create.php", ["courses" => $courses], "Create Section");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/sections/create.php", ["courses" => $courses], "Create Section");
+        }
     }
 
     public function store()
@@ -35,7 +45,12 @@ class SectionController
             $order_number = $_POST['order_number'] ?? 0;
 
             $this->sectionModel->create($course_id, $title, $description, $order_number);
-            header("Location: /admin/sections");
+
+            if ($_SESSION['user']['role'] === 'admin') {
+                header("Location: /admin/sections");
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/sections");
+            }
             exit;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
@@ -46,10 +61,18 @@ class SectionController
     {
         $section = $this->sectionModel->getSectionById($id);
         $courses = $this->courseModel->getAllCourses();
-        renderViewAdmin("view/admin/sections/edit.php", [
-            "section" => $section,
-            "courses" => $courses
-        ], "Edit Section");
+
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/sections/edit.php", [
+                "section" => $section,
+                "courses" => $courses
+            ], "Edit Section");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/sections/edit.php", [
+                "section" => $section,
+                "courses" => $courses
+            ], "Edit Section");
+        }
     }
 
     public function update($id)
@@ -61,7 +84,12 @@ class SectionController
             $order_number = $_POST['order_number'] ?? 0;
 
             $this->sectionModel->update($id, $course_id, $title, $description, $order_number);
-            header("Location: /admin/sections");
+
+            if ($_SESSION['user']['role'] === 'admin') {
+                header("Location: /admin/sections");
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/sections");
+            }
             exit;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
@@ -71,7 +99,12 @@ class SectionController
     public function destroy($id)
     {
         $this->sectionModel->delete($id);
-        header("Location: /admin/sections");
+
+        if ($_SESSION['user']['role'] === 'admin') {
+            header("Location: /admin/sections");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            header("Location: /instructor/sections");
+        }
         exit;
     }
 }
