@@ -74,4 +74,12 @@ class SectionController
         header("Location: /admin/sections");
         exit;
     }
+
+    public function getSections() {
+        header('Content-Type: application/json');
+        $courses = $this->sectionModel->getAllSections();
+        echo json_encode($courses);
+        exit;
+        
+    }
 }

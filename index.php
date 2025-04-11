@@ -288,5 +288,14 @@ switch ($request) {
     default:
         break;
 }
+
+switch ($request) {
+    case '/api/sections':
+        $controller = new sectionController();
+        $controller->getsections();
+        exit;
+    default:
+        break;
+}
 $router->dispatch();
 ?>

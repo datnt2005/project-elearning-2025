@@ -1430,3 +1430,55 @@ Updating enrollment: Array
 )
 
 Enrollment updated successfully for user_id: 7, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 1
+Calculated course progress for user 7, course 5: 6.6666666666667%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-08 04:50:25
+    [status] => in-progress
+    [progress] => 7
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 1
+Calculated course progress for user 7, course 5: 6.6666666666667%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-08 04:50:25
+    [status] => in-progress
+    [progress] => 7
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 1
+Calculated course progress for user 7, course 5: 6.6666666666667%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-08 05:01:52
+    [status] => in-progress
+    [progress] => 7
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
+Total lessons for course 5: 15
+Completed lessons for user 7, course 5: 1
+Calculated course progress for user 7, course 5: 6.6666666666667%
+Updating enrollment: Array
+(
+    [user_id] => 7
+    [course_id] => 5
+    [enrollment_date] => 2025-04-08 05:01:52
+    [status] => in-progress
+    [progress] => 7
+)
+
+Enrollment updated successfully for user_id: 7, course_id: 5
