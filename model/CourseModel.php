@@ -24,7 +24,9 @@ class Course
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+
+   
+}
 
     // Lấy 1 khoá học theo ID
     public function getCourseById($id)
@@ -43,20 +45,17 @@ class Course
     
     // Tạo mới 1 khoá học
     // Các cột theo DB: title, description, instructor_id, price, discount_price, duration, image, video_intro, status, category_id, subcategory_id
-    public function create($title, $description, $instructor_id, $price, $discount_price, $duration, $image, $video_intro, $status, $category_id, $subcategory_id)
+    public function create($title, $description, $instructor_id,  $price, $discount_price, $duration, $image, $video_intro, $course_type, $status, $category_id, $subcategory_id)
     {
         // Validate cơ bản (VD: title không được rỗng, price >= 0, v.v.)
         if (empty($title)) {
             throw new Exception("Title is required.");
         }
-        if ($price < 0) {
-            throw new Exception("Price must be >= 0.");
-        }
 
         $query = "INSERT INTO courses 
-            (title, description, instructor_id, price, discount_price, duration, image, video_intro, status, category_id, subcategory_id) 
+            (title, description, instructor_id, price, discount_price, duration, image, video_intro, course_type, status, category_id, subcategory_id) 
             VALUES 
-            (:title, :description, :instructor_id, :price, :discount_price, :duration, :image, :video_intro, :status, :category_id, :subcategory_id)";
+            (:title, :description, :instructor_id, :price, :discount_price, :duration, :image, :video_intro, :course_type, :status, :category_id, :subcategory_id)";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':title', $title);
@@ -67,6 +66,7 @@ class Course
         $stmt->bindParam(':duration', $duration, PDO::PARAM_INT);
         $stmt->bindParam(':image', $image);
         $stmt->bindParam(':video_intro', $video_intro);
+        $stmt->bindParam(':course_type', $course_type);
         $stmt->bindParam(':status', $status);
         $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
         $stmt->bindParam(':subcategory_id', $subcategory_id, PDO::PARAM_INT);
@@ -75,7 +75,7 @@ class Course
     }
 
     // Update khoá học
-    public function update($id, $title, $description, $instructor_id, $price, $discount_price, $duration, $image, $video_intro, $status, $category_id, $subcategory_id)
+    public function update($id, $title, $description, $instructor_id, $price, $discount_price, $duration, $image, $video_intro,$course_type, $status, $category_id, $subcategory_id)
     {
         if (empty($title)) {
             throw new Exception("Title is required.");
@@ -93,6 +93,7 @@ class Course
             duration = :duration,
             image = :image,
             video_intro = :video_intro,
+            course_type = :course_type,
             status = :status,
             category_id = :category_id,
             subcategory_id = :subcategory_id
@@ -107,6 +108,7 @@ class Course
         $stmt->bindParam(':duration', $duration, PDO::PARAM_INT);
         $stmt->bindParam(':image', $image);
         $stmt->bindParam(':video_intro', $video_intro);
+        $stmt->bindParam(':course_type', $course_type);
         $stmt->bindParam(':status', $status);
         $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
         $stmt->bindParam(':subcategory_id', $subcategory_id, PDO::PARAM_INT);
@@ -140,4 +142,5 @@ class Course
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 }

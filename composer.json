@@ -14,6 +14,7 @@
     "require": {
         "phpoffice/phpspreadsheet": "1.23",
         "vlucas/phpdotenv": "^5.6",
-        "google/apiclient": "2.15"
+        "google/apiclient": "2.15",
+        "phpmailer/phpmailer": "^6.9"
     }
 }

@@ -1,6 +1,10 @@
 <?php
 session_start();
 require_once __DIR__ . '/vendor/autoload.php';
+require_once "Database.php";
+$database = new Database();
+
+$conn = $database->getConnection();
 
 use Dotenv\Dotenv;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -68,7 +72,7 @@ $aiController = new AiController();
 
 // $router->addMiddleware('logRequest');
 
-$router->addRoute("/", [$courseController, 'home']);
+// $router->addRoute("/", [$courseController, 'home']);
 
 //auth
 $router->addRoute("/login", [$authController, "login"]);
@@ -89,6 +93,10 @@ $router->addRoute("/admin/uploadQuizzByFile/delete/{id}", [$uploadQuizzByFileCon
 
 //users
 $router->addRoute("/users", [$userController, "index"]);
+$router->addRoute("/admin/users", [$authController, "show"], ['isAdmin']);
+$router->addRoute("/admin/user/create", [$authController, "user_create"], ['isAdmin']);
+$router->addRoute("/admin/user/edit/{id}", [$authController, "user_edit"], ['isAdmin']);
+$router->addRoute("/admin/user/delete/{id}", [$authController, "user_delete"], ['isAdmin']);
 
 $router->addRoute("/users/create", [$userController, "create"], ['isUser']);
 $router->addRoute("/about", [$userController, "show"], ['isUser']);
@@ -146,7 +154,7 @@ $router->addRoute("/instructor/courses/delete/{id}", [$courseController, "destro
 // Favourite Courses
 $router->addRoute("/favourite/add", [$favouriteController, "addFavourite"], ['isUser']);
 $router->addRoute("/favourite/remove", [$favouriteController, "removeFavourite"], ['isUser']);
-$router->addRoute("/", [$favouriteController, "index"], ['isUser']);
+$router->addRoute("/", [$favouriteController, "index"]);
 
 
 //Order List
@@ -362,6 +370,17 @@ $router->addRoute("/thank-you", function() {
 
 });
 
-
+$request = $_SERVER['REQUEST_URI'];
+$method = $_SERVER['REQUEST_METHOD'];
+ 
+ 
+switch ($request) {
+    case '/api/courses':
+        $controller = new CourseController();
+        $controller->getCourses();
+        exit;
+    default:
+        break;
+}
 $router->dispatch();
 ?>

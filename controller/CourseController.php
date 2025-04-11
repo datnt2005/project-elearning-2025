@@ -1,7 +1,4 @@
 <?php
-
-// Dùng đường dẫn tuyệt đối (__DIR__) để tránh lỗi
-
 use Google\Service\Adsense\Header;
 
 require_once __DIR__ . "/../model/CourseModel.php";
@@ -169,11 +166,7 @@ class CourseController
     {
         $courses = $this->courseModel->getAllCourses();
         // Hiển thị danh sách ở view/admin/courses/list.php
-        if ($_SESSION['user']['role'] === 'admin') {
-            renderViewAdmin("view/admin/courses/list.php", ["courses" => $courses], "Course List");
-        } else if ($_SESSION['user']['role'] === 'instructor') {
-            renderViewInstructor("view/instructor/courses/list.php", ["courses" => $courses], "Course List");
-        } 
+        renderViewAdmin("view/admin/courses/list.php", ["courses" => $courses], "Course List");
     }
 
     // GET: /admin/courses/create -> Form tạo course
@@ -181,14 +174,8 @@ class CourseController
     {
         $categories = $this->categoryModel->getAllCategory();
         $subcategories = $this->subcategoryModel->getAllSubcategory();
-    
-        if ($_SESSION['user']['role'] === 'admin') {
-            renderViewAdmin("view/admin/courses/create.php", ["categories" => $categories, "subcategories" => $subcategories], "Create Course");
-        } else if ($_SESSION['user']['role'] === 'instructor') {
-            renderViewInstructor("view/instructor/courses/create.php", ["categories" => $categories, "subcategories" => $subcategories], "Create Course");
-        }
+        renderViewAdmin("view/admin/courses/create.php", ["categories" => $categories, "subcategories" => $subcategories], "Create Course");
     }
-    
 
     // POST: /admin/courses/store -> Xử lý lưu course
     public function store()
@@ -197,6 +184,7 @@ class CourseController
             // Lấy dữ liệu text
             $title          = $_POST['title'];
             $description    = $_POST['description'];
+            $course_type    = $_POST['course_type'] ?? 'paid';
             $instructor_id  = $_SESSION['user']['id'];
             $price          = $_POST['price']          ?? 0;
             $discount_price = $_POST['discount_price'] ?? 0;
@@ -204,7 +192,7 @@ class CourseController
             $status         = $_POST['status'];
             $category_id    = $_POST['category_id'];
             $subcategory_id = $_POST['subcategory_id'];
-
+            var_dump($instructor_id);
             // Upload file image (nếu user chọn)
             $imagePath = '';
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
@@ -239,6 +227,7 @@ class CourseController
                 $duration,
                 $imagePath,
                 $videoPath,
+                $course_type,
                 $status,
                 $category_id,
                 $subcategory_id
@@ -254,22 +243,8 @@ class CourseController
         $categories = $this->categoryModel->getAllCategory();
         $subcategories = $this->subcategoryModel->getAllSubcategory();
         $course = $this->courseModel->getCourseById($id);
-    
-        if ($_SESSION['user']['role'] === 'admin') {
-            renderViewAdmin("view/admin/courses/edit.php", [
-                "course" => $course,
-                "categories" => $categories,
-                "subcategories" => $subcategories
-            ], "Edit Course");
-        } else if ($_SESSION['user']['role'] === 'instructor') {
-            renderViewInstructor("view/instructor/courses/edit.php", [
-                "course" => $course,
-                "categories" => $categories,
-                "subcategories" => $subcategories
-            ], "Edit Course");
-        }
+        renderViewAdmin("view/admin/courses/edit.php", ["course" => $course, "categories" => $categories, "subcategories" => $subcategories],  "Edit Course");
     }
-    
 
     // POST: /admin/courses/update/{id} -> Xử lý update
     public function update($id)
@@ -277,6 +252,7 @@ class CourseController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title          = $_POST['title'];
             $description    = $_POST['description'];
+            $course_type    = $_POST['course_type'] ?? 'paid';
             $instructor_id  = $_SESSION['user']['id'];
             $price          = $_POST['price'] ?? 0;
             $discount_price = $_POST['discount_price'] ?? 0;
@@ -321,6 +297,7 @@ class CourseController
                 $duration,
                 $imagePath,
                 $videoPath,
+                $course_type,
                 $status,
                 $category_id,
                 $subcategory_id
@@ -333,16 +310,9 @@ class CourseController
     public function destroy($id)
     {
         $this->courseModel->delete($id);
-    
-        if ($_SESSION['user']['role'] === 'admin') {
-            header("Location: /admin/courses");
-        } else if ($_SESSION['user']['role'] === 'instructor') {
-            header("Location: /instructor/courses");
-        }
-    
+        header("Location: /admin/courses");
         exit;
     }
-    
 
     public function updateProgress()
     {
@@ -403,6 +373,15 @@ class CourseController
         }
 
         echo json_encode($response);
+    }
+
+    // get course
+
+    public function getCourses() {
+        header('Content-Type: application/json');
+        $courses = $this->courseModel->getAllCourses();
+        echo json_encode($courses);
+        
     }
 
 }

@@ -136,10 +136,13 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                     <?php
                     $isFavourite = in_array($course['id'], (array) $favourites);
                     $isPurchased = in_array($course['id'], (array) $orders);
+                    $courseLink = $isPurchased || $course['course_type'] === 'free' 
+                        ? "/courses/learning/{$course['id']}" 
+                        : "/courses/show/{$course['id']}";
                     ?>
                     <div class="bg-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
-                        <a href="<?php echo $isPurchased ? "/courses/learning/{$course['id']}" : "/courses/show/{$course['id']}"; ?>">
-                            <div class="relative aspect-video">
+                    <a href="<?php echo $courseLink; ?>">
+                    <div class="relative aspect-video">
                                 <img class="w-full h-full object-cover" src="http://localhost:8000/<?= htmlspecialchars($course['image']) ?>" alt="">
                             </div>
                             <div class="p-4">
@@ -155,6 +158,7 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                                     <?php if ($isPurchased) : ?>
                                         <span class="text-green-600 font-bold block mt-2 text-sm md:text-base">Bạn đã mua khóa học này!</span>
                                     <?php else : ?>
+                                        <?php if($course['course_type'] == 'paid') : ?>
                                         <div class="flex items-center justify-between mt-2 w-full">
                                             <span class="text-gray-500 line-through text-sm md:text-base">
                                                 <?php echo number_format($course['price'], 0, ',', '.'); ?> VND
@@ -163,6 +167,9 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
                                                 <?php echo number_format($course['discount_price'], 0, ',', '.'); ?> VND
                                             </span>
                                         </div>
+                                        <?php else : ?>
+                                            <span class="text-green-600 font-bold block mt-2 text-sm md:text-base">Miễn phí</span>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                 </div>
                                 <div class="instructor flex items-center mt-2">
