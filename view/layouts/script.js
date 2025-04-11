@@ -99,7 +99,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
                                 ${sections.map(section => `
                                     <li>
                                         <strong>📁 ${section.title}</strong>
-<ul>
+                                        <ul>
                                             ${section.lessons && section.lessons.length > 0 
                                                 ? section.lessons.map(lesson => `<li>📖 ${lesson.title}</li>`).join('')
                                                 : '<li>Không có bài học.</li>'}
@@ -150,11 +150,12 @@ const generateBotResponse = async (incomingMessageDiv) => {
     }
 };
 
+
 // Xử lý tin nhắn gửi đi
 const handleOutgoingMessage = (e) => {
     e.preventDefault();
     userData.message = messageInput.value.trim();
-    if (!userData.message) return; // Không gửi nếu tin nhắn rỗng
+    if (!userData.message) return; 
     messageInput.value = "";
     fileUploadWrapper.classList.remove("file-uploaded");
     messageInput.dispatchEvent(new Event("input"));
