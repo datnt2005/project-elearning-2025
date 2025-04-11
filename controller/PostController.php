@@ -19,7 +19,11 @@ class PostController
             $posts = [];
         }
 
-        renderViewAdmin("view/admin/post/index.php", compact('posts'), "Danh sách bài viết");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/post/index.php", compact('posts'), "Danh sách bài viết");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/post/index.php", compact('posts'), "Danh sách bài viết");
+        }
     }
 
     public function show()
@@ -49,6 +53,7 @@ class PostController
 
     // Truyền cả bài viết chính và bài viết liên quan vào view
     renderViewUser("view/users/post/detail.php", compact('post', 'relatedPosts'), $post['title']);
+    
 }
 
         
@@ -92,16 +97,33 @@ class PostController
 
             if ($result) {
                 $_SESSION["success"] = "Bài viết đã được tạo thành công.";
-                header("Location: /admin/post");
+                // Chuyển hướng về danh sách bài viết
+                if ($_SESSION['user']['role'] === 'admin') {
+                    $_SESSION["success"] = "Bài viết đã được tạo thành công.";
+                    header("Location: /admin/post");
+                } else if ($_SESSION['user']['role'] === 'instructor') {
+                    $_SESSION["success"] = "Bài viết đã được tạo thành công.";
+                    header("Location: /instructor/post");
+                }
                 exit;
             } else {
                 // Chuyển hướng lại form và hiển thị lỗi chi tiết
-                header("Location: /admin/post/create");
+                if ($_SESSION['user']['role'] === 'admin') {
+                    $_SESSION["error"] = "Lỗi! Không thể tạo bài viết.";
+                    header("Location: /admin/post/create");
+                } else if ($_SESSION['user']['role'] === 'instructor') {
+                    $_SESSION["error"] = "Lỗi! Không thể tạo bài viết.";
+                    header("Location: /instructor/post/create");
+                }
                 exit;
             }
         }
 
-        renderViewAdmin("view/admin/post/create.php", compact('categories'), "Viết bài mới");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/post/create.php", compact('categories'), "Viết bài mới");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/post/create.php", compact('categories'), "Viết bài mới");
+        } 
     }
 
 
@@ -134,7 +156,14 @@ class PostController
                 $result = $this->post->updatePost($id, $title, $category, $content, $thumbnail);
                 if ($result) {
                     $_SESSION["success"] = "Bài viết đã được cập nhật.";
-                    header("Location: /admin/post");
+                    // Chuyển hướng về danh sách bài viết
+                    if ($_SESSION['user']['role'] === 'admin') {
+                        $_SESSION["success"] = "Bài viết đã được cập nhật.";
+                        header("Location: /admin/post");
+                    } else if ($_SESSION['user']['role'] === 'instructor') {
+                        $_SESSION["success"] = "Bài viết đã được cập nhật.";
+                        header("Location: /instructor/post");
+                    }
                     exit;
                 } else {
                     $errors[] = "Lỗi! Không thể cập nhật bài viết.";
@@ -142,7 +171,11 @@ class PostController
             }
         }
     
-        renderViewAdmin("view/admin/post/edit.php", compact('post', 'categories', 'errors'), "Chỉnh sửa bài viết");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/post/edit.php", compact('post', 'categories', 'errors'), "Chỉnh sửa bài viết");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/post/edit.php", compact('post', 'categories', 'errors'), "Chỉnh sửa bài viết");
+        } 
     }
     
 
@@ -153,7 +186,11 @@ class PostController
 
         if (!$post || isset($post['error'])) {
             $_SESSION["error_message"] = "Bài viết không tồn tại!";
-            header("Location: /admin/posts");
+            if ($_SESSION['user']['role'] === 'admin') {
+                header("Location: /admin/posts");
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/posts");
+            }
             exit;
         }
 
@@ -165,7 +202,13 @@ class PostController
             $_SESSION["error_message"] = "Lỗi! Không thể xóa bài viết.";
         }
 
-        header("Location: /admin/post");
+        // Chuyển hướng về danh sách bài viết
+        if ($_SESSION['user']['role'] === 'admin') {
+            header("Location: /admin/post");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            header("Location: /instructor/post");
+        }
+         // Đảm bảo không bị lỗi undefined variable
         exit;
     }
  

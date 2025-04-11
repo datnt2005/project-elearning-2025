@@ -16,7 +16,11 @@ class PostCategoryController
     public function index()
     {
         $postCategories = $this->postCategory->getAllCategories();
-        renderViewAdmin("view/admin/post/category/index.php", compact('postCategories'), "Danh sách danh mục bài viết");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/post/category/index.php", compact('postCategories'), "Danh sách danh mục bài viết");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/post/category/index.php", compact('postCategories'), "Danh sách danh mục bài viết");
+        } 
     }
 
     public function create()
@@ -35,7 +39,12 @@ class PostCategoryController
                 $result = $this->postCategory->createCategory($name);
                 if ($result) {
                     $_SESSION["success_message"] = "Thêm danh mục thành công!"; 
-                    header("Location: /admin/postCategory");  
+                    // Chuyển hướng về trang danh sách danh mục
+                    if ($_SESSION['user']['role'] === 'admin') {
+                        header("Location: /admin/postCategory");  
+                    } else if ($_SESSION['user']['role'] === 'instructor') {
+                        header("Location: /instructor/postCategory");  
+                    }
                     exit;
 
                 } else {
@@ -44,8 +53,16 @@ class PostCategoryController
             }
         }
     
-        renderViewAdmin("view/admin/post/category/create.php", compact('errors'), "Thêm danh mục mới");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/post/category/create.php", compact('errors'), "Thêm danh mục bài viết");
+
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/post/category/create.php", compact('errors'), "Thêm danh mục bài viết");
+        } 
+        
+        
     }
+
     
     
     public function edit($id)
@@ -69,7 +86,12 @@ class PostCategoryController
                 $result = $this->postCategory->updateCategory($id, $name);
                 if ($result) {
                     $_SESSION["success_message"] = "Cập nhật danh mục thành công!";
-                    header("Location: /admin/postCategory");  
+                    // Chuyển hướng về trang danh sách danh mục
+                    if ($_SESSION['user']['role'] === 'admin') {
+                        header("Location: /admin/postCategory");  
+                    } else if ($_SESSION['user']['role'] === 'instructor') {
+                        header("Location: /instructor/postCategory");  
+                    }
                     exit;
                 } else {
                     $errors[] = "Lỗi! Không thể cập nhật danh mục.";
@@ -77,7 +99,11 @@ class PostCategoryController
             }
         }
     
-        renderViewAdmin("view/admin/post/category/edit.php", compact('category', 'errors'), "Chỉnh sửa danh mục");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/post/category/edit.php", compact('category', 'errors'), "Chỉnh sửa danh mục bài viết");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/post/category/edit.php", compact('category', 'errors'), "Chỉnh sửa danh mục bài viết");
+        }        
     }
     
     public function delete($id)
@@ -85,7 +111,13 @@ class PostCategoryController
     $category = $this->postCategory->getCategoryById($id);
 
     if (!$category || isset($category['error'])) {
-        header("Location: /admin/postCategory");  
+        $_SESSION["error_message"] = "Danh mục không tồn tại!";
+        // Chuyển hướng về trang danh sách danh mục
+        if ($_SESSION['user']['role'] === 'admin') {
+            header("Location: /admin/postCategory");  
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            header("Location: /instructor/postCategory");  
+        }
         exit;
     }
 
@@ -96,8 +128,11 @@ class PostCategoryController
     } else {
         $_SESSION["error_message"] = "Lỗi! Không thể xóa danh mục.";
     }
-
-    header("Location: /admin/postCategory");  
+    if  ($_SESSION['user']['role'] === 'admin') {
+        header("Location: /admin/postCategory");  
+    } else if ($_SESSION['user']['role'] === 'instructor') {
+        header("Location: /instructor/postCategory");  
+    }
     exit;
 }
 

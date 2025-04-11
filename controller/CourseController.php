@@ -1,7 +1,4 @@
 <?php
-
-// Dùng đường dẫn tuyệt đối (__DIR__) để tránh lỗi
-
 use Google\Service\Adsense\Header;
 
 require_once __DIR__ . "/../model/CourseModel.php";

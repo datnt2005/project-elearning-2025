@@ -90,13 +90,18 @@ class AuthController
             header("Location: /login");
             exit;
         }
+    
         $user = $_SESSION['user'];
+    
         if ($user['role'] === 'admin') {
             renderViewUser("view/layouts/master_admin.php", compact('user'), "Admin Dashboard");
+        } elseif ($user['role'] === 'instructor') {
+            renderViewUser("view/layouts/master_instructor.php", compact('user'), "Instructor Dashboard");
         } else {
             renderViewUser("view/layouts/master_user.php", compact('user'), "User Dashboard");
         }
     }
+    
 
     public function adminDashboard()
     {
@@ -104,6 +109,7 @@ class AuthController
         //compact: gom bien dien thanh array
         renderViewUser("view/layouts/dashboard_admin.php", compact('users'), "User List");
     }
+    
 
     public function show() {
         $users = $this->AuthModel->getAllUsers(); 
@@ -257,7 +263,7 @@ class AuthController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email']);
             $password = $_POST['password'];
-
+    
             $user = $this->AuthModel->login($email, $password);
             if ($user) {
                 $_SESSION['user'] = $user;
@@ -269,15 +275,26 @@ class AuthController
                 $_SESSION['user_image'] = $user['image'];
                 $_SESSION['success_message'] = "Đăng nhập thành công!";
                 $_SESSION['loggedIn'] = true;
-                $redirectUrl = ($user['role'] === 'admin') ? '/admin/reports' : '/login';
+    
+                // Xử lý chuyển hướng theo vai trò
+                if ($user['role'] === 'admin') {
+                    $redirectUrl = '/admin/reports';
+                } elseif ($user['role'] === 'instructor') {
+                    $redirectUrl = '/instructor/categories';
+                } else {
+                    $redirectUrl = '/user/dashboard';
+                }
+    
                 header("Location: $redirectUrl");
                 exit;
             } else {
                 $error = "Email hoặc mật khẩu không chính xác.";
             }
         }
+    
         renderViewUser("view/auth/login.php", compact('error'), "Login");
     }
+    
 
 
     public function logout()

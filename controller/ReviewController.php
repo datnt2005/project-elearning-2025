@@ -269,7 +269,11 @@ class ReviewController
     public function index()
     {
         $reviews = $this->reviewModel->getAllReviews();
-        renderViewAdmin("view/admin/reviews/index.php", compact('reviews'), "Manage Reviews");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/reviews/index.php", compact('reviews'), "Manage Reviews");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/reviews/index.php", compact('reviews'), "Manage Reviews");
+        }
     }
 
     public function create() {
@@ -277,7 +281,11 @@ class ReviewController
         $users = $this->userModel->getAllUsers();
         $admins = $this->userModel->getAllAdmins(); // Lấy danh sách admin
 
-        renderViewAdmin("view/admin/reviews/create.php", compact('courses', 'users', 'admins'), "Add Review");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/reviews/create.php", compact('courses', 'users', 'admins'), "Add Review");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/reviews/create.php", compact('courses', 'users', 'admins'), "Add Review");
+        }
     }
 
     public function store() {
@@ -312,8 +320,11 @@ class ReviewController
                 }
                 $this->reviewModel->addReviewImages($reviewId, $imagePaths);
             }
-
-            header("Location: /admin/reviews");
+            if ($_SESSION['user']['role'] === 'admin') {
+                header("Location: /admin/reviews");
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/reviews");
+            }
         }
     }
 
@@ -324,7 +335,11 @@ class ReviewController
         $admins = $this->userModel->getAllAdmins(); // Lấy danh sách admin
         $reviewReply = $this->reviewModel->getReviewReply($id); // Lấy phản hồi admin nếu có
 
-        renderViewAdmin("view/admin/reviews/edit.php", compact('review', 'courses', 'users', 'admins', 'reviewReply'), "Edit Review");
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/reviews/edit.php", compact('review', 'courses', 'users', 'admins', 'reviewReply'), "Edit Review");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/reviews/edit.php", compact('review', 'courses', 'users', 'admins', 'reviewReply'), "Edit Review");
+        }
     }
 
     public function update($id) {
@@ -363,13 +378,20 @@ class ReviewController
                 }
                 $this->reviewModel->addReviewImages($id, $imagePaths);
             }
-
-            header("Location: /admin/reviews");
+            if ($_SESSION['user']['role'] === 'admin') {
+                header("Location: /admin/reviews");
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/reviews");
+            }
         }
     }
 
     public function delete($id) {
         $this->reviewModel->delete($id);
-        header("Location: /admin/reviews");
+        if ($_SESSION['user']['role'] === 'admin') {
+            header("Location: /admin/reviews");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            header("Location: /instructor/reviews");
+        }
     }
 }
