@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     startTimer();
     restoreAnswers();
-    handleShortAnswerClicks();
+    // handleShortAnswerClicks();
 
     quizForm.addEventListener("submit", handleSubmit);
 
@@ -181,7 +181,9 @@ function normalize(text) {
             `;
         } else {
             // Lưu trạng thái đã hoàn thành vào localStorage
-            localStorage.setItem("quizCompleted", "true");
+            // localStorage.setItem("quizCompleted", "true");
+            localStorage.setItem("quizCompleted_<?= $section['id'] ?>", "true");
+
 
             // Hiển thị thông báo đã hoàn thành
             const completedBanner = document.getElementById("completed-banner");

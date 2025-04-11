@@ -1,257 +1,257 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khóa học</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-/* Container chính */
-.container-learning {
-    display: flex;
-    flex-wrap: wrap;
-    width: 1600px;
-    gap: 20px;
-    margin: auto auto;
-    align-items: stretch;
-    min-height: 100vh;
-}
-.video-section {
-    min-width: 0;
-    width: 100px;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Khóa học</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+            <style>
+        /* Container chính */
+        .container-learning {
+            display: flex;
+            flex-wrap: wrap;
+            width: 1600px;
+            gap: 20px;
+            margin: auto auto;
+            align-items: stretch;
+            min-height: 100vh;
+        }
+        .video-section {
+            min-width: 0;
+            width: 100px;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.video-title h1 {
-    font-size: 1.5rem;
-    margin: 0.75rem;
-    color: #333;
-}
+        .video-title h1 {
+            font-size: 1.5rem;
+            margin: 0.75rem;
+            color: #333;
+        }
 
-.video-player {
-    position: relative;
-    width: 100%;
-}
+        .video-player {
+            position: relative;
+            width: 100%;
+        }
 
-.video-player iframe {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    border: none;
-    border-radius: 8px;
-}
+        .video-player iframe {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            border: none;
+            border-radius: 8px;
+        }
 
-.description {
-    margin-top: 10px;
-}
+        .description {
+            margin-top: 10px;
+        }
 
-.description p {
-    font-size: 1rem;
-    margin: 0 1.25rem;
-    color: #666;
-}
+        .description p {
+            font-size: 1rem;
+            margin: 0 1.25rem;
+            color: #666;
+        }
 
-.description .text-3xl {
-    font-size: 1.5rem;
-    color: #333;
-}
+        .description .text-3xl {
+            font-size: 1.5rem;
+            color: #333;
+        }
 
-.sidebar1 {
-    min-width: 400px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        .sidebar1 {
+            min-width: 400px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.progress-bar {
-    margin-top: 1rem;
-}
+        .progress-bar {
+            margin-top: 1rem;
+        }
 
-.progress-container {
-    width: 100%;
-    background-color: #e0e0e0;
-    height: 8px;
-    border-radius: 4px;
-    margin: 5px 0;
-}
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
 
-.progress-fill {
-    height: 100%;
-    background-color: #4caf50;
-    border-radius: 4px;
-    transition: width 0.3s ease;
-}
+        .progress-fill {
+            height: 100%;
+            background-color: #4caf50;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
 
-#course-progress, #current-lesson-progress {
-    display: block;
-    font-size: 0.9rem;
-    color: #666;
-}
+        #course-progress, #current-lesson-progress {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
 
-.text-green-500 {
-    color: #22c55e;
-}
+        .text-green-500 {
+            color: #22c55e;
+        }
 
-.text-blue-500 {
-    color: #3b82f6;
-}
+        .text-blue-500 {
+            color: #3b82f6;
+        }
 
-.text-red-500 {
-    color: #ef4444;
-}
+        .text-red-500 {
+            color: #ef4444;
+        }
 
-.course-content {
-    flex-grow: 1;
-}
+        .course-content {
+            flex-grow: 1;
+        }
 
-.course-content h2 {
-    font-size: 1.25rem;
-    margin: 0.5rem 0;
-    color: #333;
-}
+        .course-content h2 {
+            font-size: 1.25rem;
+            margin: 0.5rem 0;
+            color: #333;
+        }
 
-.course-content .chapter {
-    cursor: pointer;
-    padding: 10px;
-    background-color: #f9f9f9;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-}
+        .course-content .chapter {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f9f9f9;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
 
-.course-content .chapter:hover {
-    background-color: #e5e7eb;
-}
+        .course-content .chapter:hover {
+            background-color: #e5e7eb;
+        }
 
-.lesson-list {
-    list-style: none;
-    padding-left: 20px;
-    display: none;
-}
+        .lesson-list {
+            list-style: none;
+            padding-left: 20px;
+            display: none;
+        }
 
-.lesson-list.active {
-    display: block;
-}
+        .lesson-list.active {
+            display: block;
+        }
 
-.lesson-item {
-    position: relative;
-}
+        .lesson-item {
+            position: relative;
+        }
 
-.lesson-item a {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    text-decoration: none;
-    color: #333;
-    font-size: 0.9rem;
-}
+        .lesson-item a {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9rem;
+        }
 
-.lesson-item.locked a {
-    color: #999;
-    pointer-events: none;
-}
+        .lesson-item.locked a {
+            color: #999;
+            pointer-events: none;
+        }
 
-.lesson-progress {
-    font-size: 0.875rem;
-    color: #666;
-}
+        .lesson-progress {
+            font-size: 0.875rem;
+            color: #666;
+        }
 
-.lock-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
+        .lock-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
-.btn {
-    display: inline-block;
-    padding: 8px 16px;
-    margin: 5px 0;
-    text-decoration: none;
-    background-color: #e5e7eb;
-    color: #6b7280;
-    border-radius: 4px;
-    text-align: center;
-}
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px 0;
+            text-decoration: none;
+            background-color: #e5e7eb;
+            color: #6b7280;
+            border-radius: 4px;
+            text-align: center;
+        }
 
-.btn-primary:hover {
-    background-color: #d1d5db;
-}
+        .btn-primary:hover {
+            background-color: #d1d5db;
+        }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container-learning {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container-learning {
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
-    .video-section,
-    .sidebar1 {
-        flex: 1 1 100%;
-    }
+            .video-section,
+            .sidebar1 {
+                flex: 1 1 100%;
+            }
 
-    .video-title h1 {
-        font-size: 1.25rem;
-    }
+            .video-title h1 {
+                font-size: 1.25rem;
+            }
 
-    .description .text-3xl {
-        font-size: 1.5rem;
-    }
+            .description .text-3xl {
+                font-size: 1.5rem;
+            }
 
-    .description p {
-        font-size: 0.9rem;
-    }
+            .description p {
+                font-size: 0.9rem;
+            }
 
-    .sidebar1 {
-        min-width: 0;
-        width: 100%;
-    }
-}
+            .sidebar1 {
+                min-width: 0;
+                width: 100%;
+            }
+        }
 
-@media (max-width: 480px) {
-    .video-title h1 {
-        font-size: 1rem;
-    }
+        @media (max-width: 480px) {
+            .video-title h1 {
+                font-size: 1rem;
+            }
 
-    .description .text-3xl {
-        font-size: 1.25rem;
-    }
+            .description .text-3xl {
+                font-size: 1.25rem;
+            }
 
-    .description p {
-        font-size: 0.875rem;
-    }
+            .description p {
+                font-size: 0.875rem;
+            }
 
-    .lesson-item a {
-        font-size: 0.875rem;
-    }
-    .container-learning{
-        width: 100%;
-        padding: 10px;
-    }
-}
-@media (max-width: 1024px) {
-    .container-learning {
-        flex-direction: column;
-        padding: 20px;
-    }
+            .lesson-item a {
+                font-size: 0.875rem;
+            }
+            .container-learning{
+                width: 100%;
+                padding: 10px;
+            }
+        }
+        @media (max-width: 1024px) {
+            .container-learning {
+                flex-direction: column;
+                padding: 20px;
+            }
 
-    .video-section,
-    .sidebar1 {
-        width: 100%;
-        flex: 1 1 100%;
-    }
-}
+            .video-section,
+            .sidebar1 {
+                width: 100%;
+                flex: 1 1 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -264,21 +264,24 @@
             <div class="video-player">
                 <?php if ($error): ?>
                     <p class="text-red-500 text-center"><?php echo $error; ?></p>
-                    <iframe id="video-iframe" width="100%" height="400" src="" frameborder="0" allowfullscreen></iframe>
-
-                <?php elseif (!empty($currentLesson['video_url'])): ?>
-                    <iframe id="video-iframe" width="100%" height="400"
-                        src="<?php echo htmlspecialchars($currentLesson['video_url'], ENT_QUOTES, 'UTF-8') . '&enablejsapi=1'; ?>"
-                        title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                           referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
-
-                <?php elseif (!empty($currentLesson['pdf_path'])): ?>
-                    <iframe src="<?php echo htmlspecialchars($currentLesson['pdf_path'], ENT_QUOTES, 'UTF-8'); ?>" 
-                        width="100%" height="600px" frameborder="0"></iframe>
-
                 <?php else: ?>
-                    <p class="text-gray-500 text-center">Không có nội dung video hoặc tài liệu cho bài học này.</p>
+                    <?php if ($currentLesson['type'] === 'video' && !empty($currentLesson['video_url'])): ?>
+                        <!-- Hiển thị video -->
+                        <iframe id="video-iframe" width="100%" height="400"
+                            src="<?php echo htmlspecialchars($currentLesson['video_url'], ENT_QUOTES) . '&enablejsapi=1'; ?>"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    <?php elseif ($currentLesson['type'] === 'pdf' && !empty($currentLesson['pdf_path'])): ?>
+                        <!-- Hiển thị PDF -->
+                        <iframe id="pdf-iframe" width="100%" height="600"
+                            src="<?php echo htmlspecialchars($currentLesson['pdf_path'], ENT_QUOTES); ?>" title="PDF Viewer"
+                            frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy">
+                        </iframe>
+                    <?php else: ?>
+                        <!-- Không có nội dung -->
+                        <p class="text-red-500 text-center">Không có nội dung để hiển thị.</p>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
 
@@ -500,22 +503,22 @@
                                         // Trong hàm loadNotes(), thay đoạn hiển thị note-item bằng:
                                         filteredNotes.forEach(note => {
                                             notesList.innerHTML += `
-        <div class="note-item p-2 border-b relative" data-id="${note.id}">
-            <p><strong>${note.video_time}</strong>: <span class="note-text">${note.note}</span></p>
-            <small>Phần ${note.section_order || 'N/A'} - ${note.section_name || 'Không xác định'} | Bài ${note.lesson_order || 'N/A'} - ${note.lesson_name || 'Không xác định'}</small>
-            <div class="absolute right-2 top-2">
-                <button class="dropdown-btn text-gray-400 hover:text-white focus:outline-none">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
-                    </svg>
-                </button>
-                <div class="dropdown-menu absolute right-0 mt-2 w-28 bg-gray-800 border border-gray-700 rounded-md shadow-lg hidden z-50">
-                    <button class="edit-note w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Sửa</button>
-                    <button class="delete-note w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">Xóa</button>
-                </div>
-            </div>
-        </div>
-    `;
+                    <div class="note-item p-2 border-b relative" data-id="${note.id}">
+                        <p><strong>${note.video_time}</strong>: <span class="note-text">${note.note}</span></p>
+                        <small>Phần ${note.section_order || 'N/A'} - ${note.section_name || 'Không xác định'} | Bài ${note.lesson_order || 'N/A'} - ${note.lesson_name || 'Không xác định'}</small>
+                        <div class="absolute right-2 top-2">
+                            <button class="dropdown-btn text-gray-400 hover:text-white focus:outline-none">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
+                                </svg>
+                            </button>
+                            <div class="dropdown-menu absolute right-0 mt-2 w-28 bg-gray-800 border border-gray-700 rounded-md shadow-lg hidden z-50">
+                                <button class="edit-note w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Sửa</button>
+                                <button class="delete-note w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">Xóa</button>
+                            </div>
+                        </div>
+                    </div>
+                 `;
                                         });
                                         attachEventListeners();
                                     } else {
@@ -869,13 +872,39 @@
                                     <hr class="my-1">
                                 </li>
                             <?php endforeach; ?>
-                            <a href="/quizzes/section/<?= htmlspecialchars($section['id']); ?>" class="btn btn-primary text-muted">Bài tập</a>
+                            <a href="/quizzes/section/<?= htmlspecialchars($section['id']); ?>" 
+                                class="btn btn-primary text-muted quiz-link" 
+                                data-section-id="<?= $section['id'] ?>">
+                                Bài tập <span class="quiz-status"></span>
+                            </a>
+
                         <?php endif; ?>
                     </ul>
                 <?php endforeach; ?>
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".quiz-link").forEach(link => {
+                const sectionId = link.dataset.sectionId;
+                const completed = localStorage.getItem("quizCompleted_" + sectionId);
+                const statusSpan = link.querySelector(".quiz-status");
+
+                if (completed === "true") {
+                    // Cập nhật giao diện: thêm trạng thái "✅ Đã hoàn thành"
+                    statusSpan.textContent = "✅ Đã hoàn thành";
+
+                    // Optional: Làm mờ nút hoặc vô hiệu hoá
+                    link.classList.remove("btn-primary");
+                    link.classList.add("btn-secondary", "opacity-70", "pointer-events-none");
+                } else {
+                    statusSpan.textContent = "📝 Chưa làm";
+                }
+            });
+        });
+    </script>
+
 
     <script>
         // Toggle dropdown cho các chapter
@@ -1421,10 +1450,11 @@
                     let description = this.dataset.description;
                     let lessonId = this.dataset.lessonId;
                     let orderNumber = this.dataset.orderNumber;
-                    let pdf_file = this.dataset.pdf_file;
-                    changeVideo(videoUrl, title, description, lessonId, orderNumber, pdf_file);
+                    let pdf_file = this.dataset.pdf_file;  // Lấy giá trị pdf_file từ dataset
+                    changeVideo(videoUrl, title, description, lessonId, orderNumber, pdf_file ? 'pdf' : 'video');  // Gọi với 'pdf' nếu có pdf_file
                 });
             });
+
 
             let params = new URLSearchParams(window.location.search);
             let lessonId = params.get("lesson");
@@ -1447,50 +1477,63 @@
             }
         };
 
-        function changeVideo(videoUrl, title, description, lessonId, orderNumber) {
-            console.log('Changing video to:', videoUrl, 'Lesson ID:', lessonId);
+        let currentLessonId = null;
+        let player = null;
+
+        function changeVideo(videoUrl, title, description, lessonId, orderNumber, type = 'video') {
+            console.log('Changing lesson:', lessonId, 'URL:', videoUrl, 'Type:', type);
             currentLessonId = lessonId;
-            if (player) {
-                player.destroy();
-            }
             document.getElementById("lessons_id").value = lessonId;
-            let iframe = document.getElementById("video-iframe");
-            if (!iframe) {
-                console.error('Iframe not found! Attempting to recover...');
-                const videoPlayer = document.querySelector('.video-player');
-                if (videoPlayer) {
-                    iframe = document.createElement('iframe');
-                    iframe.id = 'video-iframe';
-                    iframe.width = '100%';
-                    iframe.height = '400';
-                    iframe.frameBorder = '0';
-                    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-                    iframe.allowFullscreen = true;
-                    videoPlayer.prepend(iframe);
-                    console.log('Iframe recreated:', iframe);
-                } else {
-                    console.error('Video player container not found!');
-                    return;
-                }
+
+            let videoPlayer = document.querySelector('.video-player');
+            videoPlayer.innerHTML = '';  // Làm sạch nội dung trước khi thêm video hoặc PDF mới
+
+            if (type === 'video') {
+                // Nếu là video, tạo iframe cho video YouTube
+                let iframe = document.createElement('iframe');
+                iframe.id = 'video-iframe';
+                iframe.width = '100%';
+                iframe.height = '600';  // Chiều cao của video
+                iframe.frameBorder = '0';
+                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                iframe.allowFullscreen = true;
+                iframe.src = videoUrl + '&enablejsapi=1';  // Chỉnh sửa URL cho video YouTube
+                videoPlayer.appendChild(iframe);
+                console.log('YouTube video loaded:', videoUrl);
+                
+            } else if (type === 'pdf') {
+                // Nếu là PDF, tạo iframe để hiển thị PDF
+                let iframe = document.createElement('iframe');
+                iframe.id = 'pdf-iframe';
+                iframe.width = '100%';
+                iframe.height = '600';  // Chiều cao của PDF
+                iframe.frameBorder = '0';
+                iframe.src = videoUrl;  // Đường dẫn đến file PDF
+                videoPlayer.appendChild(iframe);
+                console.log('PDF file loaded:', videoUrl);
+            } else {
+                console.log('Unsupported content type:', type);
             }
-            iframe.src = videoUrl + "&enablejsapi=1";
-            document.getElementById("video-description").innerHTML = `<p class="text-3xl m-5 mb-0"><strong>Bài ${orderNumber}: ${title}</strong></p><p class="mx-5">${description}</p>`;
-            history.pushState(null, "", `?course=<?php echo $course['id']; ?>&lesson=${lessonId}`);
 
-            console.log('Initializing YT.Player with iframe:', iframe);
-            player = new YT.Player('video-iframe', {
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange,
-                    'onError': (event) => console.log('Player error:', event.data)
-                }
-            });
-            console.log('YT.Player initialized:', player);
+            // Cập nhật mô tả bài học
+            document.getElementById("video-description").innerHTML =
+                `<p class="text-3xl m-5 mb-0"><strong>Bài ${orderNumber}: ${title}</strong></p><p class="mx-5">${description}</p>`;
+
+            // Cập nhật URL trình duyệt
+            history.pushState(null, "", `?course=${courseId}&lesson=${lessonId}`);
+
         }
 
-        function onPlayerReady(event) {
-            console.log('Player ready');
-        }
+
+    // Hàm YouTube API bắt buộc nếu dùng player
+    function onPlayerReady(event) {
+        console.log("YouTube player ready.");
+    }
+
+    function onPlayerStateChange(event) {
+        // Có thể xử lý theo trạng thái video nếu cần
+        console.log("Player state changed:", event.data);
+    }
 
         let progressInterval;
         let lastProgress = 0;

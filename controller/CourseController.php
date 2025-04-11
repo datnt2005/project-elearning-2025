@@ -84,7 +84,7 @@ class CourseController
         header("Location: /404");
         exit;
     }
-
+    
     $sections = $this->sectionModel->getSectionsByCourseId($id);
     $lessonsBySection = [];
     $lessonProgressById = [];

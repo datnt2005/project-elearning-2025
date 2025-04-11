@@ -56,7 +56,6 @@
     
 
    
-
     public function addAnswer($question_id, $answer, $is_correct){
         $sql = "INSERT INTO quiz_answers (question_id, answer, is_correct) VALUES (:question_id, :answer, :is_correct)";
         $stmt = $this->conn->prepare($sql);
@@ -65,6 +64,7 @@
         $stmt->bindParam(':is_correct', $is_correct, PDO::PARAM_BOOL);
         return $stmt->execute();
     }
+      
     
     
 

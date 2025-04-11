@@ -91,7 +91,7 @@
             <div class="mb-3">
                 <?php if (!empty($lesson['pdf_path'])): ?>
                     <p>📄 File hiện tại: <a href="<?= $lesson['pdf_path'] ?>" target="_blank">Xem PDF</a></p>
-                <?php endif; ?>
+                <?php endif; ?> 
             </div>
 
             <!-- Trường upload file mới -->

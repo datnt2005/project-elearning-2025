@@ -18,7 +18,7 @@ function renderViewAdmin($view, $data = [], $title = "My App") {
 }
 
 // chuẩn hoá  không phân biệt hoa thường, không dư khoảng trắng.
-function normalizeAnswer($text) {
+function removeVietnameseTones($text) {
     return strtolower(trim(preg_replace('/\s+/', ' ', $text)));
 }
 

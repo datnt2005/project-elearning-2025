@@ -134,7 +134,7 @@
                             foreach ($rows as $index => $row) {
                                 if ($index === 0) continue; // Bỏ qua dòng tiêu đề
 
-                           
+                            
                                 // Giả sử cấu trúc file có cột câu hỏi, loại câu hỏi, các đáp án, đáp án đúng
                                 [$question_text, $question_type, $answer_a, $answer_b, $answer_c, $answer_d, $correct_answer] = $row;
 

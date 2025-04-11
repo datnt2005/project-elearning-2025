@@ -85,15 +85,19 @@ require_once "Database.php";
    
     
 
-    public function addQuestion($quiz_id, $question, $type) {
-        $query = "INSERT INTO quiz_questions(quiz_id, question, type) VALUES (:quiz_id, :question, :type)";
+      public function addQuestion($quiz_id, $question, $type) {
+        $query = "INSERT INTO quiz_questions (quiz_id, question, type) VALUES (:quiz_id, :question, :type)";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':quiz_id', $quiz_id);
         $stmt->bindParam(':question', $question);
         $stmt->bindParam(':type', $type);
-        return $stmt->execute();
 
+        
+        // Thực thi câu truy vấn và trả về ID của câu hỏi vừa được thêm
+        $stmt->execute();
+        return $this->conn->lastInsertId();
     }
+    
 
     public function delete($id){
         $query = "DELETE FROM quiz_questions WHERE id = :id";
@@ -111,10 +115,48 @@ require_once "Database.php";
         $stmt->bindParam(':id', $id); // Thêm điều kiện WHERE id
         return $stmt->execute();
     }
-    
 
+
+    public function saveFile($file_name, $file_path, $file_type, $quiz_id){
+        $query = "INSERT INTO uploaded_files (file_name, file_path, file_type, quiz_id) VALUES (:file_name, :file_path, :file_type, :quiz_id)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':file_name', $file_name);
+        $stmt->bindParam(':file_path', $file_path);
+        $stmt->bindParam(':file_type', $file_type);
+        $stmt->bindParam(':quiz_id', $quiz_id);
+        return $stmt->execute();
+    }
+
+    public function questionExists($quiz_id, $question) {
+        // Truy vấn để tìm câu hỏi với quiz_id và question cụ thể
+        $query = "SELECT id FROM quiz_questions WHERE quiz_id = :quiz_id AND question = :question";
+        $stmt = $this->conn->prepare($query);
+        
+        // Liên kết các tham số
+        $stmt->bindParam(':quiz_id', $quiz_id);
+        $stmt->bindParam(':question', $question);
+        
+        // Thực thi câu lệnh SQL
+        $stmt->execute();
+        
+        // Kiểm tra nếu có câu hỏi trùng khớp
+        if ($stmt->rowCount() > 0) {
+            return true; // Câu hỏi đã tồn tại
+        }
+        
+        return false; // Không có câu hỏi trùng khớp
+    }
+
+    public function getQuestionByText($question_text) {
+        $query = "SELECT * FROM quiz_questions WHERE question = :question";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':question', $question_text);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Trả về dữ liệu câu hỏi nếu tìm thấy
+    }
+    
     
  }
-
 
 ?>
