@@ -116,8 +116,9 @@
         </div>
     </div>
 
-     <!-- Main Content -->
-     <main class="main-content container mx-auto px-4 pt-20 sm:ml-[96px] mb-5">
+
+    <!-- Main Content -->
+    <main class="main-content container mx-auto px-4 pt-20 ">
         <?= $content ?>
     </main>
 

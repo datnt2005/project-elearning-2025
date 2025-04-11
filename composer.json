@@ -1,23 +1,19 @@
 {
-    "name": "phatt/project-elearning-spring2025",
+    "name": "admin/project-elearning-2025",
     "autoload": {
         "psr-4": {
-            "Phatt\\ProjectElearningSpring2025\\": "src/"
+            "Admin\\ProjectElearning2025\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "tpaat4004",
-            "email": "phatdeptraiokmen@gmail.com"
+            "name": "datnt2005",
+            "email": "datntpk2005@gmail.com"
         }
     ],
     "require": {
+        "phpoffice/phpspreadsheet": "1.23",
         "vlucas/phpdotenv": "^5.6",
-        "symfony/polyfill-ctype": "*",
-        "google/apiclient": "*",
-        "phpmailer/phpmailer": "^6.9",
-        "paypal/paypal-server-sdk": "^1.0",
-
-        "google/apiclient-services": "^0.396.0"
+        "google/apiclient": "2.15"
     }
 }
