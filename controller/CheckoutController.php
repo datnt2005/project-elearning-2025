@@ -1,5 +1,6 @@
 <?php
 
+require_once "model/NotificationModel.php";
 require_once "model/OrderModel.php";
 require_once "model/CourseModel.php";
 require_once "model/CouponModel.php";
@@ -15,6 +16,7 @@ use PayPal\Http\PayPalHttpClient;
 use PayPal\Environment\SandboxEnvironment; // Đúng class cho sandbox environment
 use PayPal\Environment\LiveEnvironment; // Đúng class cho live environment
 
+
 class CheckoutController
 {
     private $orderModel;
@@ -22,6 +24,7 @@ class CheckoutController
     private $couponModel;
     private $userModel;
     private $paypalClient;
+    private $notificationModel;
 
     public function __construct()
     {
@@ -29,6 +32,7 @@ class CheckoutController
         $this->courseModel = new Course();
         $this->couponModel = new CouponModel();
         $this->userModel = new UserModel();
+        $this->notificationModel = new NotificationModel();
     }
 
 
@@ -134,9 +138,9 @@ class CheckoutController
         }
     }
 
-    
 
-    
+
+
 
     public function processPayment($order_id, $total_amount)
     {
@@ -149,7 +153,7 @@ class CheckoutController
         $vnp_TxnRef = $order_id;
         $vnp_OrderInfo = "Thanh toán khóa học";
         $vnp_OrderType = "billpayment";
-        $vnp_Amount = $total_amount * 100;  
+        $vnp_Amount = $total_amount * 100;
         $vnp_Locale = "vn";
         $vnp_BankCode = "NCB";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
@@ -187,7 +191,6 @@ class CheckoutController
         if (isset($vnp_HashSecret)) {
             $vnp_SecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
             $vnp_Url .= 'vnp_SecureHash=' . $vnp_SecureHash;
-            
         }
 
         header('Location: ' . $vnp_Url);
@@ -249,7 +252,7 @@ class CheckoutController
         }
     }
 
-    
+
 
 
     // Phương thức tạo popup
@@ -411,7 +414,6 @@ class CheckoutController
 
     public function paymentResult()
     {
-        // Kiểm tra kết quả trả về từ Momo
         if (!isset($_GET['resultCode'])) {
             echo "Không tìm thấy kết quả thanh toán.";
             exit;
@@ -420,35 +422,37 @@ class CheckoutController
         $resultCode = $_GET['resultCode'];
 
         if ($resultCode == 0) {
-            // ✅ Thanh toán thành công
-            $order_code = $_GET['orderId'];  // Lấy orderId từ URL trả về của Momo
-
-            $order = $this->orderModel->getOrderByOrderCode($order_code); // Tìm kiếm trong database theo order_code
+            $order_code = $_GET['orderId'];
+            $order = $this->orderModel->getOrderByOrderCode($order_code);
 
             if (!$order) {
                 echo "Không tìm thấy đơn hàng với mã đơn hàng: $order_code";
                 exit;
             }
 
-            // Kiểm tra trạng thái đơn hàng đã được xử lý chưa
             if ($order['status'] == 'completed') {
                 echo "Đơn hàng đã được xử lý rồi.";
                 exit;
             }
 
-            $result1 = $this->orderModel->updateOrderMomoStatus($order_code, 'completed');  // Cập nhật trạng thái đơn hàng
-            $result2 = $this->orderModel->updateOrderPaymentMomoStatus($order_code, 'completed');  // Cập nhật trạng thái thanh toán
+            $result1 = $this->orderModel->updateOrderMomoStatus($order_code, 'completed');
+            $result2 = $this->orderModel->updateOrderPaymentMomoStatus($order_code, 'completed');
 
             if ($result1 && $result2) {
-                // Gửi email xác nhận thanh toán
                 $user_id = $order['user_id'];
                 $course_id = $order['course_id'];
                 $total_amount = $order['total_amount'];
 
-                // Gửi email thông báo thanh toán thành công
+                // ✅ Gửi email xác nhận
                 $this->sendConfirmationEmail($user_id, $course_id, $order_code, $total_amount);
 
-                // Thông báo thanh toán thành công
+                // ✅ Gửi thông báo
+                $message = "🎉 Cảm ơn bạn đã mua khóa học #$order_code.";
+                $link = "/orderList" . "?user_id=$user_id";
+                $adminId = 2; 
+
+                $this->notificationModel->createAutoNotification($user_id, $message, $link, $adminId);
+
                 echo "<script>alert('Thanh toán thành công!'); window.location.href='/';</script>";
             } else {
                 echo "Lỗi khi cập nhật trạng thái đơn hàng.";
@@ -457,6 +461,7 @@ class CheckoutController
             echo "<script>alert('Thanh toán thất bại!'); window.location.href='/';</script>";
         }
     }
+
 
     public function getOrderByUserId()
     {

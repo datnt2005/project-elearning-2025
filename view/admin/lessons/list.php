@@ -231,6 +231,7 @@ h1.text-center {
                       <?= htmlspecialchars($lesson['section_title']) ?>
                     </span>
                   </td>
+                 
                   <td>
                     <div class="btn-group">
                       <a href="/admin/lessons/view/<?= $lesson['id'] ?>" 
@@ -248,6 +249,7 @@ h1.text-center {
                     </div>
                   </td>
                 </tr>
+
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
@@ -275,6 +277,7 @@ h1.text-center {
     </div>
   </div>
 </div>
+
 
 <script>
 function confirmDelete(id) {

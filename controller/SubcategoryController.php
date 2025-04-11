@@ -14,14 +14,22 @@ class SubcategoryController {
 
     public function index() {
         $subcategories = $this->subcategoryModel->getAllSubcategory();
-        $categories = $this->categoryModel->getAllCategory();
-        
-        renderViewAdmin("view/admin/subcategories/subcategories_list.php", compact('subcategories'), "subcategories List");
+
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/subcategories/subcategories_list.php", compact('subcategories'), "Subcategories List");
+        } elseif ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/subcategories/subcategories_list.php", compact('subcategories'), "Subcategories List");
+        }
     }
 
     public function show($id) {
-        $subcategories = $this->subcategoryModel->getSubcategoryById($id);
-        renderViewAdmin("view/subcategories/subcategories_detail.php", compact('subcategories'), "subcategories Detail");
+        $subcategory = $this->subcategoryModel->getSubcategoryById($id);
+
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/subcategories/subcategories_detail.php", compact('subcategory'), "Subcategory Detail");
+        } elseif ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/subcategories/subcategories_detail.php", compact('subcategory'), "Subcategory Detail");
+        }
     }
 
     public function create() {
@@ -30,10 +38,17 @@ class SubcategoryController {
             $name = $_POST['name'];
             $description = $_POST['description'];
             $this->subcategoryModel->create($category_id, $name, $description);
-            header("Location: /admin/subcategories");
+
+            $redirectPath = $_SESSION['user']['role'] === 'instructor' ? "/instructor/subcategories" : "/admin/subcategories";
+            header("Location: $redirectPath");
         } else {
             $categories = $this->categoryModel->getAllCategory();
-            renderViewAdmin("view/admin/subcategories/subcategories_create.php", compact('categories'), "subcategories Create");
+
+            if ($_SESSION['user']['role'] === 'admin') {
+                renderViewAdmin("view/admin/subcategories/subcategories_create.php", compact('categories'), "Create Subcategory");
+            } elseif ($_SESSION['user']['role'] === 'instructor') {
+                renderViewInstructor("view/instructor/subcategories/subcategories_create.php", compact('categories'), "Create Subcategory");
+            }
         }
     }
 
@@ -43,16 +58,25 @@ class SubcategoryController {
             $name = $_POST['name'];
             $description = $_POST['description'];
             $this->subcategoryModel->update($id, $category_id, $name, $description);
-            header("Location: /admin/subcategories");
+
+            $redirectPath = $_SESSION['user']['role'] === 'instructor' ? "/instructor/subcategories" : "/admin/subcategories";
+            header("Location: $redirectPath");
         } else {
             $subcategory = $this->subcategoryModel->getSubcategoryById($id);
             $categories = $this->categoryModel->getAllCategory();
-            renderViewAdmin("view/admin/subcategories/subcategories_edit.php", compact('subcategory', 'categories'), "subcategories Edit");
+
+            if ($_SESSION['user']['role'] === 'admin') {
+                renderViewAdmin("view/admin/subcategories/subcategories_edit.php", compact('subcategory', 'categories'), "Edit Subcategory");
+            } elseif ($_SESSION['user']['role'] === 'instructor') {
+                renderViewInstructor("view/instructor/subcategories/subcategories_edit.php", compact('subcategory', 'categories'), "Edit Subcategory");
+            }
         }
     }
 
     public function delete($id) {
         $this->subcategoryModel->delete($id);
-        header("Location: /admin/subcategories");
+
+        $redirectPath = $_SESSION['user']['role'] === 'instructor' ? "/instructor/subcategories" : "/admin/subcategories";
+        header("Location: $redirectPath");
     }
 }

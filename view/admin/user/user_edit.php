@@ -54,13 +54,17 @@
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '')  ?>" required>
+                        </div>
 
                         <div class="mb-3">
                             <label for="image" class="form-label">Ảnh đại diện</label>
                             <input type="file" class="form-control" id="image" name="image">
                             <?php if (!empty($user['image'])): ?>
                                 <div class="mt-2">
-                                    <img src="/uploads/<?= htmlspecialchars($user['image']) ?>" alt="Ảnh đại diện" width="100">
+                                    <img src="http://localhost:8000/<?= htmlspecialchars($user['image']) ?>" alt="Ảnh đại diện" width="100">
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -86,7 +90,7 @@
                             <button type="submit" class="btn btn-dark">
                                 <i class="fas fa-save me-1"></i> Cập nhật
                             </button>
-                            <a href="/admin/user" class="btn btn-secondary">
+                            <a href="/admin/users" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left me-1"></i> Quay lại
                             </a>
                         </div>

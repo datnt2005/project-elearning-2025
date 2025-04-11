@@ -40,6 +40,7 @@ require_once "controller/CommentPostController.php";
 require_once "controller/NotesController.php";
 require_once "controller/UploadQuizzByFileController.php";
 require_once "controller/AiController.php";
+require_once "Controller/NotificationController.php";
 
 require_once "router/Router.php";
 require_once "middleware.php";
@@ -68,12 +69,13 @@ $commentPostController = new CommentPostController();
 $notesController = new NotesController();
 $uploadQuizzByFileController = new UploadQuizzByFileController;
 $aiController = new AiController();
+$notificationController = new NotificationController();
 
 
 // $router->addMiddleware('logRequest');
 
 $router->addRoute("/", [$courseController, 'home']);
-
+$router->addRoute("/notification/read/{id}", [$notificationController, 'read']);
 //auth
 $router->addRoute("/login", [$authController, "login"]);
 
@@ -93,6 +95,10 @@ $router->addRoute("/admin/uploadQuizzByFile/delete/{id}", [$uploadQuizzByFileCon
 
 //users
 $router->addRoute("/users", [$userController, "index"]);
+$router->addRoute("/admin/users", [$authController, "show"], ['isAdmin']);
+$router->addRoute("/admin/user/create", [$authController, "user_create"], ['isAdmin']);
+$router->addRoute("/admin/user/edit/{id}", [$authController, "user_edit"], ['isAdmin']);
+$router->addRoute("/admin/user/delete/{id}", [$authController, "user_delete"], ['isAdmin']);
 
 $router->addRoute("/users/create", [$userController, "create"], ['isUser']);
 $router->addRoute("/about", [$userController, "show"], ['isUser']);
@@ -111,6 +117,11 @@ $router->addRoute("/admin/categories/create", [$categoryController, "create"], [
 $router->addRoute("/admin/categories/edit/{id}", [$categoryController, "edit"], ['isAdmin']);
 $router->addRoute("/admin/categories/delete{id}", [$categoryController, "delete"], ['isAdmin']);
 
+$router->addRoute("/instructor/categories", [$categoryController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/categories/create", [$categoryController, "create"], ['isInstructor']);
+$router->addRoute("/instructor/categories/edit/{id}", [$categoryController, "edit"], ['isInstructor']);
+$router->addRoute("/instructor/categories/delete{id}", [$categoryController, "delete"], ['isInstructor']);
+
 
 //Subcategories
 
@@ -118,6 +129,12 @@ $router->addRoute("/admin/subcategories", [$subcategoryController, "index"]); //
 $router->addRoute("/admin/subcategories/create", [$subcategoryController, "create"]); // Thêm mới
 $router->addRoute("/admin/subcategories/edit/{id}", [$subcategoryController, "edit"]); // Chỉnh sửa
 $router->addRoute("/admin/subcategories/delete/{id}", [$subcategoryController, "delete"]); // Xóa
+
+$router->addRoute("/instructor/subcategories", [$subcategoryController, "index"], ['isInstructor']); // Danh sách subcategories
+$router->addRoute("/instructor/subcategories/create", [$subcategoryController, "create"], ['isInstructor']); // Thêm mới
+$router->addRoute("/instructor/subcategories/edit/{id}", [$subcategoryController, "edit"], ['isInstructor']); // Chỉnh sửa
+$router->addRoute("/instructor/subcategories/delete/{id}", [$subcategoryController, "delete"], ['isInstructor']); // Xóa
+
 
 // Course routes
 $router->addRoute("/admin/courses", [$courseController, "index"], ['isAdmin']);
@@ -127,12 +144,19 @@ $router->addRoute("/admin/courses/edit/{id}", [$courseController, "editForm"], [
 $router->addRoute("/admin/courses/update/{id}", [$courseController, "update"], ['isAdmin']);
 $router->addRoute("/admin/courses/delete/{id}", [$courseController, "destroy"], ['isAdmin']);
 
+$router->addRoute("/instructor/courses", [$courseController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/courses/create", [$courseController, "createForm"], ['isInstructor']);
+$router->addRoute("/instructor/courses/store", [$courseController, "store"], ['isInstructor']);
+$router->addRoute("/instructor/courses/edit/{id}", [$courseController, "editForm"], ['isInstructor']);
+$router->addRoute("/instructor/courses/update/{id}", [$courseController, "update"], ['isInstructor']);
+$router->addRoute("/instructor/courses/delete/{id}", [$courseController, "destroy"], ['isInstructor']);
+
 
 
 // Favourite Courses
 $router->addRoute("/favourite/add", [$favouriteController, "addFavourite"], ['isUser']);
 $router->addRoute("/favourite/remove", [$favouriteController, "removeFavourite"], ['isUser']);
-$router->addRoute("/", [$favouriteController, "index"], ['isUser']);
+$router->addRoute("/", [$favouriteController, "index"]);
 
 
 //Order List
@@ -149,6 +173,13 @@ $router->addRoute("/admin/sections/edit/{id}", [$sectionController, "editForm"],
 $router->addRoute("/admin/sections/update/{id}", [$sectionController, "update"], ['isAdmin']);
 $router->addRoute("/admin/sections/delete/{id}", [$sectionController, "destroy"], ['isAdmin']);
 
+$router->addRoute("/instructor/sections", [$sectionController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/sections/create", [$sectionController, "createForm"], ['isInstructor']);
+$router->addRoute("/instructor/sections/store", [$sectionController, "store"], ['isInstructor']);
+$router->addRoute("/instructor/sections/edit/{id}", [$sectionController, "editForm"], ['isInstructor']);
+$router->addRoute("/instructor/sections/update/{id}", [$sectionController, "update"], ['isInstructor']);
+$router->addRoute("/instructor/sections/delete/{id}", [$sectionController, "destroy"], ['isInstructor']);
+
 // Lesson routes
 $router->addRoute("/admin/lessons", [$lessonController, "index"], ['isAdmin']);
 $router->addRoute("/admin/lessons/create", [$lessonController, "createForm"], ['isAdmin']);
@@ -156,11 +187,24 @@ $router->addRoute("/admin/lessons/store", [$lessonController, "store"], ['isAdmi
 $router->addRoute("/admin/lessons/edit/{id}", [$lessonController, "editForm"], ['isAdmin']);
 $router->addRoute("/admin/lessons/update/{id}", [$lessonController, "update"], ['isAdmin']);
 $router->addRoute("/admin/lessons/delete/{id}", [$lessonController, "destroy"], ['isAdmin']);
+
+$router->addRoute("/instructor/lessons", [$lessonController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/lessons/create", [$lessonController, "createForm"], ['isInstructor']);
+$router->addRoute("/instructor/lessons/store", [$lessonController, "store"], ['isInstructor']);
+$router->addRoute("/instructor/lessons/edit/{id}", [$lessonController, "editForm"], ['isInstructor']);
+$router->addRoute("/instructor/lessons/update/{id}", [$lessonController, "update"], ['isInstructor']);
+$router->addRoute("/instructor/lessons/delete/{id}", [$lessonController, "destroy"], ['isInstructor']);
 // bài kiểm tra
 $router->addRoute("/admin/quizzes", [$adminQuizzeController, "index"]);
 $router->addRoute("/admin/quizzes/create", [$adminQuizzeController, "createQuizze"]);
 $router->addRoute("/admin/quizzes/delete/{id}", [$adminQuizzeController, "deleteQuizze"]);
 $router->addRoute("/admin/quizzes/update/{id}", [$adminQuizzeController, "updateQuizze"]);
+
+$router->addRoute("/instructor/quizzes", [$adminQuizzeController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/quizzes/create", [$adminQuizzeController, "createQuizze"], ['isInstructor']);
+$router->addRoute("/instructor/quizzes/delete/{id}", [$adminQuizzeController, "deleteQuizze"], ['isInstructor']);
+$router->addRoute("/instructor/quizzes/update/{id}", [$adminQuizzeController, "updateQuizze"], ['isInstructor']);
+
 
 // câu hỏi 
 $router->addRoute("/admin/quizQuests", [$AdminQuiQuestionController, "index"]);
@@ -168,12 +212,25 @@ $router->addRoute("/admin/quizQuests/create", [$AdminQuiQuestionController, "cre
 $router->addRoute("/admin/quizQuests/delete/{id}", [$AdminQuiQuestionController, "delete"]);
 $router->addRoute("/admin/quizQuests/update/{id}", [$AdminQuiQuestionController, "update"]);
 
+$router->addRoute("/instructor/quizQuests", [$AdminQuiQuestionController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/quizQuests/create", [$AdminQuiQuestionController, "create"], ['isInstructor']);
+$router->addRoute("/instructor/quizQuests/delete/{id}", [$AdminQuiQuestionController, "delete"], ['isInstructor']);
+$router->addRoute("/instructor/quizQuests/update/{id}", [$AdminQuiQuestionController, "update"], ['isInstructor']);
+
+
 // câu trl 
 $router->addRoute("/admin/quizAnswers", [$AdminQuizAnswerController, "index"]);
 $router->addRoute("/admin/quizAnswers/create", [$AdminQuizAnswerController, "create"]);
 $router->addRoute("/admin/quizAnswers/delete/{id}", [$AdminQuizAnswerController, "delete"]);
 $router->addRoute("/admin/quizAnswers/update/{id}", [$AdminQuizAnswerController, "update"]);
 $router->addRoute("/quizzes/section/{section_id}", [$adminQuizzeController,"show"]);
+
+$router->addRoute("/instructor/quizAnswers", [$AdminQuizAnswerController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/quizAnswers/create", [$AdminQuizAnswerController, "create"], ['isInstructor']);
+$router->addRoute("/instructor/quizAnswers/delete/{id}", [$AdminQuizAnswerController, "delete"], ['isInstructor']);
+$router->addRoute("/instructor/quizAnswers/update/{id}", [$AdminQuizAnswerController, "update"], ['isInstructor']);
+$router->addRoute("/quizzes/section/{section_id}", [$adminQuizzeController,"show"], ['isUser']);    
+
 //show course user
 $router->addRoute("/courses/show/{course_id}", [$courseController, "show"]);
 $router->addRoute("/courses/learning/{course_id}", [$courseController, "detailCourse"],['isUser']);
@@ -184,7 +241,21 @@ $router->addRoute("/courses/review/update", [$reviewController, "editReview"], [
 $router->addRoute("/courses/review/delete", [$reviewController, "deleteReview"], ['isUser']);
 $router->addRoute("/courses/review/like", [$reviewController, "toggleLikeReview"], ['isUser']);
 
+
+
 $router->addRoute("/courses/review/reply", [$reviewController, "replyReview"], ['isAdmin']);
+
+
+
+//Notification
+$router->addRoute("/admin/notifications", [$notificationController, "index"], ['isAdmin']);
+$router->addRoute("/admin/notifications/create", [$notificationController, "create"], ['isAdmin']);
+$router->addRoute("/admin/notifications/store", [$notificationController, "store"], ['isAdmin']);
+$router->addRoute("/admin/notifications/edit/{id}", [$notificationController, "edit"], ['isAdmin']);
+$router->addRoute("/admin/notifications/update/{id}", [$notificationController, "update"], ['isAdmin']);
+$router->addRoute("/admin/notifications/delete/{id}", [$notificationController, "delete"], ['isAdmin']);
+$router->addRoute("/admin/notifications/send-selected", [$notificationController, "sendSelected"], ['isAdmin']);
+$router->addRoute("/admin/notifications/delete-selected", [$notificationController, "deleteSelected"], ['isAdmin']);
 
 
 
@@ -232,11 +303,25 @@ $router->addRoute("/admin/postCategory/create", [$postCategoryController, "creat
 $router->addRoute("/admin/postCategory/edit/{id}", [$postCategoryController, "edit"]);
 $router->addRoute("/admin/postCategory/delete/{id}", [$postCategoryController, "delete"]);
 
+$router->addRoute("/instructor/postCategory", [$postCategoryController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/postCategory/create", [$postCategoryController, "create"], ['isInstructor']);
+$router->addRoute("/instructor/postCategory/edit/{id}", [$postCategoryController, "edit"], ['isInstructor']);
+$router->addRoute("/instructor/postCategory/delete/{id}", [$postCategoryController, "delete"], ['isInstructor']);
+
+
+
 // post
 $router->addRoute("/admin/post", [$postController, "index"]);
 $router->addRoute("/admin/post/create", [$postController, "create"]);
 $router->addRoute("/admin/post/edit/{id}", [$postController, "edit"]);
 $router->addRoute("/admin/post/delete/{id}", [$postController, "delete"]);
+
+$router->addRoute("/instructor/post", [$postController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/post/create", [$postController, "create"], ['isInstructor']);
+$router->addRoute("/instructor/post/edit/{id}", [$postController, "edit"], ['isInstructor']);
+$router->addRoute("/instructor/post/delete/{id}", [$postController, "delete"], ['isInstructor']);
+
+
 
 $router->addRoute("/posts", [$postController, "show"]);
 $router->addRoute("/posts/detail/{id}", [$postController, "detail"]);
@@ -276,6 +361,14 @@ $router->addRoute("/admin/reviews/edit/{id}", [$reviewController, "edit"], ['isA
 $router->addRoute("/admin/reviews/update/{id}", [$reviewController, "update"], ['isAdmin']);
 $router->addRoute("/admin/reviews/delete/{id}", [$reviewController, "delete"], ['isAdmin']);
 
+$router->addRoute("/instructor/reviews", [$reviewController, "index"], ['isInstructor']);
+$router->addRoute("/instructor/reviews/create", [$reviewController, "create"], ['isInstructor']);
+$router->addRoute("/instructor/reviews/store", [$reviewController, "store"], ['isInstructor']);
+$router->addRoute("/instructor/reviews/edit/{id}", [$reviewController, "edit"], ['isInstructor']);
+$router->addRoute("/instructor/reviews/update/{id}", [$reviewController, "update"], ['isInstructor']);
+$router->addRoute("/instructor/reviews/delete/{id}", [$reviewController, "delete"], ['isInstructor']);
+
+
 $router->addRoute("/notes", [$notesController, "create"]);
 $router->addRoute("/notes/get", [$notesController, "getNotesByCourse"], ['isUser']);
 $router->addRoute("/notes/edit/{id}", [$notesController, "edit"], ['isUser']);
@@ -284,12 +377,25 @@ $router->addRoute("/notes/delete/{id}", [$notesController, "delete"], ['isUser']
 
 $router->addRoute("/generate_questions", [$aiController, "generateQuestions"], ['isUser']);
 $router->addRoute("/get_questions", [$aiController, "getQuestions"], ['isUser']);
-
+$router->addRoute("/generate_video_content", [$aiController, "generateVideoContent"], ['isUser']);
 
 $router->addRoute("/thank-you", function() {
     include __DIR__ . "/view/thank-you.php";
 
 });
+
+
+if (preg_match('/^\/view-pdf\/(.+)$/', $_SERVER['REQUEST_URI'], $matches)) {
+    $fileName = $matches[1];
+    include 'controllers/FileController.php';
+    $controller = new FileController();
+    $controller->servePdf($fileName);
+    exit;
+}
+
+
+
+
 
 $request = $_SERVER['REQUEST_URI'];
 $method = $_SERVER['REQUEST_METHOD'];
@@ -312,5 +418,6 @@ switch ($request) {
     default:
         break;
 }
+
 $router->dispatch();
 ?>

@@ -29,8 +29,9 @@ class AiController {
         $lessonId = $input['lesson_id'] ?? '';
         $courseId = $input['course_id'] ?? null;
         $userId = $_SESSION['user']['id'] ?? null;
+        $questionCount = $input['question_count'] ?? 5; // Lấy số lượng câu hỏi từ form, mặc định là 5
         
-        if (empty($lessonTitle) || empty($lessonId) || empty($courseId) || empty($userId)) {
+        if (empty($lessonTitle) || empty($lessonId) || empty($courseId) || empty($userId) || empty($videoUrl)) {
             echo json_encode([
                 'status' => 'error',
                 'message' => 'Thiếu thông tin cần thiết để tạo câu hỏi'
@@ -38,6 +39,13 @@ class AiController {
             exit;
         }
         
+        // Kiểm tra questionCount nằm trong khoảng 5-20
+        $questionCount = max(5, min(20, (int)$questionCount));
+        error_log("Generating $questionCount questions for lesson_id: $lessonId");
+
+        // Tính thời gian làm bài (giây)
+        $timeLimit = $questionCount < 10 ? 120 : 270; // Dưới 10 câu: 2 phút, từ 10 câu: 4 phút 30 giây
+
         // Xóa các câu hỏi cũ liên quan đến lesson_id trước khi tạo mới
         try {
             $this->aiModel->deleteQuestionsByLessonId($lessonId);
@@ -46,8 +54,8 @@ class AiController {
             error_log("Error deleting existing questions: " . $e->getMessage());
         }
 
-        // Tạo câu hỏi mới từ AI
-        $questions = $this->aiModel->generateQuestionsFromAI($lessonTitle, $lessonDescription);
+        // Tạo câu hỏi mới từ AI với số lượng yêu cầu
+        $questions = $this->aiModel->generateQuestionsFromAI($lessonTitle, $lessonDescription, $videoUrl, $questionCount);
         
         if (empty($questions)) {
             echo json_encode([
@@ -65,7 +73,7 @@ class AiController {
                     $lessonId,
                     $courseId,
                     $userId,
-                    $question['question'],
+                    $question['question_text'],
                     $question['options'],
                     $question['correct_answer']
                 );
@@ -78,6 +86,7 @@ class AiController {
         $savedQuestions = $this->aiModel->getQuestionsByLessonId($lessonId);
         error_log('Saved questions: ' . print_r($savedQuestions, true));
         
+        // Trả về phản hồi với time_limit
         echo json_encode([
             'status' => 'success',
             'questions' => array_map(function($q) {
@@ -86,12 +95,14 @@ class AiController {
                     'options' => json_decode($q['options'], true),
                     'correct_answer' => $q['correct_answer']
                 ];
-            }, $savedQuestions)
+            }, $savedQuestions),
+            'time_limit' => $timeLimit, // Thêm thời gian làm bài (giây)
+            'message' => "Đã tạo thành công $questionCount câu hỏi"
         ]);
         exit;
     }
 
-    // Phương thức để lấy câu hỏi
+    // Phương thức để lấy câu hỏi (giữ nguyên)
     public function getQuestions() {
         header('Content-Type: application/json');
     
@@ -118,10 +129,9 @@ class AiController {
             $questionList = array_map(function($q) {
                 $options = json_decode($q['options'], true);
                 $correctAnswer = $q['correct_answer'];
-                // Nếu correct_answer chỉ chứa ký tự (A, B, C, D), chuyển thành giá trị đầy đủ trong options
                 if (strlen($correctAnswer) === 1 && preg_match('/^[A-D]$/', $correctAnswer)) {
                     $index = ord($correctAnswer) - ord('A');
-                    $correctAnswer = $options[$index] ?? $correctAnswer; // Giữ nguyên nếu không tìm thấy
+                    $correctAnswer = $options[$index] ?? $correctAnswer;
                 }
                 return [
                     'question_text' => $q['question_text'],
@@ -141,6 +151,91 @@ class AiController {
                 'message' => 'Lỗi khi tải câu hỏi từ cơ sở dữ liệu'
             ]);
         }
+        exit;
+    }
+
+    // Phương thức để tạo và lấy nội dung video (giữ nguyên)
+    public function generateVideoContent() {
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Phương thức không được hỗ trợ'
+            ]);
+            exit;
+        }
+        
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        $videoUrl = $input['video_url'] ?? '';
+        $lessonTitle = $input['lesson_title'] ?? '';
+        $lessonDescription = $input['lesson_description'] ?? '';
+        $lessonId = $input['lesson_id'] ?? '';
+        $courseId = $input['course_id'] ?? null;
+        $userId = $_SESSION['user']['id'] ?? null;
+        $videoDuration = 120; // Giả sử video dài 2 phút, thay bằng giá trị thực nếu có
+        $forceReload = $input['force_reload'] ?? false; // Thêm tham số để buộc tạo mới
+        
+        if (empty($videoUrl) || empty($lessonId) || empty($courseId) || empty($userId)) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Thiếu thông tin cần thiết để tạo nội dung video'
+            ]);
+            exit;
+        }
+        
+        // Nếu không buộc tải lại, kiểm tra nội dung cũ
+        if (!$forceReload) {
+            try {
+                $existingContent = $this->aiModel->getVideoContentByLessonId($lessonId);
+                if ($existingContent && !empty($existingContent['content'])) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'content' => $existingContent['content']
+                    ]);
+                    exit;
+                }
+            } catch (Exception $e) {
+                error_log("Error retrieving existing video content: " . $e->getMessage());
+            }
+        }
+        
+        // Xóa nội dung cũ trước khi tạo mới
+        try {
+            $this->aiModel->deleteVideoContentByLessonId($lessonId);
+            error_log("Deleted existing video content for lesson_id: $lessonId");
+        } catch (Exception $e) {
+            error_log("Error deleting existing video content: " . $e->getMessage());
+        }
+        
+        $result = $this->aiModel->generateVideoContent($videoUrl, $lessonTitle, $lessonDescription, $videoDuration);
+        
+        if ($result['status'] === 'error' || empty($result['content'])) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => $result['message'] ?? 'Không thể tạo nội dung video hoặc nội dung rỗng'
+            ]);
+            exit;
+        }
+        
+        try {
+            $this->aiModel->saveVideoContent(
+                $lessonId,
+                $courseId,
+                $userId,
+                $videoUrl,
+                $result['content']
+            );
+            error_log("Saved video content for lesson_id: $lessonId");
+        } catch (Exception $e) {
+            error_log("Error saving video content: " . $e->getMessage());
+        }
+        
+        echo json_encode([
+            'status' => 'success',
+            'content' => $result['content']
+        ]);
         exit;
     }
 }

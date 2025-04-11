@@ -87,6 +87,21 @@
                     <input type="number" name="order_number" class="form-control" 
                            value="<?= htmlspecialchars($lesson['order_number']) ?>">
                 </div>
+              <!-- Hiển thị file hiện tại nếu có -->
+            <div class="mb-3">
+                <?php if (!empty($lesson['pdf_path'])): ?>
+                    <p>📄 File hiện tại: <a href="<?= $lesson['pdf_path'] ?>" target="_blank">Xem PDF</a></p>
+                <?php endif; ?> 
+            </div>
+
+            <!-- Trường upload file mới -->
+            <div class="mb-3">
+                <label for="pdf_path">Tải lên file PDF mới:</label>
+                <input type="file" name="pdf_path" id="pdf_path" accept="application/pdf">
+            </div>
+
+            <!-- Giữ lại đường dẫn file cũ nếu không upload -->
+            <input type="hidden" name="current_pdf_path" value="<?= $lesson['pdf_path'] ?? '' ?>">
 
                 <button type="submit" class="btn btn-success">Lưu thay đổi</button>
             </form>
