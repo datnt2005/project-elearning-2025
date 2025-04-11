@@ -189,7 +189,7 @@
                                            class="btn btn-sm btn-outline-primary" title="Sửa">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                        <button  type="button" class="btn btn-sm btn-outline-danger"
                                                 onclick="confirmDelete(<?= $quiz['answer_id'] ?>)" title="Xóa">
                                             <i class="fas fa-trash"></i>
                                         </button>

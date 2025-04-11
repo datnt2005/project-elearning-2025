@@ -84,6 +84,217 @@
             transition: width 0.3s ease;
         }
 
+        #course-progress, #current-lesson-progress {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .text-green-500 {
+            color: #22c55e;
+        }
+
+        .text-blue-500 {
+            color: #3b82f6;
+        }
+
+        .text-red-500 {
+            color: #ef4444;
+        }
+
+        .course-content {
+            flex-grow: 1;
+        }
+
+        .course-content h2 {
+            font-size: 1.25rem;
+            margin: 0.5rem 0;
+            color: #333;
+        }
+
+        .course-content .chapter {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #f9f9f9;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .course-content .chapter:hover {
+            background-color: #e5e7eb;
+        }
+
+        .lesson-list {
+            list-style: none;
+            padding-left: 20px;
+            display: none;
+        }
+
+        .lesson-list.active {
+            display: block;
+        }
+
+        .lesson-item {
+            position: relative;
+        }
+
+        .lesson-item a {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .lesson-item.locked a {
+            color: #999;
+            pointer-events: none;
+        }
+
+        .lesson-progress {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .lock-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px 0;
+            text-decoration: none;
+            background-color: #e5e7eb;
+            color: #6b7280;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            background-color: #d1d5db;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container-learning {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .video-section,
+            .sidebar1 {
+                flex: 1 1 100%;
+            }
+
+            .video-title h1 {
+                font-size: 1.25rem;
+            }
+
+            .description .text-3xl {
+                font-size: 1.5rem;
+            }
+
+            .description p {
+                font-size: 0.9rem;
+            }
+
+            .sidebar1 {
+                min-width: 0;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .video-title h1 {
+                font-size: 1rem;
+            }
+
+            .description .text-3xl {
+                font-size: 1.25rem;
+            }
+
+            .description p {
+                font-size: 0.875rem;
+            }
+
+            .lesson-item a {
+                font-size: 0.875rem;
+            }
+            .container-learning{
+=======
+
+        .video-title h1 {
+            font-size: 1.5rem;
+            margin: 0.75rem;
+            color: #333;
+        }
+
+        .video-player {
+            position: relative;
+            width: 100%;
+        }
+
+        .video-player iframe {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .description {
+            margin-top: 10px;
+        }
+
+        .description p {
+            font-size: 1rem;
+            margin: 0 1.25rem;
+            color: #666;
+        }
+
+        .description .text-3xl {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .sidebar1 {
+            min-width: 400px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            margin-top: 1rem;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            margin: 5px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #4caf50;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
         #course-progress,
         #current-lesson-progress {
             display: block;
@@ -236,7 +447,6 @@
                 padding: 10px;
             }
         }
-
         @media (max-width: 1024px) {
             .container-learning {
                 flex-direction: column;
@@ -262,15 +472,27 @@
             <div class="video-player">
                 <?php if ($error): ?>
                     <p class="text-red-500 text-center"><?php echo $error; ?></p>
-                    <iframe id="video-iframe" width="100%" height="400" src="" frameborder="0" allowfullscreen></iframe>
                 <?php else: ?>
-                    <iframe id="video-iframe" width="100%" height="400"
-                        src="<?php echo htmlspecialchars($currentLesson['video_url'], ENT_QUOTES, 'UTF-8') . '&enablejsapi=1'; ?>"
-                        title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+                    <?php if ($currentLesson['type'] === 'video' && !empty($currentLesson['video_url'])): ?>
+                        <!-- Hiển thị video -->
+                        <iframe id="video-iframe" width="100%" height="400"
+                            src="<?php echo htmlspecialchars($currentLesson['video_url'], ENT_QUOTES) . '&enablejsapi=1'; ?>"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    <?php elseif ($currentLesson['type'] === 'pdf' && !empty($currentLesson['pdf_path'])): ?>
+                        <!-- Hiển thị PDF -->
+                        <iframe id="pdf-iframe" width="100%" height="600"
+                            src="<?php echo htmlspecialchars($currentLesson['pdf_path'], ENT_QUOTES); ?>" title="PDF Viewer"
+                            frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy">
+                        </iframe>
+                    <?php else: ?>
+                        <!-- Không có nội dung -->
+                        <p class="text-red-500 text-center">Không có nội dung để hiển thị.</p>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
+
             <div class="flex items-center justify-between">
                 <div class="description" id="video-description">
                     <p class="text-3xl m-5 mb-0">
@@ -278,6 +500,12 @@
                     </p>
                     <p class="mx-5"><?php echo htmlspecialchars($currentLesson['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                 </div>
+
+              
+
+              
+
+
                 <div class="ghichu" id="ghichu">
                     <!-- Nút Thêm Ghi Chú -->
                     <button id="note-button" class="bg-purple-500 text-white px-4 py-2  rounded mr-5" onclick="openModal()">
@@ -1019,22 +1247,22 @@ function closeQuiz() {
                                         // Trong hàm loadNotes(), thay đoạn hiển thị note-item bằng:
                                         filteredNotes.forEach(note => {
                                             notesList.innerHTML += `
-        <div class="note-item p-2 border-b relative" data-id="${note.id}">
-            <p><strong>${note.video_time}</strong>: <span class="note-text">${note.note}</span></p>
-            <small>Phần ${note.section_order || 'N/A'} - ${note.section_name || 'Không xác định'} | Bài ${note.lesson_order || 'N/A'} - ${note.lesson_name || 'Không xác định'}</small>
-            <div class="absolute right-2 top-2">
-                <button class="dropdown-btn text-gray-400 hover:text-white focus:outline-none">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
-                    </svg>
-                </button>
-                <div class="dropdown-menu absolute right-0 mt-2 w-28 bg-gray-800 border border-gray-700 rounded-md shadow-lg hidden z-50">
-                    <button class="edit-note w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Sửa</button>
-                    <button class="delete-note w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">Xóa</button>
-                </div>
-            </div>
-        </div>
-    `;
+                    <div class="note-item p-2 border-b relative" data-id="${note.id}">
+                        <p><strong>${note.video_time}</strong>: <span class="note-text">${note.note}</span></p>
+                        <small>Phần ${note.section_order || 'N/A'} - ${note.section_name || 'Không xác định'} | Bài ${note.lesson_order || 'N/A'} - ${note.lesson_name || 'Không xác định'}</small>
+                        <div class="absolute right-2 top-2">
+                            <button class="dropdown-btn text-gray-400 hover:text-white focus:outline-none">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
+                                </svg>
+                            </button>
+                            <div class="dropdown-menu absolute right-0 mt-2 w-28 bg-gray-800 border border-gray-700 rounded-md shadow-lg hidden z-50">
+                                <button class="edit-note w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700">Sửa</button>
+                                <button class="delete-note w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">Xóa</button>
+                            </div>
+                        </div>
+                    </div>
+                 `;
                                         });
                                         attachEventListeners();
                                     } else {
@@ -1388,13 +1616,43 @@ function closeQuiz() {
                                     <hr class="my-1">
                                 </li>
                             <?php endforeach; ?>
-                            <a href="/quizzes/section/<?= htmlspecialchars($section['id']); ?>" class="btn btn-primary text-muted">Bài tập</a>
+
+                            <!-- // set status cho đoạn này -->
+                            <a href="/quizzes/section/<?= htmlspecialchars($section['id']); ?>" 
+                                class="btn btn-primary text-muted quiz-link" 
+                                data-section-id="<?= $section['id'] ?>">
+                                Bài tập <span class="quiz-status"></span>
+                            </a>
+
                         <?php endif; ?>
                     </ul>
                 <?php endforeach; ?>
             </div>
         </div>
     </div>
+    
+   <!-- // thêm đoạn này  -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".quiz-link").forEach(link => {
+                const sectionId = link.dataset.sectionId;
+                const completed = localStorage.getItem("quizCompleted_" + sectionId);
+                const statusSpan = link.querySelector(".quiz-status");
+
+                if (completed === "true") {
+                    // Cập nhật giao diện: thêm trạng thái "✅ Đã hoàn thành"
+                    statusSpan.textContent = "✅ Đã hoàn thành";
+
+                    // Optional: Làm mờ nút hoặc vô hiệu hoá
+                    link.classList.remove("btn-primary");
+                    link.classList.add("btn-secondary", "opacity-70", "pointer-events-none");
+                } else {
+                    statusSpan.textContent = "📝 Chưa làm";
+                }
+            });
+        });
+    </script>
+
 
     <script>
         // Toggle dropdown cho các chapter
@@ -1483,7 +1741,6 @@ function closeQuiz() {
 
         <div id="review-message" class="mt-4 text-center text-lg font-medium"></div>
     </div>
-
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -1929,24 +2186,22 @@ function closeQuiz() {
                     }
                 });
 
-                // Gọi updateCourseProgressAndEnrollment khi trang được tải
-                updateCourseProgressAndEnrollment();
-
-                document.querySelectorAll(".lesson-item a:not(.disabled)").forEach(item => {
-                    item.addEventListener("click", function(e) {
-                        e.preventDefault();
-                        let videoUrl = this.dataset.video;
-                        let title = this.dataset.title;
-                        let description = this.dataset.description;
-                        let lessonId = this.dataset.lessonId;
-                        let orderNumber = this.dataset.orderNumber;
-                        changeVideo(videoUrl, title, description, lessonId, orderNumber);
-                    });
+            document.querySelectorAll(".lesson-item a:not(.disabled)").forEach(item => {
+                item.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    let videoUrl = this.dataset.video;
+                    let title = this.dataset.title;
+                    let description = this.dataset.description;
+                    let lessonId = this.dataset.lessonId;
+                    let orderNumber = this.dataset.orderNumber;
+                    let pdf_file = this.dataset.pdf_file;  // Lấy giá trị pdf_file từ dataset
+                    changeVideo(videoUrl, title, description, lessonId, orderNumber, pdf_file ? 'pdf' : 'video');  // Gọi với 'pdf' nếu có pdf_file
                 });
 
-                let params = new URLSearchParams(window.location.search);
-                let lessonId = params.get("lesson");
-                console.log('Initial lesson ID:', lessonId);
+
+            let params = new URLSearchParams(window.location.search);
+            let lessonId = params.get("lesson");
+            console.log('Initial lesson ID:', lessonId);
 
                 if (lessonId) {
                     let activeLesson = document.querySelector(`[data-lesson-id='${lessonId}']`);
@@ -2387,7 +2642,6 @@ function closeQuiz() {
             padding-left: 15px;
             display: none;
         }
-
         .lesson-item {
             padding: 5px 0;
             font-size: 14px;
@@ -2502,6 +2756,7 @@ function closeQuiz() {
             transform: translateX(0);
             /* Dịch chuyển vào màn hình */
         }
+
 
         /* Tùy chỉnh giao diện danh sách ghi chú (sau này bạn có thể thêm style cho danh sách) */
         #notes-list {

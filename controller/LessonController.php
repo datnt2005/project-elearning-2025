@@ -35,20 +35,32 @@ class LessonController
             renderViewInstructor("view/instructor/lessons/create.php", ["sections" => $sections], "Create Lesson");
         }
     }
+        public function store()
+        {
+            try {
+                $section_id   = $_POST['section_id']   ?? 0;
+                $title        = $_POST['title']        ?? '';
+                $description  = $_POST['description']  ?? '';
+                $video_url    = $_POST['video_url']    ?? '';
+                $content      = $_POST['content']      ?? '';
+                $order_number = $_POST['order_number'] ?? 0;
 
-    public function store()
-    {
-        try {
-            $section_id   = $_POST['section_id']   ?? 0;
-            $title        = $_POST['title']        ?? '';
-            $description  = $_POST['description']  ?? '';
-            $video_url    = $_POST['video_url']    ?? '';
-            $content      = $_POST['content']      ?? '';
-            $order_number = $_POST['order_number'] ?? 0;
+                $pdfPath = null;
+                if (isset($_FILES['pdf_path']) && $_FILES['pdf_path']['error'] === UPLOAD_ERR_OK) {
+                    $fileTmpPath = $_FILES['pdf_path']['tmp_name'];
+                    $originalName = $_FILES['pdf_path']['name'];
+                    $fileExtension = pathinfo($originalName, PATHINFO_EXTENSION);
+                    $fileName = time() . '_' . basename($originalName);
+                    $destination = __DIR__ . '/../uploads/files/' . $fileName;
+                
+                    if (move_uploaded_file($fileTmpPath, $destination)) {
+                        $pdfPath = '/uploads/files/' . $fileName; // lưu vào DB khớp với file thực
+                    }
+                }
+                
+                
 
-            $this->lessonModel->create($section_id, $title, $description, $video_url, $content, $order_number);
-
-            if ($_SESSION['user']['role'] === 'admin') {
+                $this->lessonModel->create($section_id, $title, $description, $video_url, $content, $order_number, $pdfPath);
                 header("Location: /admin/lessons");
             } else if ($_SESSION['user']['role'] === 'instructor') {
                 header("Location: /instructor/lessons");
@@ -77,22 +89,45 @@ class LessonController
         }
     }
 
-    public function update($id)
-    {
-        try {
-            $section_id   = $_POST['section_id']   ?? 0;
-            $title        = $_POST['title']        ?? '';
-            $description  = $_POST['description']  ?? '';
-            $video_url    = $_POST['video_url']    ?? '';
-            $content      = $_POST['content']      ?? '';
-            $order_number = $_POST['order_number'] ?? 0;
-
-            $this->lessonModel->update($id, $section_id, $title, $description, $video_url, $content, $order_number);
-
-            if ($_SESSION['user']['role'] === 'admin') {
-                header("Location: /admin/lessons");
-            } else if ($_SESSION['user']['role'] === 'instructor') {
-                header("Location: /instructor/lessons");
+        public function update($id)
+        {
+            try {
+                $section_id   = $_POST['section_id']   ?? 0;
+                $title        = $_POST['title']        ?? '';
+                $description  = $_POST['description']  ?? '';
+                $video_url    = $_POST['video_url']    ?? '';
+                $content      = $_POST['content']      ?? '';
+                $order_number = $_POST['order_number'] ?? 0;
+        
+                // Giữ giá trị mặc định nếu không upload mới
+                $pdfPath = $_POST['current_pdf_path'] ?? null;
+        
+                // Nếu có upload mới thì xử lý
+                if (isset($_FILES['pdf_path']) && $_FILES['pdf_path']['error'] === UPLOAD_ERR_OK) {
+                    $fileTmpPath = $_FILES['pdf_path']['tmp_name'];
+                    $fileName = time() . '_' . basename($_FILES['pdf_path']['name']);
+                    $destination = __DIR__ . '/../uploads/files/' . $fileName;
+        
+                    if (move_uploaded_file($fileTmpPath, $destination)) {
+                        $pdfPath = '/uploads/files/' . $fileName;
+                    } else {
+                        throw new Exception("Không thể lưu file PDF.");
+                    }
+                }
+        
+                // Gọi model cập nhật
+                $result = $this->lessonModel->update($id, $section_id, $title, $description, $video_url, $content, $order_number, $pdfPath);
+        
+                if ($result) {
+                    // Chuyển hướng kèm thông báo
+                    header("Location: /admin/lessons?success=1");
+                } else {
+                    throw new Exception("Không thể cập nhật bài học.");
+                }
+                exit;
+            } catch (Exception $e) {
+                // In ra lỗi nếu có
+                echo "<div style='color:red;'>Lỗi: " . $e->getMessage() . "</div>";
             }
             exit;
         } catch (Exception $e) {
