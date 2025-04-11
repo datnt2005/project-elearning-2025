@@ -872,6 +872,8 @@
                                     <hr class="my-1">
                                 </li>
                             <?php endforeach; ?>
+
+                            <!-- // set status cho đoạn này -->
                             <a href="/quizzes/section/<?= htmlspecialchars($section['id']); ?>" 
                                 class="btn btn-primary text-muted quiz-link" 
                                 data-section-id="<?= $section['id'] ?>">
@@ -884,6 +886,8 @@
             </div>
         </div>
     </div>
+    
+   <!-- // thêm đoạn này  -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(".quiz-link").forEach(link => {
@@ -993,7 +997,6 @@
 
         <div id="review-message" class="mt-4 text-center text-lg font-medium"></div>
     </div>
-
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
