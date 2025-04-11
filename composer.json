@@ -1,14 +1,14 @@
 {
-    "name": "admin/project-elearning-2025",
+    "name": "phatt/project-elearning-2025",
     "autoload": {
         "psr-4": {
-            "Admin\\ProjectElearning2025\\": "src/"
+            "Phatt\\ProjectElearning2025\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "datnt2005",
-            "email": "datntpk2005@gmail.com"
+            "name": "tpaat4004",
+            "email": "phatdeptraiokmen@gmail.com"
         }
     ],
     "require": {

@@ -1,31 +1,40 @@
 <?php
-    require_once __DIR__ . "/../model/LessonModel.php";
-    require_once __DIR__ . "/../model/SectionModel.php";
-    require_once __DIR__ . "/../view/helpers.php";
+require_once __DIR__ . "/../model/LessonModel.php";
+require_once __DIR__ . "/../model/SectionModel.php";
+require_once __DIR__ . "/../view/helpers.php";
 
-    class LessonController
+class LessonController
+{
+    private $lessonModel;
+    private $sectionModel;
+
+    public function __construct()
     {
-        private $lessonModel;
-        private $sectionModel;
+        $this->lessonModel  = new Lesson();
+        $this->sectionModel = new Section();
+    }
 
-        public function __construct()
-        {
-            $this->lessonModel  = new Lesson();
-            $this->sectionModel = new Section();
-        }
+    public function index()
+    {
+        $lessons = $this->lessonModel->getAllLessons();
 
-        public function index()
-        {
-            $lessons = $this->lessonModel->getAllLessons();
+        if ($_SESSION['user']['role'] === 'admin') {
             renderViewAdmin("view/admin/lessons/list.php", ["lessons" => $lessons], "Lesson List");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/lessons/list.php", ["lessons" => $lessons], "Lesson List");
         }
+    }
 
-        public function createForm()
-        {
-            $sections = $this->sectionModel->getAllSections();
+    public function createForm()
+    {
+        $sections = $this->sectionModel->getAllSections();
+
+        if ($_SESSION['user']['role'] === 'admin') {
             renderViewAdmin("view/admin/lessons/create.php", ["sections" => $sections], "Create Lesson");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/lessons/create.php", ["sections" => $sections], "Create Lesson");
         }
-
+    }
         public function store()
         {
             try {
@@ -53,21 +62,32 @@
 
                 $this->lessonModel->create($section_id, $title, $description, $video_url, $content, $order_number, $pdfPath);
                 header("Location: /admin/lessons");
-                exit;
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/lessons");
             }
+            exit;
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
+    }
 
-        public function editForm($id)
-        {
-            $lesson   = $this->lessonModel->getLessonById($id);
-            $sections = $this->sectionModel->getAllSections();
+    public function editForm($id)
+    {
+        $lesson   = $this->lessonModel->getLessonById($id);
+        $sections = $this->sectionModel->getAllSections();
+
+        if ($_SESSION['user']['role'] === 'admin') {
             renderViewAdmin("view/admin/lessons/edit.php", [
                 "lesson"   => $lesson,
                 "sections" => $sections
             ], "Edit Lesson");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/lessons/edit.php", [
+                "lesson"   => $lesson,
+                "sections" => $sections
+            ], "Edit Lesson");
         }
+    }
 
         public function update($id)
         {
@@ -109,13 +129,21 @@
                 // In ra lỗi nếu có
                 echo "<div style='color:red;'>Lỗi: " . $e->getMessage() . "</div>";
             }
-        }
-        
-
-        public function destroy($id)
-        {
-            $this->lessonModel->delete($id);
-            header("Location: /admin/lessons");
             exit;
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
+
+    public function destroy($id)
+    {
+        $this->lessonModel->delete($id);
+
+        if ($_SESSION['user']['role'] === 'admin') {
+            header("Location: /admin/lessons");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            header("Location: /instructor/lessons");
+        }
+        exit;
+    }
+}

@@ -165,6 +165,19 @@ class ReviewModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getReviewAuthor($reviewId)
+{
+    $sql = "SELECT u.id, u.name FROM reviews r 
+            JOIN users u ON r.user_id = u.id 
+            WHERE r.id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([$reviewId]);
+    return $stmt->fetch();
+}
+
+
+
+
     public function getReplyById($replyId)
     {
         $sql = "SELECT r.id, r.comment, r.created_at, u.name as admin_name 
@@ -239,51 +252,59 @@ class ReviewModel
         return $reviews;
     }
 
-    public function add($data) {
+    public function add($data)
+    {
         $sql = "INSERT INTO reviews (course_id, user_id, rating, comment, created_at) VALUES (:course_id, :user_id, :rating, :comment, NOW())";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($data);
         return $this->conn->lastInsertId();
     }
-    public function addReply($data) {
+    public function addReply($data)
+    {
         $sql = "INSERT INTO review_replies (review_id, user_id, comment, created_at) VALUES (:review_id, :user_id, :comment, NOW())";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute($data);
     }
 
-    public function updateReviewReply($reviewId, $data) {
+    public function updateReviewReply($reviewId, $data)
+    {
         $sql = "UPDATE review_replies SET user_id = :user_id, comment = :comment, created_at = NOW() WHERE review_id = :review_id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute(array_merge($data, ['review_id' => $reviewId]));
     }
 
-    public function getReviewReply($reviewId) {
+    public function getReviewReply($reviewId)
+    {
         $sql = "SELECT * FROM review_replies WHERE review_id = :review_id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['review_id' => $reviewId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function addReviewImage($reviewId, $imagePath) {
+    public function addReviewImage($reviewId, $imagePath)
+    {
         $sql = "INSERT INTO review_images (review_id, image_path) VALUES (:review_id, :image_path)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute(['review_id' => $reviewId, 'image_path' => $imagePath]);
     }
 
-    public function getReview($id) {
+    public function getReview($id)
+    {
         $sql = "SELECT * FROM reviews WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function update($id, $data) {
+    public function update($id, $data)
+    {
         $sql = "UPDATE reviews SET course_id = :course_id, user_id = :user_id, rating = :rating, comment = :comment, updated_at = NOW() WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute(array_merge($data, ['id' => $id]));
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $this->conn->prepare("DELETE FROM review_images WHERE review_id = :id")->execute(['id' => $id]);
         $this->conn->prepare("DELETE FROM review_replies WHERE review_id = :id")->execute(['id' => $id]);
         $stmt = $this->conn->prepare("DELETE FROM reviews WHERE id = :id");

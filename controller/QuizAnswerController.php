@@ -14,7 +14,11 @@ require_once "model/QuizAnswerModel.php";
 
         $quizAnswers = $this->quizAnswerModel->getAllAnswers();
 
-        renderViewAdmin("view/admin/quizAnswers/index.php", compact('quizAnswers')) ;
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/quizAnswers/index.php", compact('quizAnswers'), "Danh sách câu trả lời");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/quizAnswers/index.php", compact('quizAnswers'), "Danh sách câu trả lời");
+        }
     }
     public function create() {
         $errors = [];
@@ -39,8 +43,12 @@ require_once "model/QuizAnswerModel.php";
                     $this->quizAnswerModel->addAnswer($question_id, trim($answer_text), $is_correct);
                 }
                 $_SESSION['success_message'] = "Thêm câu trả lời thành công!";
-                header("Location:/admin/quizAnswers");
-
+                // Chuyển hướng về trang danh sách câu trả lời
+                if ($_SESSION['user']['role'] === 'admin') {
+                    header("Location:/admin/quizAnswers");
+                } else if ($_SESSION['user']['role'] === 'instructor') {
+                    header("Location:/instructor/quizAnswers");
+                }
                 exit();
             }
         }
@@ -50,7 +58,12 @@ require_once "model/QuizAnswerModel.php";
             $question_id = $question_id ?? [];
             $questions = $questions ?? [];
             $is_corrects = $is_corrects ?? [];
-        renderViewAdmin("view/admin/quizAnswers/create.php", compact('questions', 'question_id', 'answers', 'is_corrects', 'errors'), "Thêm câu trả lời");
+
+        if ($_SESSION['user']['role'] === 'admin') {
+            renderViewAdmin("view/admin/quizAnswers/create.php", compact('questions', 'question_id', 'answers', 'is_corrects', 'errors'), "Thêm câu trả lời");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            renderViewInstructor("view/instructor/quizAnswers/create.php", compact('questions', 'question_id', 'answers', 'is_corrects', 'errors'), "Thêm câu trả lời");
+        }
     }
 
     public function delete($id) {
@@ -60,7 +73,13 @@ require_once "model/QuizAnswerModel.php";
         } else {
             $_SESSION['error_message'] = "Không thể xóa câu trả lời!";
         }
-        header("Location: /admin/quizAnswers");
+        // Chuyển hướng về trang danh sách câu trả lời
+        if ($_SESSION['user']['role'] === 'admin') {
+            header("Location:/admin/quizAnswers");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            header("Location:/instructor/quizAnswers");
+        }
+         // Đảm bảo không bị lỗi undefined variable
         exit();
     }
   // Controller: Update answer
@@ -78,7 +97,13 @@ require_once "model/QuizAnswerModel.php";
     // Kiểm tra nếu câu trả lời không tồn tại
     if (!$quizAnswer) {
         $_SESSION['error_message'] = "Câu trả lời không tồn tại.";
-        header("Location: /admin/quizAnswers");
+        // Chuyển hướng về trang danh sách câu trả lời
+        if ($_SESSION['user']['role'] === 'admin') {
+            header("Location: /admin/quizAnswers");
+        } else if ($_SESSION['user']['role'] === 'instructor') {
+            header("Location: /instructor/quizAnswers");
+        }
+         // Đảm bảo không bị lỗi undefined variable
         exit();
     }
 
@@ -109,7 +134,12 @@ require_once "model/QuizAnswerModel.php";
             }
 
             $_SESSION['success_message'] = "Cập nhật câu trả lời thành công!";
-            header("Location: /admin/quizAnswers");
+            // Chuyển hướng về trang danh sách câu trả lời
+            if ($_SESSION['user']['role'] === 'admin') {
+                header("Location: /admin/quizAnswers");
+            } else if ($_SESSION['user']['role'] === 'instructor') {
+                header("Location: /instructor/quizAnswers");
+            }
             exit();
         }
     } else {
@@ -120,7 +150,11 @@ require_once "model/QuizAnswerModel.php";
     }
 
     // Truyền dữ liệu ra view
-    renderViewAdmin("view/admin/quizAnswers/edit.php", compact('questions', 'question_id', 'answers', 'is_corrects', 'errors'), "Sửa câu trả lời");
+    if ($_SESSION['user']['role'] === 'admin') {
+        renderViewAdmin("view/admin/quizAnswers/edit.php", compact('questions', 'question_id', 'answers', 'is_corrects', 'errors'), "Sửa câu trả lời");
+    } else if ($_SESSION['user']['role'] === 'instructor') {
+        renderViewInstructor("view/instructor/quizAnswers/edit.php", compact('questions', 'question_id', 'answers', 'is_corrects', 'errors'), "Sửa câu trả lời");
+    }
 }
 
     

@@ -90,13 +90,18 @@ class AuthController
             header("Location: /login");
             exit;
         }
+    
         $user = $_SESSION['user'];
+    
         if ($user['role'] === 'admin') {
             renderViewUser("view/layouts/master_admin.php", compact('user'), "Admin Dashboard");
+        } elseif ($user['role'] === 'instructor') {
+            renderViewUser("view/layouts/master_instructor.php", compact('user'), "Instructor Dashboard");
         } else {
             renderViewUser("view/layouts/master_user.php", compact('user'), "User Dashboard");
         }
     }
+    
 
     public function adminDashboard()
     {
@@ -104,6 +109,7 @@ class AuthController
         //compact: gom bien dien thanh array
         renderViewUser("view/layouts/dashboard_admin.php", compact('users'), "User List");
     }
+    
 
     public function show() {
         $users = $this->AuthModel->getAllUsers(); 
@@ -154,7 +160,8 @@ class AuthController
             $name = trim($_POST['name']);
             $email = trim($_POST['email']);
             $password = trim($_POST['password']);
-            $role = $_POST['role'] ?? 'student';
+            $phone = $_POST['phone'] ?? null;
+            $role = $_POST['role'] ;
             $status = $_POST['status'] ?? 'active';
             $image = (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) ? $this->uploadImage($_FILES['image']) : null;
     
@@ -181,10 +188,10 @@ class AuthController
             }
     
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $this->AuthModel->createUser($name, $email, $hashedPassword, $image, $role, $status);
+            $this->AuthModel->createUser($name, $email, $hashedPassword, $phone, $image, $role, $status);
     
             $_SESSION['success'] = "Tạo người dùng thành công!";
-            header("Location: /admin/user");
+            header("Location: /admin/users");
             exit;
         }
     
@@ -201,7 +208,7 @@ class AuthController
             }
             $this->AuthModel->deleteUser($id);
             $_SESSION['success'] = "Xóa người dùng thành công!";
-            header("Location: /admin/user");
+            header("Location: /admin/users");
             exit;
         } else {
             echo "User not found.";
@@ -256,7 +263,7 @@ class AuthController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email']);
             $password = $_POST['password'];
-
+    
             $user = $this->AuthModel->login($email, $password);
             if ($user) {
                 $_SESSION['user'] = $user;
@@ -268,15 +275,26 @@ class AuthController
                 $_SESSION['user_image'] = $user['image'];
                 $_SESSION['success_message'] = "Đăng nhập thành công!";
                 $_SESSION['loggedIn'] = true;
-                $redirectUrl = ($user['role'] === 'admin') ? '/admin/reports' : '/login';
+    
+                // Xử lý chuyển hướng theo vai trò
+                if ($user['role'] === 'admin') {
+                    $redirectUrl = '/admin/reports';
+                } elseif ($user['role'] === 'instructor') {
+                    $redirectUrl = '/instructor/categories';
+                } else {
+                    $redirectUrl = '/user/dashboard';
+                }
+    
                 header("Location: $redirectUrl");
                 exit;
             } else {
                 $error = "Email hoặc mật khẩu không chính xác.";
             }
         }
+    
         renderViewUser("view/auth/login.php", compact('error'), "Login");
     }
+    
 
 
     public function logout()
@@ -431,11 +449,13 @@ class AuthController
 
             $email = $googleUser->email;
             $name = $googleUser->name;
-
+            $phone = null;
+            $role = 'student';
+            $image = null;
             $user = $this->AuthModel->getUserByEmail($email);
             if (!$user) {
                 $password = uniqid();  
-                $this->AuthModel->createUser($name, $email, $password, '', 'user');
+                $this->AuthModel->createUser($name, $email, $password, $phone, $image, $role);
                 $user = $this->AuthModel->getUserByEmail($email);
             }
 

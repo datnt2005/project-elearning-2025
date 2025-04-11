@@ -18,6 +18,14 @@ function isUser() {
     header("Location: /login");
     exit;
 }
+function isInstructor() {
+    if (isset($_SESSION['user']) && $_SESSION['user_role'] === 'instructor') {
+        return true;
+    }
+    echo "Access denied: Instructor privileges required.";
+    header("Location: /login");
+    exit;
+}
 
 function logRequest() {
     // Log the request for debugging or auditing

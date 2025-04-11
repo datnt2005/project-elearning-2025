@@ -192,6 +192,13 @@ if (!isset($_SESSION['loggedIn']) || $_SESSION['user_role'] !== 'admin') {
                                 </li>
                             </ul>
                         </li>
+                        <!-- Notifications Menu -->
+                        <li class="nav-item">
+                            <a href="/admin/notifications" class="nav-link">
+                                <i class="nav-icon fas fa-bell"></i>
+                                <p>Thông báo</p>
+                            </a>
+                        </li>
 
                         <!-- Posts Menu -->
                         <li class="nav-item has-treeview">
