@@ -187,6 +187,7 @@ class CourseController
             // Lấy dữ liệu text
             $title          = $_POST['title'];
             $description    = $_POST['description'];
+            $course_type    = $_POST['course_type'] ?? 'paid';
             $instructor_id  = $_SESSION['user']['id'];
             $price          = $_POST['price']          ?? 0;
             $discount_price = $_POST['discount_price'] ?? 0;
@@ -194,7 +195,7 @@ class CourseController
             $status         = $_POST['status'];
             $category_id    = $_POST['category_id'];
             $subcategory_id = $_POST['subcategory_id'];
-
+            var_dump($instructor_id);
             // Upload file image (nếu user chọn)
             $imagePath = '';
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
@@ -229,6 +230,7 @@ class CourseController
                 $duration,
                 $imagePath,
                 $videoPath,
+                $course_type,
                 $status,
                 $category_id,
                 $subcategory_id
@@ -253,6 +255,7 @@ class CourseController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title          = $_POST['title'];
             $description    = $_POST['description'];
+            $course_type    = $_POST['course_type'] ?? 'paid';
             $instructor_id  = $_SESSION['user']['id'];
             $price          = $_POST['price'] ?? 0;
             $discount_price = $_POST['discount_price'] ?? 0;
@@ -297,6 +300,7 @@ class CourseController
                 $duration,
                 $imagePath,
                 $videoPath,
+                $course_type,
                 $status,
                 $category_id,
                 $subcategory_id

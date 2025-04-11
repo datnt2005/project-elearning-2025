@@ -154,7 +154,8 @@ class AuthController
             $name = trim($_POST['name']);
             $email = trim($_POST['email']);
             $password = trim($_POST['password']);
-            $role = $_POST['role'] ?? 'student';
+            $phone = $_POST['phone'] ?? null;
+            $role = $_POST['role'] ;
             $status = $_POST['status'] ?? 'active';
             $image = (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) ? $this->uploadImage($_FILES['image']) : null;
     
@@ -181,10 +182,10 @@ class AuthController
             }
     
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $this->AuthModel->createUser($name, $email, $hashedPassword, $image, $role, $status);
+            $this->AuthModel->createUser($name, $email, $hashedPassword, $phone, $image, $role, $status);
     
             $_SESSION['success'] = "Tạo người dùng thành công!";
-            header("Location: /admin/user");
+            header("Location: /admin/users");
             exit;
         }
     
@@ -201,7 +202,7 @@ class AuthController
             }
             $this->AuthModel->deleteUser($id);
             $_SESSION['success'] = "Xóa người dùng thành công!";
-            header("Location: /admin/user");
+            header("Location: /admin/users");
             exit;
         } else {
             echo "User not found.";
@@ -431,11 +432,13 @@ class AuthController
 
             $email = $googleUser->email;
             $name = $googleUser->name;
-
+            $phone = null;
+            $role = 'student';
+            $image = null;
             $user = $this->AuthModel->getUserByEmail($email);
             if (!$user) {
                 $password = uniqid();  
-                $this->AuthModel->createUser($name, $email, $password, '', 'user');
+                $this->AuthModel->createUser($name, $email, $password, $phone, $image, $role);
                 $user = $this->AuthModel->getUserByEmail($email);
             }
 

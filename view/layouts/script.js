@@ -55,40 +55,76 @@ const generateBotResponse = async (incomingMessageDiv) => {
     });
 
     try {
-        if (userData.message.toLowerCase().includes("Tìm khoá học") || userData.message.toLowerCase().includes("course")) {
-            const response = await fetch('http://localhost:8000/api/courses', {
-                method: 'GET',
-                headers: { "Content-Type": "application/json" }
-            });
+        if (userData.message.toLowerCase().includes("tìm khoá học") || userData.message.toLowerCase().includes("course")) {
+            const response = await fetch('http://localhost:8000/api/courses');
             const courses = await response.json();
 
-            let responseText = "Dưới đây là các khóa học có sẵn:<br>";
-            courses.forEach(course => {
-                responseText += `<strong>${course.title}</strong><br>`;
-                responseText += `Danh mục: ${course.category_name} | Danh mục con: ${course.subcategory_name}<br>`;
-                responseText += `Giảng viên: ${course.instructor_name}<br>`;
-                responseText += `Giá: ${course.discount_price ? course.discount_price : course.price} VNĐ (Thời lượng: ${course.duration} H<br>`;
-                if (course.image) {
-                    responseText += `<img src="${course.image}" alt="${course.title}" style="width: 100px; height: auto; border-radius: 5px;"><br>`;
-                }
-                responseText += `<a href="/courses/show/${course.id}" target="_blank" class="course-link">Đi tới khóa học</a><br><br>`;
-            });
-            
-            messageElement.innerHTML = responseText;
-            
+            let responseText = `<div style="font-family: Arial, sans-serif;">
+                <h3 style="color: #2c3e50;">📚 Các khóa học hiện có:</h3>`;
 
+            for (const course of courses) {
+                let sections = [];
+                try {
+                    const sectionRes = await fetch(`http://localhost:8000/api/sections?course_id=${course.id}`);
+                    sections = await sectionRes.json();
+                } catch (err) {
+                    console.warn("Không thể lấy section cho course ID:", course.id);
+                }
+
+                // Lấy bài học trong từng section
+                for (const section of sections) {
+                    try {
+                        const lessonRes = await fetch(`http://localhost:8000/api/lessons?section_id=${section.id}`);
+                        const lessons = await lessonRes.json();
+                        section.lessons = lessons;
+                    } catch (err) {
+                        section.lessons = [];
+                        console.warn("Không thể lấy lessons cho section ID:", section.id);
+                    }
+                }
+
+                responseText += `
+                <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9;">
+                    <h4 style="color: #2980b9; margin-bottom: 10px;">${course.title}</h4>
+                    <p><strong>📂 Danh mục:</strong> ${course.category_name} | <strong>📁 Danh mục con:</strong> ${course.subcategory_name}</p>
+                    <p><strong>👨‍🏫 Giảng viên:</strong> ${course.instructor_name}</p>
+                    <p><strong>💰 Giá:</strong> ${course.discount_price ? course.discount_price : course.price} VNĐ</p>
+                    <p><strong>⏱️ Thời lượng:</strong> ${course.duration} H</p>
+                    ${course.image ? `<img src="${course.image}" alt="${course.title}" style="width: 120px; height: auto; border-radius: 8px; margin-top: 10px;">` : ''}
+
+                    <div style="margin-top: 10px;">
+                        <strong>📘 Nội dung khóa học:</strong>
+                        ${sections.length > 0 ? `
+                            <ul style="padding-left: 20px;">
+                                ${sections.map(section => `
+                                    <li>
+                                        <strong>📁 ${section.title}</strong>
+<ul>
+                                            ${section.lessons && section.lessons.length > 0 
+                                                ? section.lessons.map(lesson => `<li>📖 ${lesson.title}</li>`).join('')
+                                                : '<li>Không có bài học.</li>'}
+                                        </ul>
+                                    </li>`).join('')}
+                            </ul>` : `<p>❌ Chưa có nội dung.</p>`}
+                    </div>
+
+                    <a href="/courses/show/${course.id}" target="_blank" style="display: inline-block; margin-top: 10px; padding: 8px 12px; background-color:rgb(209, 32, 47); color: white; text-decoration: none; border-radius: 5px;">🔗 Xem khóa học</a>
+                </div>`;
+            }
+
+            responseText += `</div>`;
             messageElement.innerHTML = responseText;
+
             chatHistory.push({
                 role: "model",
                 parts: [{ text: responseText }]
             });
         } else {
+            // Các câu hỏi khác
             const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: chatHistory
-                })
+                body: JSON.stringify({ contents: chatHistory })
             };
             const response = await fetch(API_URL, requestOptions);
             const data = await response.json();
@@ -96,6 +132,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
 
             const apiResponseText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
             messageElement.innerText = apiResponseText;
+
             chatHistory.push({
                 role: "model",
                 parts: [{ text: apiResponseText }]

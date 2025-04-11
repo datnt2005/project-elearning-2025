@@ -72,7 +72,7 @@ $aiController = new AiController();
 
 // $router->addMiddleware('logRequest');
 
-$router->addRoute("/", [$courseController, 'home']);
+// $router->addRoute("/", [$courseController, 'home']);
 
 //auth
 $router->addRoute("/login", [$authController, "login"]);
@@ -93,6 +93,10 @@ $router->addRoute("/admin/uploadQuizzByFile/delete/{id}", [$uploadQuizzByFileCon
 
 //users
 $router->addRoute("/users", [$userController, "index"]);
+$router->addRoute("/admin/users", [$authController, "show"], ['isAdmin']);
+$router->addRoute("/admin/user/create", [$authController, "user_create"], ['isAdmin']);
+$router->addRoute("/admin/user/edit/{id}", [$authController, "user_edit"], ['isAdmin']);
+$router->addRoute("/admin/user/delete/{id}", [$authController, "user_delete"], ['isAdmin']);
 
 $router->addRoute("/users/create", [$userController, "create"], ['isUser']);
 $router->addRoute("/about", [$userController, "show"], ['isUser']);
@@ -132,7 +136,7 @@ $router->addRoute("/admin/courses/delete/{id}", [$courseController, "destroy"], 
 // Favourite Courses
 $router->addRoute("/favourite/add", [$favouriteController, "addFavourite"], ['isUser']);
 $router->addRoute("/favourite/remove", [$favouriteController, "removeFavourite"], ['isUser']);
-$router->addRoute("/", [$favouriteController, "index"], ['isUser']);
+$router->addRoute("/", [$favouriteController, "index"]);
 
 
 //Order List
