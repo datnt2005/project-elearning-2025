@@ -124,6 +124,7 @@ class AuthController
             $name = trim($_POST['name']);
             $email = trim($_POST['email']);
             $image = $user['image']; 
+            $phone = trim($_POST['phone']);
             $role = trim($_POST['role']);
             $status = trim($_POST['status']);
     
@@ -144,7 +145,7 @@ class AuthController
                 renderViewAdmin("view/admin/user/user_edit.php", compact('user', 'errors'), "Edit User");
                 return;
             }
-            $this->AuthModel->editUser($id, $name, $email, $image, $role, $status);
+            $this->AuthModel->editUser($id, $name, $email, $phone, $image, $role, $status);
             $_SESSION['success'] = "Cập nhật thông tin người dùng thành công!";
             header("Location: /admin/user");
             exit;
@@ -282,7 +283,7 @@ class AuthController
                 } elseif ($user['role'] === 'instructor') {
                     $redirectUrl = '/instructor/categories';
                 } else {
-                    $redirectUrl = '/user/dashboard';
+                    $redirectUrl = '/';
                 }
     
                 header("Location: $redirectUrl");

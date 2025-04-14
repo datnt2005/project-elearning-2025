@@ -57,15 +57,10 @@ class LessonController
                         $pdfPath = '/uploads/files/' . $fileName; // lưu vào DB khớp với file thực
                     }
                 }
-                
-                
 
                 $this->lessonModel->create($section_id, $title, $description, $video_url, $content, $order_number, $pdfPath);
                 header("Location: /admin/lessons");
-            } else if ($_SESSION['user']['role'] === 'instructor') {
-                header("Location: /instructor/lessons");
-            }
-            exit;
+                exit;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
@@ -130,11 +125,7 @@ class LessonController
                 echo "<div style='color:red;'>Lỗi: " . $e->getMessage() . "</div>";
             }
             exit;
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
         }
-    }
-
     public function destroy($id)
     {
         $this->lessonModel->delete($id);

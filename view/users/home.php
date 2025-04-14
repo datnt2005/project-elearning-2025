@@ -14,25 +14,25 @@ $userName = $loggedIn ? $_SESSION['user_name'] : '';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+
+    @media (max-width: 1024px) {
+        .sidebar {
+            display: none;
         }
 
-        @media (max-width: 1024px) {
-            .sidebar {
-                display: none;
-            }
-
-            .main-content {
-                margin-left: 0 !important;
-            }
+        .main-content {
+            margin-left: 0 !important;
         }
+    }
 
-        @media (max-width: 640px) {
-            .search-input {
-                display: none;
-            }
+    @media (max-width: 640px) {
+        .search-input {
+            display: none;
         }
+    }
     </style>
 </head>
 <?php
@@ -56,7 +56,8 @@ if ($userId) {
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <a href="/" class="text-2xl font-bold text-[#f05123]">P6</a>
-                    <span class="ml-2 text-gray-700 hidden lg:inline">Học online không khó, chỉ sợ không có tiền🙂</span>
+                    <span class="ml-2 text-gray-700 hidden lg:inline">Học online không khó, chỉ sợ không có
+                        tiền🙂</span>
                 </div>
                 <div class="flex items-center">
                     <button class="text-gray-700 focus:outline-none lg:hidden" @click="menuOpen = !menuOpen">
@@ -76,7 +77,8 @@ if ($userId) {
                             <button @click="showNotify = !showNotify" class="relative focus:outline-none text-gray-700">
                                 <i class="fas fa-bell text-xl"></i>
                                 <?php if (!empty($unreadCount)): ?>
-                                    <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
+                                <span
+                                    class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
                                 <?php endif; ?>
                             </button>
 
@@ -85,60 +87,75 @@ if ($userId) {
                                 <div class="p-4 border-b font-semibold text-gray-700">Thông báo</div>
 
                                 <?php if (!empty($notifications)): ?>
-                                    <?php foreach ($notifications as $notify): ?>
-                                        <a href="/notification/read/<?= $notify['id'] ?>"
-                                            class="block px-4 py-2 text-sm border-b hover:bg-gray-50 
+                                <?php foreach ($notifications as $notify): ?>
+                                <a href="/notification/read/<?= $notify['id'] ?>"
+                                    class="block px-4 py-2 text-sm border-b hover:bg-gray-50 
                                             <?= $notify['status'] === 'unread' ? 'font-semibold text-[#f05123]' : 'text-gray-700' ?>">
 
-                                            <!-- Avatar + Tên admin -->
-                                            <div class="flex items-center gap-2 mb-1">
-                                                <?php
+                                    <!-- Avatar + Tên admin -->
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <?php
                                                 $avatarPath = !empty($notify['admin_avatar'])
                                                     ? '/uploads/' . ltrim($notify['admin_avatar'], '/')
                                                     : '/images/default-avatar.png';
                                                 ?>
-                                                <img src="<?= htmlspecialchars($avatarPath) ?>" alt="avatar" class="w-6 h-6 rounded-full object-cover">
-                                                <span class="text-xs text-gray-500"><?= $notify['admin_name'] ?? 'Admin' ?></span>
-                                            </div>
+                                        <img src="<?= htmlspecialchars($avatarPath) ?>" alt="avatar"
+                                            class="w-6 h-6 rounded-full object-cover">
+                                        <span
+                                            class="text-xs text-gray-500"><?= $notify['admin_name'] ?? 'Admin' ?></span>
+                                    </div>
 
-                                            <!-- Nội dung + Thời gian -->
-                                            <?= htmlspecialchars($notify['message']) ?>
-                                            <div class="text-xs text-gray-400">
-                                                <?= date("d/m/Y H:i", strtotime($notify['created_at'])) ?>
-                                            </div>
-                                        </a>
-                                    <?php endforeach; ?>
+                                    <!-- Nội dung + Thời gian -->
+                                    <?= htmlspecialchars($notify['message']) ?>
+                                    <div class="text-xs text-gray-400">
+                                        <?= date("d/m/Y H:i", strtotime($notify['created_at'])) ?>
+                                    </div>
+                                </a>
+                                <?php endforeach; ?>
 
                                 <?php else: ?>
-                                    <div class="px-4 py-2 text-sm text-gray-500">Không có thông báo nào.</div>
+                                <div class="px-4 py-2 text-sm text-gray-500">Không có thông báo nào.</div>
                                 <?php endif; ?>
                             </div>
                         </div>
 
-                        <div class="mt-4 lg:mt-0 lg:ml-4" x-data="{ loggedIn: <?= json_encode($loggedIn) ?>, dropdownOpen: false, userName: '<?= $userName ?>' }">
+                        <div class="mt-4 lg:mt-0 lg:ml-4"
+                            x-data="{ loggedIn: <?= json_encode($loggedIn) ?>, dropdownOpen: false, userName: '<?= $userName ?>' }">
                             <template x-if="!loggedIn">
                                 <div class="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4">
-                                    <a href="/register" class="px-4 py-2 text-[#f05123] font-medium hover:text-[#f05123]/90 no-underline">Đăng ký</a>
-                                    <a href="/login" class="px-4 py-2 bg-[#f05123] text-white rounded-full font-medium hover:bg-[#f05123]/90 no-underline">Đăng nhập</a>
+                                    <a href="/register"
+                                        class="px-4 py-2 text-[#f05123] font-medium hover:text-[#f05123]/90 no-underline">Đăng
+                                        ký</a>
+                                    <a href="/login"
+                                        class="px-4 py-2 bg-[#f05123] text-white rounded-full font-medium hover:bg-[#f05123]/90 no-underline">Đăng
+                                        nhập</a>
                                 </div>
                             </template>
                             <template x-if="loggedIn">
                                 <div class="relative">
-                                    <button @click="dropdownOpen = !dropdownOpen" class="flex items-center px-4 py-2 text-gray-700 font-medium focus:outline-none">
-                                        <img src="http://localhost:8000/<?= !empty($user['image']) ? 'uploads/' . $user['image'] : 'uploads/avatar/default-avatar.png' ?>" alt="User Avatar" class="w-8 h-8 rounded-full">
+                                    <button @click="dropdownOpen = !dropdownOpen"
+                                        class="flex items-center px-4 py-2 text-gray-700 font-medium focus:outline-none">
+                                        <img src="http://localhost:8000/<?= !empty($user['image']) ? 'uploads/' . $user['image'] : 'uploads/avatar/default-avatar.png' ?>"
+                                            alt="User Avatar" class="w-8 h-8 rounded-full">
                                         <span class="ml-2" x-text="userName"></span>
                                     </button>
-                                    <div x-show="dropdownOpen" @click.away="dropdownOpen = false" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
-                                        <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Trang cá nhân</a>
-                                        <a href="/orderList" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Khóa học đã mua</a>
-                                        <a href="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cài đặt</a>
-                                        <a href="/logout" class="block px-4 py-2 text-red-500 hover:bg-gray-100">Đăng xuất</a>
+                                    <div x-show="dropdownOpen" @click.away="dropdownOpen = false"
+                                        class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
+                                        <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Trang
+                                            cá nhân</a>
+                                        <a href="/orderList"
+                                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Khóa học đã mua</a>
+                                        <a href="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Cài
+                                            đặt</a>
+                                        <a href="/logout" class="block px-4 py-2 text-red-500 hover:bg-gray-100">Đăng
+                                            xuất</a>
                                     </div>
                                 </div>
                             </template>
                         </div>
                         <div class="mt-4 lg:hidden">
-                            <a href="/posts" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Bài viết</a>
+                            <a href="/posts" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Bài
+                                viết</a>
                         </div>
                     </div>
                 </div>
@@ -147,7 +164,8 @@ if ($userId) {
     </nav>
 
     <!-- Sidebar -->
-    <div style="max-width: 96px" class="sidebar fixed left-0 top-16 w-[96px] h-screen bg-white border-r border-gray-200 hidden lg:block">
+    <div style="max-width: 96px"
+        class="sidebar fixed left-0 top-16 w-[96px] h-screen bg-white border-r border-gray-200 hidden lg:block">
         <div class="flex flex-col items-center py-6 space-y-8">
             <a href="/" class="flex flex-col items-center text-gray-700 hover:text-[#f05123]">
                 <i class="fas fa-home text-xl"></i>
@@ -168,11 +186,13 @@ if ($userId) {
     <main class="main-content container mx-auto px-4 pt-20 mb-5">
         <!-- Hero Section -->
         <div style="max-width: 1700px;" class="relative overflow-hidden rounded-2xl mb-8">
-            <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between">
+            <div
+                class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between">
                 <div class="max-w-xl text-center md:text-left">
                     <h1 class="text-2xl md:text-4xl font-bold text-white mb-4">Học ReactJS Miễn Phí!</h1>
                     <p class="text-white/90 mb-6 text-sm md:text-base">
-                        Khóa học ReactJS từ cơ bản tới nâng cao. Kết quả của khóa học này là bạn có thể làm hầu hết các dự án thường gặp với ReactJS.
+                        Khóa học ReactJS từ cơ bản tới nâng cao. Kết quả của khóa học này là bạn có thể làm hầu hết các
+                        dự án thường gặp với ReactJS.
                     </p>
                     <button class="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-white/90">
                         ĐĂNG KÝ NGAY
@@ -180,8 +200,7 @@ if ($userId) {
                 </div>
                 <div class="flex-shrink-0 mt-6 md:mt-0">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png"
-                        alt="ReactJS Logo"
-                        class="w-40 h-40 md:w-64 md:h-64 object-contain">
+                        alt="ReactJS Logo" class="w-40 h-40 md:w-64 md:h-64 object-contain">
                 </div>
             </div>
         </div>
@@ -194,52 +213,59 @@ if ($userId) {
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php foreach ($courses as $course) : ?>
-                    <?php
+                <?php
                     $isFavourite = in_array($course['id'], (array) $favourites);
                     $isPurchased = in_array($course['id'], (array) $orders);
                     $courseLink = $isPurchased || $course['course_type'] === 'free' 
                         ? "/courses/learning/{$course['id']}" 
                         : "/courses/show/{$course['id']}";
                     ?>
-                    <div class="bg-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+                <div class="bg-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
                     <a href="<?php echo $courseLink; ?>">
-                    <div class="relative aspect-video">
-                                <img class="w-full h-full object-cover" src="http://localhost:8000/<?= htmlspecialchars($course['image']) ?>" alt="">
+                        <div class="relative aspect-video">
+                            <img class="w-full h-full object-cover"
+                                src="http://localhost:8000/<?= htmlspecialchars($course['image']) ?>" alt="">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg md:text-xl font-bold text-gray-800"><?php echo $course['title']; ?>
+                                </h3>
+                                <?php if (!$isPurchased) : ?>
+                                <button class="favorite-btn" data-course-id="<?= $course['id']; ?>"
+                                    data-favorite="<?= $isFavourite ? 'true' : 'false'; ?>">
+                                    <i class="fas fa-heart <?= $isFavourite ? 'text-red-500' : 'text-gray-400'; ?>"></i>
+                                </button>
+                                <?php endif; ?>
                             </div>
-                            <div class="p-4">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="text-lg md:text-xl font-bold text-gray-800"><?php echo $course['title']; ?></h3>
-                                    <?php if (!$isPurchased) : ?>
-                                        <button class="favorite-btn" data-course-id="<?= $course['id']; ?>" data-favorite="<?= $isFavourite ? 'true' : 'false'; ?>">
-                                            <i class="fas fa-heart <?= $isFavourite ? 'text-red-500' : 'text-gray-400'; ?>"></i>
-                                        </button>
-                                    <?php endif; ?>
+                            <div class="flex items-center">
+                                <?php if ($isPurchased) : ?>
+                                <span class="text-green-600 font-bold block mt-2 text-sm md:text-base">Bạn đã mua khóa
+                                    học này!</span>
+                                <?php else : ?>
+                                <?php if($course['course_type'] == 'paid') : ?>
+                                <div class="flex items-center justify-between mt-2 w-full">
+                                    <span class="text-gray-500 line-through text-sm md:text-base">
+                                        <?php echo number_format($course['price'], 0, ',', '.'); ?> VND
+                                    </span>
+                                    <span class="text-[#f05123] font-bold mx-2 text-sm md:text-base">
+                                        <?php echo number_format($course['discount_price'], 0, ',', '.'); ?> VND
+                                    </span>
                                 </div>
-                                <div class="flex items-center">
-                                    <?php if ($isPurchased) : ?>
-                                        <span class="text-green-600 font-bold block mt-2 text-sm md:text-base">Bạn đã mua khóa học này!</span>
-                                    <?php else : ?>
-                                        <?php if($course['course_type'] == 'paid') : ?>
-                                        <div class="flex items-center justify-between mt-2 w-full">
-                                            <span class="text-gray-500 line-through text-sm md:text-base">
-                                                <?php echo number_format($course['price'], 0, ',', '.'); ?> VND
-                                            </span>
-                                            <span class="text-[#f05123] font-bold mx-2 text-sm md:text-base">
-                                                <?php echo number_format($course['discount_price'], 0, ',', '.'); ?> VND
-                                            </span>
-                                        </div>
-                                        <?php else : ?>
-                                            <span class="text-green-600 font-bold block mt-2 text-sm md:text-base">Miễn phí</span>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="instructor flex items-center mt-2">
-                                    <img class="rounded-full w-6 h-6 md:w-8 md:h-8" src="http://localhost:8000/uploads/<?= htmlspecialchars($course['instructor_image']) ?>" alt="avt">
-                                    <span class="mx-2 text-gray-600 text-sm md:text-base"><?php echo $course['instructor_name']; ?></span>
-                                </div>
+                                <?php else : ?>
+                                <span class="text-green-600 font-bold block mt-2 text-sm md:text-base">Miễn phí</span>
+                                <?php endif; ?>
+                                <?php endif; ?>
                             </div>
-                        </a>
-                    </div>
+                            <div class="instructor flex items-center mt-2">
+                                <img class="rounded-full w-6 h-6 md:w-8 md:h-8"
+                                    src="http://localhost:8000/uploads/<?= htmlspecialchars($course['instructor_image']) ?>"
+                                    alt="avt">
+                                <span
+                                    class="mx-2 text-gray-600 text-sm md:text-base"><?php echo $course['instructor_name']; ?></span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
                 <?php endforeach; ?>
             </div>
         </section>
@@ -247,107 +273,162 @@ if ($userId) {
         <!-- Favourite Courses Section -->
         <section>
             <?php if (!empty($favouriteList)) : ?>
-                <h2 class="text-xl md:text-2xl font-bold mb-6 flex items-center mt-8">
-                    Khóa học Yêu thích
-                    <span class="ml-2 px-2 py-1 bg-blue-500 text-white text-xs rounded">MỚI</span>
-                </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <?php foreach ($courses as $course) : ?>
-                        <?php
+            <h2 class="text-xl md:text-2xl font-bold mb-6 flex items-center mt-8">
+                Khóa học Yêu thích
+                <span class="ml-2 px-2 py-1 bg-blue-500 text-white text-xs rounded">MỚI</span>
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <?php foreach ($courses as $course) : ?>
+                <?php
                         $isPurchased = in_array($course['id'], (array) $orders);
                         ?>
-                        <?php if (in_array($course['id'], $favouriteList)) : ?>
-                            <div class="bg-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
-                                <a href="<?php echo $isPurchased ? "/courses/learning/{$course['id']}" : "/courses/show/{$course['id']}"; ?>">
-                                    <div class="relative aspect-video">
-                                        <img class="w-full h-full object-cover" src="http://localhost:8000/<?= htmlspecialchars($course['image']) ?>" alt="">
-                                    </div>
-                                    <div class="p-4">
-                                        <div class="flex items-center justify-between">
-                                            <h3 class="text-lg md:text-xl font-bold text-gray-800"><?php echo $course['title']; ?></h3>
-                                            <?php if (!$isPurchased) : ?>
-                                                <button class="favorite-btn" data-course-id="<?= $course['id']; ?>" data-favorite="true">
-                                                    <i class="fas fa-heart text-red-500"></i>
-                                                </button>
-                                            <?php endif; ?>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <?php if ($isPurchased) : ?>
-                                                <span class="text-green-600 font-bold block mt-2 text-sm md:text-base">Bạn đã mua khóa học này!</span>
-                                            <?php else : ?>
-                                                <div class="flex items-center justify-between mt-2 w-full">
-                                                    <span class="text-gray-500 line-through text-sm md:text-base">
-                                                        <?php echo number_format($course['price'], 0, ',', '.'); ?> VND
-                                                    </span>
-                                                    <span class="text-[#f05123] font-bold mx-2 text-sm md:text-base">
-                                                        <?php echo number_format($course['discount_price'], 0, ',', '.'); ?> VND
-                                                    </span>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                        <div class="instructor flex items-center mt-2">
-                                            <img class="rounded-full w-6 h-6 md:w-8 md:h-8" src="http://localhost:8000/uploads/<?= htmlspecialchars($course['instructor_image']) ?>" alt="avt">
-                                            <span class="mx-2 text-gray-600 text-sm md:text-base"><?php echo $course['instructor_name']; ?></span>
-                                        </div>
-                                    </div>
-                                </a>
+                <?php if (in_array($course['id'], $favouriteList)) : ?>
+                <div class="bg-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+                    <a
+                        href="<?php echo $isPurchased ? "/courses/learning/{$course['id']}" : "/courses/show/{$course['id']}"; ?>">
+                        <div class="relative aspect-video">
+                            <img class="w-full h-full object-cover"
+                                src="http://localhost:8000/<?= htmlspecialchars($course['image']) ?>" alt="">
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg md:text-xl font-bold text-gray-800"><?php echo $course['title']; ?>
+                                </h3>
+                                <?php if (!$isPurchased) : ?>
+                                <button class="favorite-btn" data-course-id="<?= $course['id']; ?>"
+                                    data-favorite="true">
+                                    <i class="fas fa-heart text-red-500"></i>
+                                </button>
+                                <?php endif; ?>
                             </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                            <div class="flex items-center">
+                                <?php if ($isPurchased) : ?>
+                                <span class="text-green-600 font-bold block mt-2 text-sm md:text-base">Bạn đã mua khóa
+                                    học này!</span>
+                                <?php else : ?>
+                                <div class="flex items-center justify-between mt-2 w-full">
+                                    <span class="text-gray-500 line-through text-sm md:text-base">
+                                        <?php echo number_format($course['price'], 0, ',', '.'); ?> VND
+                                    </span>
+                                    <span class="text-[#f05123] font-bold mx-2 text-sm md:text-base">
+                                        <?php echo number_format($course['discount_price'], 0, ',', '.'); ?> VND
+                                    </span>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="instructor flex items-center mt-2">
+                                <img class="rounded-full w-6 h-6 md:w-8 md:h-8"
+                                    src="http://localhost:8000/uploads/<?= htmlspecialchars($course['instructor_image']) ?>"
+                                    alt="avt">
+                                <span
+                                    class="mx-2 text-gray-600 text-sm md:text-base"><?php echo $course['instructor_name']; ?></span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
+                <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
             <?php endif; ?>
         </section>
     </main>
 
+    <button id="chatbot-toggler">
+        <span class="material-symbols-rounded">mode_comment</span>
+        <span class="material-symbols-rounded">close</span>
+    </button>
+    <div class="chatbot-popup">
+        <!-- Chatbot Header -->
+        <div class="chat-header">
+            <div class="header-info">
+                <svg class="chatbot-logo" xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                    viewBox="0 0 1024 1024">
+                    <path
+                        d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z" />
+                </svg>
+                <h2 class="logo-text">Trợ Lý Nóng bỏng</h2>
+            </div>
+            <button id="close-chatbot" class="material-symbols-rounded">keyboard_arrow_down</button>
+        </div>
+        <!-- Chatbot Body -->
+        <div class="chat-body">
+            <div class="message bot-message">
+                <svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                    viewBox="0 0 1024 1024">
+                    <path
+                        d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z" />
+                </svg>
+                <!-- prettier-ignore -->
+                <div class="message-text"> Xin chào 👋<br /> Tôi có thể giúp gì cho bạn </div>
+            </div>
+        </div>
+        <!-- Chatbot Footer -->
+        <div class="chat-footer">
+            <form action="#" class="chat-form">
+                <textarea placeholder="Message..." class="message-input" required></textarea>
+                <div class="chat-controls">
+                    <button type="button" id="emoji-picker"
+                        class="material-symbols-outlined">sentiment_satisfied</button>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="file-input" hidden />
+                        <img src="#" />
+                        <button type="button" id="file-upload" class="material-symbols-rounded">attach_file</button>
+                        <button type="button" id="file-cancel" class="material-symbols-rounded">close</button>
+                    </div>
+                    <button type="submit" id="send-message" class="material-symbols-rounded">arrow_upward</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x/dist/cdn.min.js" defer></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let favList = JSON.parse(localStorage.getItem('favourites')) || [];
+    document.addEventListener("DOMContentLoaded", function() {
+        let favList = JSON.parse(localStorage.getItem('favourites')) || [];
 
-            document.querySelectorAll('.favorite-btn').forEach(button => {
-                let courseId = button.getAttribute('data-course-id');
-                if (favList.includes(courseId)) {
-                    button.querySelector('i').classList.remove('text-gray-400');
-                    button.querySelector('i').classList.add('text-red-500');
-                    button.setAttribute('data-favorite', 'true');
-                }
-            });
+        document.querySelectorAll('.favorite-btn').forEach(button => {
+            let courseId = button.getAttribute('data-course-id');
+            if (favList.includes(courseId)) {
+                button.querySelector('i').classList.remove('text-gray-400');
+                button.querySelector('i').classList.add('text-red-500');
+                button.setAttribute('data-favorite', 'true');
+            }
+        });
 
-            document.querySelectorAll('.favorite-btn').forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    let courseId = this.getAttribute('data-course-id');
-                    let isFavorite = this.getAttribute('data-favorite') === 'true';
-                    let url = isFavorite ? '/favourite/remove' : '/favourite/add';
+        document.querySelectorAll('.favorite-btn').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                let courseId = this.getAttribute('data-course-id');
+                let isFavorite = this.getAttribute('data-favorite') === 'true';
+                let url = isFavorite ? '/favourite/remove' : '/favourite/add';
 
-                    fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                course_id: courseId
-                            })
+                fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            course_id: courseId
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'added') {
-                                this.querySelector('i').classList.remove('text-gray-400');
-                                this.querySelector('i').classList.add('text-red-500');
-                                this.setAttribute('data-favorite', 'true');
-                                favList.push(courseId);
-                            } else if (data.status === 'removed') {
-                                this.querySelector('i').classList.remove('text-red-500');
-                                this.querySelector('i').classList.add('text-gray-400');
-                                this.setAttribute('data-favorite', 'false');
-                                favList = favList.filter(id => id !== courseId);
-                            }
-                            localStorage.setItem('favourites', JSON.stringify(favList));
-                        });
-                });
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'added') {
+                            this.querySelector('i').classList.remove('text-gray-400');
+                            this.querySelector('i').classList.add('text-red-500');
+                            this.setAttribute('data-favorite', 'true');
+                            favList.push(courseId);
+                        } else if (data.status === 'removed') {
+                            this.querySelector('i').classList.remove('text-red-500');
+                            this.querySelector('i').classList.add('text-gray-400');
+                            this.setAttribute('data-favorite', 'false');
+                            favList = favList.filter(id => id !== courseId);
+                        }
+                        localStorage.setItem('favourites', JSON.stringify(favList));
+                    });
             });
         });
+    });
     </script>
 </body>
 
