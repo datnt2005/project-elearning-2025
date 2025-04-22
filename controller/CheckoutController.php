@@ -341,7 +341,7 @@ class CheckoutController
 
         // ✅ Tạo requestId
         $requestId = time() . "_" . rand(1000, 9999);
-        $requestType = "captureWallet";
+        $requestType = "payWithATM";
         $extraData = "";
         $orderInfo = "Thanh toán khóa học #$course_id";
 

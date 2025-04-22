@@ -36,6 +36,59 @@
  </head>
 
  <body style="margin: 0;" class="bg-gray-100">
+ <div id="loader"
+            style="position: fixed; z-index: 9999; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center;">
+            <div class="dot-loader">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+        <style>
+        .dot-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .dot-loader span {
+            width: 10px;
+            height: 10px;
+            background-color: rgb(58, 58, 58);
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 0.6s infinite ease-in-out;
+        }
+
+        .dot-loader span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot-loader span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-15px);
+            }
+        }
+        </style>
+        <script>
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+        });
+        </script>
      <nav class="bg-white shadow-sm fixed w-full top-0 z-10">
          <div class="container mx-auto px-4">
              <div class="flex flex-col sm:flex-row justify-between items-center h-auto sm:h-16 py-4 sm:py-0">

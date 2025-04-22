@@ -130,5 +130,12 @@ class CouponModel {
         $stmt->execute([$course_id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function findByCode($code) {
+        $query = "SELECT * FROM coupons WHERE code = :code";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':code', $code);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     
 }
